@@ -327,8 +327,73 @@
         }
 
         .desk-box.libre {
-            background: #b0b0b0;
-            border-color: #909090;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+            border: 2px dashed #a0aec0;
+            position: relative;
+        }
+
+        .desk-unit.is-libre {
+            cursor: pointer;
+        }
+
+        .desk-unit.is-libre .desk-box {
+            animation: pulse-libre 2s ease-in-out infinite;
+        }
+
+        .desk-unit.is-libre:hover .desk-box {
+            background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+            border-color: var(--green);
+            animation: none;
+            box-shadow: 0 0 0 3px rgba(72,187,120,0.3), 0 4px 12px rgba(72,187,120,0.2);
+            transform: scale(1.02);
+        }
+
+        .desk-unit.is-libre:hover .libre-badge {
+            background: var(--green);
+            color: white;
+        }
+
+        @keyframes pulse-libre {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(66,153,225,0.0); }
+            50% { box-shadow: 0 0 0 4px rgba(66,153,225,0.15); }
+        }
+
+        .libre-badge {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--primary-light);
+            background: #ebf8ff;
+            border: 1px solid #bee3f8;
+            border-radius: 6px;
+            padding: 1px 6px;
+            white-space: nowrap;
+            transition: all 0.15s;
+            pointer-events: none;
+        }
+
+        .libre-plus {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: 300;
+            color: #a0aec0;
+            pointer-events: none;
+            transition: all 0.15s;
+            z-index: 5;
+        }
+
+        .desk-unit.is-libre:hover .libre-plus {
+            color: var(--green);
+            transform: translate(-50%, -50%) scale(1.2);
         }
 
         /* Screen on desk */
@@ -927,6 +992,7 @@
             <button class="view-btn active" onclick="setView('plan',this)">Plan</button>
             <button class="view-btn" onclick="setView('table',this)">Tableau</button>
         </div>
+        <div id="syncStatus" style="font-size:12px;margin-left:8px;white-space:nowrap;"></div>
     </div>
 </div>
 
@@ -1004,17 +1070,12 @@
             </div>
 
             <!-- Accueil — large, en bas -->
-            <div class="room room-floor-accueil" style="left:10px;top:485px;width:430px;height:125px">
+            <div class="room room-floor-accueil" style="left:10px;top:485px;width:680px;height:125px">
                 <span class="room-title">Accueil / R&eacute;ception</span>
             </div>
 
-            <!-- Bureau G — Hot desks (4 postes) — bas droite -->
-            <div class="room room-floor-openspace" style="left:455px;top:485px;width:220px;height:125px">
-                <span class="room-title">Hot Desks</span>
-            </div>
-
             <!-- WC / Local technique -->
-            <div class="room room-floor-couloir" style="left:690px;top:485px;width:180px;height:125px">
+            <div class="room room-floor-couloir" style="left:705px;top:485px;width:165px;height:125px">
                 <span class="room-title">Sanitaires / Tech.</span>
             </div>
 
@@ -1177,6 +1238,84 @@
 // ============================
 const STORAGE_KEY = 'dap_bureau_uccle_v2';
 
+// ============================
+// GOOGLE SHEETS BACKEND
+// ============================
+// Coller ici l'URL du déploiement Apps Script (voir google-apps-script.js)
+const APPS_SCRIPT_URL = ''; // ← COLLER L'URL ICI
+
+let isSyncing = false;
+let lastSyncTime = null;
+let isOnline = !!APPS_SCRIPT_URL;
+
+// Charger les réservations depuis Google Sheets
+async function loadFromSheets() {
+    if (!APPS_SCRIPT_URL) return false;
+    try {
+        isSyncing = true;
+        updateSyncStatus();
+        const resp = await fetch(APPS_SCRIPT_URL);
+        const json = await resp.json();
+        if (json.success && json.reservations) {
+            // Merge: Google Sheets est la source de vérité
+            reservations = json.reservations;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
+            lastSyncTime = new Date();
+            isOnline = true;
+        }
+        isSyncing = false;
+        updateSyncStatus();
+        return true;
+    } catch (err) {
+        console.warn('Sync lecture échouée, mode hors-ligne:', err);
+        isSyncing = false;
+        isOnline = false;
+        updateSyncStatus();
+        return false;
+    }
+}
+
+// Sauvegarder une clé vers Google Sheets
+async function saveToSheets(key, data) {
+    if (!APPS_SCRIPT_URL) return false;
+    try {
+        isSyncing = true;
+        updateSyncStatus();
+        const resp = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ key, data }),
+        });
+        const json = await resp.json();
+        lastSyncTime = new Date();
+        isSyncing = false;
+        isOnline = true;
+        updateSyncStatus();
+        return json.success;
+    } catch (err) {
+        console.warn('Sync écriture échouée, sauvegardé localement:', err);
+        isSyncing = false;
+        isOnline = false;
+        updateSyncStatus();
+        return false;
+    }
+}
+
+// Indicateur de statut de synchro
+function updateSyncStatus() {
+    const el = document.getElementById('syncStatus');
+    if (!el) return;
+    if (!APPS_SCRIPT_URL) {
+        el.innerHTML = '<span style="color:#e53e3e">● Hors-ligne (localStorage)</span>';
+    } else if (isSyncing) {
+        el.innerHTML = '<span style="color:#ed8936">● Synchronisation...</span>';
+    } else if (isOnline) {
+        const time = lastSyncTime ? lastSyncTime.toLocaleTimeString('fr-BE') : '';
+        el.innerHTML = `<span style="color:#38a169">● Connecté</span> <small style="color:#a0aec0">${time}</small>`;
+    } else {
+        el.innerHTML = '<span style="color:#e53e3e">● Hors-ligne</span>';
+    }
+}
+
 const COLLABORATEURS = [
     { id: 'caroline', name: 'Caroline', color: '#e74c3c', hair: '#8B4513' },
     { id: 'malki', name: 'Malki', color: '#3498db', hair: '#1a1a1a' },
@@ -1202,40 +1341,46 @@ const COLLABORATEURS = [
 
 // Desk positions — distributed across rooms (realistic Uccle building)
 const DESKS = [
-    // Bureau A — Production haut-gauche (4 postes)
-    { id: 'B01', x: 30,  y: 45,  room: 'A' },
-    { id: 'B02', x: 130, y: 45,  room: 'A' },
-    { id: 'B03', x: 30,  y: 120, room: 'A' },
-    { id: 'B04', x: 130, y: 120, room: 'A' },
+    // Bureau A — Production haut-gauche (6 postes, dont 2 libres)
+    { id: 'B01', x: 30,  y: 40,  room: 'A' },
+    { id: 'B02', x: 130, y: 40,  room: 'A' },
+    { id: 'B03', x: 30,  y: 105, room: 'A' },
+    { id: 'B04', x: 130, y: 105, room: 'A' },
+    { id: 'A05', x: 80,  y: 155, room: 'A' },
+    { id: 'A06', x: 160, y: 155, room: 'A' },
 
-    // Bureau B — Production bas-gauche (4 postes)
-    { id: 'B05', x: 30,  y: 295, room: 'B' },
-    { id: 'B06', x: 130, y: 295, room: 'B' },
-    { id: 'B07', x: 30,  y: 365, room: 'B' },
-    { id: 'B08', x: 130, y: 365, room: 'B' },
+    // Bureau B — Production bas-gauche (6 postes, dont 2 libres)
+    { id: 'B05', x: 30,  y: 285, room: 'B' },
+    { id: 'B06', x: 130, y: 285, room: 'B' },
+    { id: 'B07', x: 30,  y: 350, room: 'B' },
+    { id: 'B08', x: 130, y: 350, room: 'B' },
+    { id: 'B09x', x: 80,  y: 395, room: 'B' },
+    { id: 'B10x', x: 160, y: 395, room: 'B' },
 
-    // Bureau C — Sinistres haut-droite (3 postes)
-    { id: 'B09', x: 485, y: 45,  room: 'C' },
-    { id: 'B10', x: 580, y: 45,  room: 'C' },
-    { id: 'B11', x: 485, y: 120, room: 'C' },
+    // Bureau C — Sinistres haut-droite (5 postes, dont 2 libres)
+    { id: 'B09', x: 480, y: 40,  room: 'C' },
+    { id: 'B10', x: 575, y: 40,  room: 'C' },
+    { id: 'B11', x: 480, y: 105, room: 'C' },
+    { id: 'C04', x: 575, y: 105, room: 'C' },
+    { id: 'C05', x: 530, y: 155, room: 'C' },
 
-    // Bureau D — Commercial (2 postes)
-    { id: 'B12', x: 265, y: 305, room: 'D' },
-    { id: 'B13', x: 340, y: 305, room: 'D' },
+    // Bureau D — Commercial (3 postes, dont 1 libre)
+    { id: 'B12', x: 265, y: 290, room: 'D' },
+    { id: 'B13', x: 340, y: 290, room: 'D' },
+    { id: 'D03', x: 300, y: 365, room: 'D' },
 
-    // Bureau E — Compta (2 postes)
-    { id: 'B14', x: 440, y: 305, room: 'E' },
-    { id: 'B15', x: 515, y: 305, room: 'E' },
+    // Bureau E — Compta (3 postes, dont 1 libre)
+    { id: 'B14', x: 440, y: 290, room: 'E' },
+    { id: 'B15', x: 515, y: 290, room: 'E' },
+    { id: 'E03', x: 478, y: 365, room: 'E' },
 
     // Bureau F — Direction (2 postes)
-    { id: 'D01', x: 615, y: 295, room: 'F' },
-    { id: 'D02', x: 695, y: 295, room: 'F' },
+    { id: 'D01', x: 615, y: 290, room: 'F' },
+    { id: 'D02', x: 695, y: 290, room: 'F' },
 
-    // Hot desks — rez-de-chaussée (4 postes)
-    { id: 'H01', x: 480, y: 515, room: 'G' },
-    { id: 'H02', x: 575, y: 515, room: 'G' },
-    { id: 'H03', x: 480, y: 570, room: 'G' },
-    { id: 'H04', x: 575, y: 570, room: 'G' },
+    // Accueil — rez-de-chaussée (2 postes libres)
+    { id: 'R01', x: 100, y: 515, room: 'Accueil' },
+    { id: 'R02', x: 250, y: 515, room: 'Accueil' },
 ];
 
 // Permanences appels (from Excel data)
@@ -1469,6 +1614,11 @@ function removeReservation(dayIndex, period, deskId) {
 
 function save() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
+    // Sync chaque clé modifiée vers Google Sheets
+    if (APPS_SCRIPT_URL) {
+        const key = getDateKey(currentDayIndex, currentPeriod);
+        saveToSheets(key, reservations[key]);
+    }
 }
 
 function getCurrentSlotReservations() {
@@ -1577,6 +1727,9 @@ function renderDesks() {
         el.style.cssText = `left:${desk.x}px;top:${desk.y}px;`;
         el.onclick = () => openModal(desk.id);
 
+        const isLibre = !collab;
+        if (isLibre) el.classList.add('is-libre');
+
         el.innerHTML = `
             ${isOnAppels ? '<div class="phone-icon">📞</div>' : ''}
             ${collab && isAtDesk ? `
@@ -1592,7 +1745,8 @@ function renderDesks() {
                 <div class="char-body" style="background:${collab.color}"></div>
                 <div class="char-legs"></div>
             </div>` : ''}
-            <div class="desk-box ${!collab ? 'libre' : ''}">
+            <div class="desk-box ${isLibre ? 'libre' : ''}">
+                ${isLibre ? '<div class="libre-plus">+</div>' : ''}
                 <div class="desk-screen">
                     <div class="desk-screen-glow ${!isAtDesk ? 'off' : ''}"></div>
                     <div class="desk-screen-stand"></div>
@@ -1600,10 +1754,11 @@ function renderDesks() {
                 <div class="desk-keyboard"></div>
                 ${reservation ? `<div class="status-bubble ${cfg.bubble}"></div>` : ''}
             </div>
+            ${isLibre ? `<div class="libre-badge">Réserver</div>` : `
             <div class="desk-label">
-                ${collab ? escapeHtml(collab.name) : 'Libre'}
+                ${escapeHtml(collab.name)}
                 <span class="desk-number">${desk.id}${reservation && reservation.detail ? ' · ' + reservation.detail : ''}</span>
-            </div>
+            </div>`}
         `;
 
         container.appendChild(el);
@@ -1802,9 +1957,13 @@ function freeDesk() {
 // ============================
 // NAVIGATION
 // ============================
-function changeWeek(delta) {
+async function changeWeek(delta) {
     currentWeekStart.setDate(currentWeekStart.getDate() + delta * 7);
     renderAll();
+    if (APPS_SCRIPT_URL) {
+        const ok = await loadFromSheets();
+        if (ok) renderAll();
+    }
 }
 
 function setDay(index, btn) {
@@ -1865,7 +2024,20 @@ function renderAll() {
 // ============================
 // INIT
 // ============================
-renderAll();
+(async function init() {
+    updateSyncStatus();
+    renderAll();
+    // Charger depuis Google Sheets si configuré
+    if (APPS_SCRIPT_URL) {
+        const ok = await loadFromSheets();
+        if (ok) renderAll();
+        // Rafraîchir toutes les 30 secondes
+        setInterval(async () => {
+            const ok = await loadFromSheets();
+            if (ok) renderAll();
+        }, 30000);
+    }
+})();
 </script>
 </body>
 </html>
