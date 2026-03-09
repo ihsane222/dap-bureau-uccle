@@ -753,6 +753,22 @@
         .appel-prio { color: var(--accent); font-weight: 700; }
         .appel-sec { color: var(--text-light); }
 
+        .badge-non-confirme {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ed8936;
+            color: white;
+            font-size: 0.55rem;
+            font-weight: 800;
+            margin-left: 4px;
+            vertical-align: middle;
+            cursor: help;
+        }
+
         /* Rappels section */
         .rappel-section {
             background: #fffbeb;
@@ -1962,10 +1978,26 @@ function getCollabsWithoutStatus() {
 }
 
 function renderRappelSection(collabStatuses) {
-    const missing = collabStatuses.filter(c => !c.status);
+    // Vérifier qui n'a PAS de réservation explicite (utilise encore le pattern par défaut)
+    const key = getDateKey(currentDayIndex, currentPeriod);
+    const hasExplicitReservation = !!reservations[key];
+
+    let missing;
+    if (hasExplicitReservation) {
+        // Slot modifié : ceux qui ne sont pas dans les réservations explicites
+        const explicitIds = new Set();
+        Object.values(reservations[key]).forEach(r => {
+            if (r.person) explicitIds.add(r.person);
+        });
+        missing = COLLABORATEURS.filter(c => !explicitIds.has(c.id));
+    } else {
+        // Aucune réservation explicite pour ce créneau : tout le monde est sur le pattern par défaut
+        missing = COLLABORATEURS.slice(); // tout le monde
+    }
+
     if (missing.length === 0) {
         return `<div class="rappel-section" style="background:#f0fff4;border-color:#c6f6d5">
-            <div class="rappel-ok">Tout le monde a indiqué son statut</div>
+            <div class="rappel-ok">Tout le monde a confirmé son statut</div>
         </div>`;
     }
 
@@ -2051,6 +2083,15 @@ function renderSidebar() {
         return a.name.localeCompare(b.name);
     });
 
+    // Qui a confirmé (réservation explicite) ?
+    const key = getDateKey(currentDayIndex, currentPeriod);
+    const confirmedIds = new Set();
+    if (reservations[key]) {
+        Object.values(reservations[key]).forEach(r => {
+            if (r.person) confirmedIds.add(r.person);
+        });
+    }
+
     // Appels
     const dayAppels = PERMANENCES_APPELS[currentDayIndex + 1] || { prio: [], sec: [] };
 
@@ -2067,12 +2108,15 @@ function renderSidebar() {
             <div class="collab-list">
                 ${filtered.map(c => {
                     const cfg = c.status ? STATUS_CONFIG[c.status] : STATUS_CONFIG.libre;
-                    const statusLabel = c.status ? cfg.label + (c.detail ? ' (' + c.detail + ')' : '') : 'Non assign\u00e9';
+                    const isConfirmed = confirmedIds.has(c.id);
+                    const confirmBadge = isConfirmed
+                        ? ''
+                        : ' <span class="badge-non-confirme" title="Statut par défaut — non confirmé">?</span>';
                     return `<div class="collab-item ${highlightedCollab === c.id ? 'active' : ''}"
                         onclick="toggleHighlightCollab('${c.id}')"
                         onmouseenter="highlightCollab('${c.id}')" onmouseleave="unhighlightCollab()">
                         <div class="collab-dot" style="background:${cfg.dot}"></div>
-                        <span class="collab-name">${escapeHtml(c.name)}</span>
+                        <span class="collab-name">${escapeHtml(c.name)}${confirmBadge}</span>
                         <span class="collab-status">${c.deskId || ''}</span>
                     </div>`;
                 }).join('')}
