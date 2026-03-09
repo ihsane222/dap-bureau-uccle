@@ -1978,22 +1978,20 @@ function getCollabsWithoutStatus() {
 }
 
 function renderRappelSection(collabStatuses) {
-    // Vérifier qui n'a PAS de réservation explicite (utilise encore le pattern par défaut)
-    const key = getDateKey(currentDayIndex, currentPeriod);
-    const hasExplicitReservation = !!reservations[key];
+    // Les collaborateurs avec bureau fixe n'ont pas besoin de confirmer
+    const fixedDeskIds = new Set(DEFAULT_ASSIGNMENTS.map(([id]) => id));
 
-    let missing;
-    if (hasExplicitReservation) {
-        // Slot modifié : ceux qui ne sont pas dans les réservations explicites
-        const explicitIds = new Set();
+    // Parmi les non-fixes, qui n'a pas de réservation explicite ?
+    const key = getDateKey(currentDayIndex, currentPeriod);
+    const explicitIds = new Set();
+    if (reservations[key]) {
         Object.values(reservations[key]).forEach(r => {
             if (r.person) explicitIds.add(r.person);
         });
-        missing = COLLABORATEURS.filter(c => !explicitIds.has(c.id));
-    } else {
-        // Aucune réservation explicite pour ce créneau : tout le monde est sur le pattern par défaut
-        missing = COLLABORATEURS.slice(); // tout le monde
     }
+
+    // Missing = pas de bureau fixe ET pas de réservation explicite
+    const missing = COLLABORATEURS.filter(c => !fixedDeskIds.has(c.id) && !explicitIds.has(c.id));
 
     if (missing.length === 0) {
         return `<div class="rappel-section" style="background:#f0fff4;border-color:#c6f6d5">
@@ -2083,6 +2081,8 @@ function renderSidebar() {
         return a.name.localeCompare(b.name);
     });
 
+    // Bureaux fixes = pas besoin de confirmer
+    const fixedDeskIds = new Set(DEFAULT_ASSIGNMENTS.map(([id]) => id));
     // Qui a confirmé (réservation explicite) ?
     const key = getDateKey(currentDayIndex, currentPeriod);
     const confirmedIds = new Set();
@@ -2108,10 +2108,11 @@ function renderSidebar() {
             <div class="collab-list">
                 ${filtered.map(c => {
                     const cfg = c.status ? STATUS_CONFIG[c.status] : STATUS_CONFIG.libre;
-                    const isConfirmed = confirmedIds.has(c.id);
+                    const isFixed = fixedDeskIds.has(c.id);
+                    const isConfirmed = isFixed || confirmedIds.has(c.id);
                     const confirmBadge = isConfirmed
                         ? ''
-                        : ' <span class="badge-non-confirme" title="Statut par défaut — non confirmé">?</span>';
+                        : ' <span class="badge-non-confirme" title="Statut non confirmé">?</span>';
                     return `<div class="collab-item ${highlightedCollab === c.id ? 'active' : ''}"
                         onclick="toggleHighlightCollab('${c.id}')"
                         onmouseenter="highlightCollab('${c.id}')" onmouseleave="unhighlightCollab()">
