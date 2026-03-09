@@ -89,7 +89,22 @@
 
         .week-nav button:hover { background: rgba(255,255,255,0.3); }
 
+        .btn-today {
+            background: var(--accent) !important;
+            border-color: var(--accent) !important;
+            font-size: 0.7rem !important;
+            font-weight: 700;
+            padding: 0 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-today:hover { background: var(--accent-hover) !important; }
+
         .week-label { font-weight: 600; min-width: 160px; text-align: center; }
+
+        .day-tab.is-today {
+            box-shadow: inset 0 -2px 0 var(--accent);
+        }
 
         /* Day tabs */
         .day-tabs {
@@ -815,6 +830,30 @@
 
         .btn-rappel:hover { background: var(--accent-hover); }
 
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         .rappel-ok {
             font-size: 0.75rem;
             color: #276749;
@@ -1041,13 +1080,58 @@
         }
 
         @media (max-width: 900px) {
-            .sidebar { display: none; }
+            .sidebar {
+                display: none;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                width: 100%;
+                max-height: 60vh;
+                overflow-y: auto;
+                z-index: 200;
+                border-radius: 16px 16px 0 0;
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+            }
+            .sidebar.mobile-open { display: block; }
             .header { padding: 10px 14px; gap: 8px; }
+            .plan-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         }
 
         @media (max-width: 700px) {
-            .day-tabs { gap: 1px; }
-            .day-tab { padding: 5px 8px; font-size: 0.7rem; }
+            .header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-left { justify-content: center; }
+            .day-tabs { gap: 1px; justify-content: center; }
+            .day-tab { padding: 5px 6px; font-size: 0.65rem; }
+            .stats-bar { flex-wrap: wrap; gap: 6px; padding: 8px 12px; }
+            .stat-item { font-size: 0.7rem; }
+        }
+
+        /* Mobile sidebar toggle button */
+        .mobile-sidebar-toggle {
+            display: none;
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            z-index: 199;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .mobile-sidebar-toggle:hover { background: var(--primary-light); }
+
+        @media (max-width: 900px) {
+            .mobile-sidebar-toggle { display: flex; align-items: center; justify-content: center; }
         }
     </style>
 </head>
@@ -1058,9 +1142,10 @@
     <div class="header-left">
         <h1>DAP — Bureau <span>Uccle</span></h1>
         <div class="week-nav">
-            <button onclick="changeWeek(-1)">&lsaquo;</button>
+            <button onclick="changeWeek(-1)" aria-label="Semaine précédente">&lsaquo;</button>
             <span class="week-label" id="weekLabel"></span>
-            <button onclick="changeWeek(1)">&rsaquo;</button>
+            <button onclick="changeWeek(1)" aria-label="Semaine suivante">&rsaquo;</button>
+            <button class="btn-today" onclick="goToday()" aria-label="Revenir à aujourd'hui">Auj.</button>
         </div>
     </div>
 
@@ -1068,8 +1153,8 @@
 
     <div style="display:flex;gap:8px;align-items:center;">
         <div class="ampm-toggle">
-            <button class="ampm-btn active" data-period="am" onclick="setPeriod('am',this)">AM</button>
-            <button class="ampm-btn" data-period="pm" onclick="setPeriod('pm',this)">PM</button>
+            <button class="ampm-btn active" data-period="am" onclick="setPeriod('am',this)" aria-label="Matin">AM</button>
+            <button class="ampm-btn" data-period="pm" onclick="setPeriod('pm',this)" aria-label="Après-midi">PM</button>
         </div>
 
         <div class="view-toggle">
@@ -1264,7 +1349,7 @@
 </div>
 
 <!-- ===== RESERVATION MODAL ===== -->
-<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
     <div class="modal">
         <div class="modal-header">
             <span id="modalTitle">Bureau #1</span>
@@ -1746,7 +1831,9 @@ function renderHeader() {
         const d = new Date(currentWeekStart);
         d.setDate(d.getDate() + i);
         const dateStr = d.getDate();
-        return `<button class="day-tab ${i === currentDayIndex ? 'active' : ''}" onclick="setDay(${i}, this)">${DAY_SHORT[i]} ${dateStr}</button>`;
+        const today = new Date();
+        const isToday = d.toDateString() === today.toDateString();
+        return `<button class="day-tab ${i === currentDayIndex ? 'active' : ''} ${isToday ? 'is-today' : ''}" onclick="setDay(${i}, this)">${DAY_SHORT[i]} ${dateStr}</button>`;
     }).join('');
 }
 
@@ -1764,6 +1851,14 @@ function renderStats() {
     const libre = DESKS.length - totalAssigned;
 
     const bar = document.getElementById('statsBar');
+    const descriptions = {
+        bureau: 'Présent(e) au bureau d\'Uccle',
+        teletravail: 'Travaille depuis chez soi',
+        autre: 'Dans un autre bureau (Quaregnon, Leuze…)',
+        conge: 'En congé',
+        indisponible: 'Indisponible (formation, absence…)',
+    };
+
     bar.innerHTML = [
         ['bureau', counts.bureau || 0],
         ['teletravail', counts.teletravail || 0],
@@ -1771,13 +1866,13 @@ function renderStats() {
         ['conge', counts.conge || 0],
         ['indisponible', counts.indisponible || 0],
     ].map(([s, n]) => `
-        <div class="stat-item">
+        <div class="stat-item" title="${descriptions[s]}">
             <div class="stat-dot" style="background:${STATUS_CONFIG[s].dot}"></div>
             <span class="stat-count">${n}</span>
             <span class="stat-label">${STATUS_CONFIG[s].label}</span>
         </div>
     `).join('') + `
-        <div class="stat-item">
+        <div class="stat-item" title="Postes disponibles à la réservation">
             <div class="stat-dot" style="background:${STATUS_CONFIG.libre.dot}"></div>
             <span class="stat-count">${libre}</span>
             <span class="stat-label">Libre</span>
@@ -1797,7 +1892,7 @@ function renderDesks() {
         const reservation = slot[desk.id];
         const collab = reservation ? getCollabById(reservation.person) : null;
         const status = reservation ? reservation.status : 'libre';
-        const cfg = STATUS_CONFIG[status];
+        const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.libre;
         const isAtDesk = status === 'bureau';
         const isHighlighted = highlightedCollab && reservation && reservation.person === highlightedCollab;
         const isDimmed = highlightedCollab && (!reservation || reservation.person !== highlightedCollab);
@@ -1807,9 +1902,14 @@ function renderDesks() {
         const isOnAppels = reservation && dayAppels.prio.includes(reservation.person);
 
         const el = document.createElement('div');
+        const ariaLabel = collab ? `${collab.name} — ${cfg.label}` : `Bureau ${desk.id} — Libre, cliquer pour réserver`;
         el.className = `desk-unit ${isHighlighted ? 'highlighted' : ''} ${isDimmed ? 'dimmed' : ''}`;
         el.style.cssText = `left:${desk.x}px;top:${desk.y}px;`;
+        el.setAttribute('role', 'button');
+        el.setAttribute('aria-label', ariaLabel);
+        el.setAttribute('tabindex', '0');
         el.onclick = () => openModal(desk.id);
+        el.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(desk.id); } };
 
         const isLibre = !collab;
         if (isLibre) el.classList.add('is-libre');
@@ -1817,13 +1917,13 @@ function renderDesks() {
         el.innerHTML = `
             ${isOnAppels ? '<div class="phone-icon">📞</div>' : ''}
             ${collab && isAtDesk ? `
-            <div class="pixel-char">
+            <div class="pixel-char" aria-hidden="true">
                 <div class="char-hair" style="background:${collab.hair}"></div>
                 <div class="char-head"></div>
                 <div class="char-body" style="background:${collab.color}"></div>
                 <div class="char-legs"></div>
             </div>` : collab ? `
-            <div class="pixel-char" style="opacity:0.35">
+            <div class="pixel-char" aria-hidden="true" style="opacity:0.35">
                 <div class="char-hair" style="background:${collab.hair}"></div>
                 <div class="char-head"></div>
                 <div class="char-body" style="background:${collab.color}"></div>
@@ -1887,7 +1987,7 @@ function renderRappelSection(collabStatuses) {
 Nous n'avons pas encore votre statut pour ${dayLabel} ${dateStr} (${periodLabel}).
 
 Merci de mettre à jour votre présence sur l'outil de réservation des bureaux :
-https://ihsane222.github.io/dap-bureau-uccle/
+${window.location.href.split('?')[0]}
 
 Les statuts possibles :
 • Bureau — Vous serez présent(e) au bureau d'Uccle
@@ -2002,35 +2102,51 @@ function renderSidebar() {
 function renderTable() {
     const table = document.getElementById('planningTable');
 
-    const headers = '<tr><th>' + DAYS[currentDayIndex] + '</th>' +
-        COLLABORATEURS.map(c => `<th>${escapeHtml(c.name)}</th>`).join('') + '</tr>';
+    // Header: Collaborateur | Lun AM | Lun PM | Mar AM | Mar PM | ...
+    let headers = '<tr><th>Collaborateur</th>';
+    DAYS.forEach((day, i) => {
+        const d = new Date(currentWeekStart);
+        d.setDate(d.getDate() + i);
+        const dateStr = d.getDate();
+        const today = new Date();
+        const isToday = d.toDateString() === today.toDateString();
+        const todayClass = isToday ? ' style="background:var(--accent)"' : '';
+        headers += `<th colspan="2"${todayClass}>${day} ${dateStr}</th>`;
+    });
+    headers += '</tr>';
 
+    // Sub-header: AM | PM for each day
+    let subHeaders = '<tr><th></th>';
+    DAYS.forEach(() => {
+        subHeaders += '<th style="font-size:0.65rem;padding:4px">AM</th><th style="font-size:0.65rem;padding:4px">PM</th>';
+    });
+    subHeaders += '</tr>';
+
+    // Rows: one per collaborator
     let rows = '';
-    ['am', 'pm'].forEach(period => {
-        const slot = getReservationsForSlot(currentDayIndex, period);
-        const label = period === 'am' ? 'Matin' : 'Apr\u00e8s-midi';
-
-        let cells = `<td>${label}</td>`;
-        COLLABORATEURS.forEach(c => {
-            let found = null;
-            for (const [deskId, data] of Object.entries(slot)) {
-                if (data.person === c.id) { found = data; break; }
-            }
-
-            if (found) {
-                const cfg = STATUS_CONFIG[found.status];
-                const cellClass = 'cell-' + found.status;
-                const detail = found.detail ? ' (' + found.detail + ')' : '';
-                cells += `<td class="${cellClass}">${cfg.label}${detail}</td>`;
-            } else {
-                cells += '<td>—</td>';
-            }
+    COLLABORATEURS.forEach(c => {
+        let cells = `<td style="font-weight:600;text-align:left;white-space:nowrap">${escapeHtml(c.name)}</td>`;
+        DAYS.forEach((_, dayIdx) => {
+            ['am', 'pm'].forEach(period => {
+                const slot = getReservationsForSlot(dayIdx, period);
+                let found = null;
+                for (const [deskId, data] of Object.entries(slot)) {
+                    if (data.person === c.id) { found = data; break; }
+                }
+                if (found) {
+                    const cfg = STATUS_CONFIG[found.status] || STATUS_CONFIG.libre;
+                    const cellClass = 'cell-' + found.status;
+                    const label = found.status === 'autre' && found.detail ? found.detail : cfg.label;
+                    cells += `<td class="${cellClass}" style="cursor:pointer;font-size:0.65rem" title="${cfg.label}${found.detail ? ' (' + found.detail + ')' : ''}">${label}</td>`;
+                } else {
+                    cells += '<td style="cursor:pointer;color:#cbd5e0" title="Cliquer pour réserver">—</td>';
+                }
+            });
         });
-
         rows += `<tr>${cells}</tr>`;
     });
 
-    table.innerHTML = headers + rows;
+    table.innerHTML = headers + subHeaders + rows;
 }
 
 // ============================
@@ -2059,16 +2175,27 @@ function openModal(deskId) {
     }
 
     onStatusChange();
-    modalPeriod = 'full';
-    document.querySelectorAll('.period-btn').forEach(b => b.classList.toggle('active', b.dataset.p === 'full'));
+    // Période par défaut = celle de la vue en cours
+    modalPeriod = currentPeriod;
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.toggle('active', b.dataset.p === currentPeriod));
 
-    document.getElementById('modalOverlay').classList.add('show');
+    const overlay = document.getElementById('modalOverlay');
+    overlay.classList.add('show');
+    // Focus trap : focus sur le premier élément
+    setTimeout(() => document.getElementById('modalPerson').focus(), 100);
 }
 
 function closeModal() {
     document.getElementById('modalOverlay').classList.remove('show');
     selectedDeskId = null;
 }
+
+// Échap pour fermer la modal
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('modalOverlay').classList.contains('show')) {
+        closeModal();
+    }
+});
 
 function onStatusChange() {
     const status = document.getElementById('modalStatus').value;
@@ -2102,19 +2229,49 @@ function reserveDesk() {
 
     closeModal();
     renderAll();
+    const collabName = getCollabById(person)?.name || person;
+    showToast(`${collabName} réservé(e) au bureau ${selectedDeskId}`);
 }
 
 function freeDesk() {
     if (!selectedDeskId) return;
+    if (!confirm('Voulez-vous vraiment libérer ce bureau ?')) return;
     const periods = modalPeriod === 'full' ? ['am', 'pm'] : [modalPeriod];
     periods.forEach(p => removeReservation(currentDayIndex, p, selectedDeskId));
+    showToast(`Bureau ${selectedDeskId} libéré`);
     closeModal();
     renderAll();
+}
+
+// Toast notification
+function showToast(message) {
+    const existing = document.querySelector('.toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('show'));
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
 }
 
 // ============================
 // NAVIGATION
 // ============================
+function goToday() {
+    const today = new Date();
+    currentWeekStart = getMonday(today);
+    const dow = today.getDay(); // 0=dim, 1=lun...
+    currentDayIndex = dow >= 1 && dow <= 5 ? dow - 1 : 0;
+    currentPeriod = today.getHours() < 13 ? 'am' : 'pm';
+    document.querySelectorAll('.ampm-btn').forEach(b => b.classList.toggle('active', b.dataset.period === currentPeriod));
+    renderAll();
+    if (APPS_SCRIPT_URL) loadFromSheets().then(ok => { if (ok) renderAll(); });
+}
+
 async function changeWeek(delta) {
     currentWeekStart.setDate(currentWeekStart.getDate() + delta * 7);
     renderAll();
@@ -2196,6 +2353,17 @@ function renderAll() {
         }, 30000);
     }
 })();
+
+// Mobile sidebar toggle
+function toggleMobileSidebar() {
+    const sb = document.querySelector('.sidebar');
+    sb.classList.toggle('mobile-open');
+    const btn = document.getElementById('mobileSidebarBtn');
+    btn.textContent = sb.classList.contains('mobile-open') ? '✕' : '☰';
+}
 </script>
+
+<button class="mobile-sidebar-toggle" id="mobileSidebarBtn" onclick="toggleMobileSidebar()" aria-label="Ouvrir la liste des collaborateurs">☰</button>
+
 </body>
 </html>
