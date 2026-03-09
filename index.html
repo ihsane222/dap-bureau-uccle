@@ -738,6 +738,90 @@
         .appel-prio { color: var(--accent); font-weight: 700; }
         .appel-sec { color: var(--text-light); }
 
+        /* Rappels section */
+        .rappel-section {
+            background: #fffbeb;
+            border: 1px solid #f6e05e;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-top: 8px;
+        }
+
+        .rappel-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #b7791f;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rappel-count {
+            background: #ed8936;
+            color: white;
+            font-size: 0.65rem;
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .rappel-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .rappel-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.73rem;
+            color: #744210;
+            padding: 3px 6px;
+            background: rgba(237,137,54,0.08);
+            border-radius: 4px;
+        }
+
+        .rappel-item .rappel-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ed8936;
+            animation: blink-rappel 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink-rappel {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .btn-rappel {
+            display: block;
+            width: 100%;
+            padding: 7px 12px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.73rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-rappel:hover { background: var(--accent-hover); }
+
+        .rappel-ok {
+            font-size: 0.75rem;
+            color: #276749;
+            text-align: center;
+            padding: 8px;
+        }
+
         /* ===== TABLE VIEW ===== */
         .table-container {
             flex: 1;
@@ -1317,26 +1401,26 @@ function updateSyncStatus() {
 }
 
 const COLLABORATEURS = [
-    { id: 'caroline', name: 'Caroline', color: '#e74c3c', hair: '#8B4513' },
-    { id: 'malki', name: 'Malki', color: '#3498db', hair: '#1a1a1a' },
-    { id: 'nelly', name: 'Nelly', color: '#e91e63', hair: '#c0392b' },
-    { id: 'jeanbaptiste', name: 'Jean-Baptiste', color: '#2ecc71', hair: '#333' },
-    { id: 'raphael', name: 'Rapha\u00ebl R', color: '#f39c12', hair: '#555' },
-    { id: 'sarah', name: 'Sarah', color: '#9b59b6', hair: '#d4a017' },
-    { id: 'sandra', name: 'Sandra', color: '#1abc9c', hair: '#a0522d' },
-    { id: 'christian', name: 'Christian', color: '#34495e', hair: '#2c3e50' },
-    { id: 'fatou', name: 'Fatou', color: '#e67e22', hair: '#1a1a1a' },
-    { id: 'antoine', name: 'Antoine', color: '#27ae60', hair: '#333' },
-    { id: 'francois', name: 'Fran\u00e7ois', color: '#2980b9', hair: '#555' },
-    { id: 'sadiya', name: 'Sadiya', color: '#8e44ad', hair: '#1a1a1a' },
-    { id: 'elodie', name: 'Elodie', color: '#d35400', hair: '#8B4513' },
-    { id: 'ugo', name: 'Ugo', color: '#16a085', hair: '#2c3e50' },
-    { id: 'laurent', name: 'Laurent', color: '#c0392b', hair: '#666' },
-    { id: 'lorena', name: 'Lorena', color: '#8e44ad', hair: '#c0392b' },
-    { id: 'laura', name: 'Laura', color: '#2c3e50', hair: '#d4a017' },
-    { id: 'matias', name: 'Matias', color: '#f1c40f', hair: '#333' },
-    { id: 'maxime', name: 'Maxime', color: '#7f8c8d', hair: '#1a1a1a' },
-    { id: 'christophe', name: 'Christophe', color: '#e84393', hair: '#555' },
+    { id: 'caroline', name: 'Caroline', color: '#e74c3c', hair: '#8B4513', email: '' },
+    { id: 'malki', name: 'Malki', color: '#3498db', hair: '#1a1a1a', email: '' },
+    { id: 'nelly', name: 'Nelly', color: '#e91e63', hair: '#c0392b', email: '' },
+    { id: 'jeanbaptiste', name: 'Jean-Baptiste', color: '#2ecc71', hair: '#333', email: '' },
+    { id: 'raphael', name: 'Rapha\u00ebl R', color: '#f39c12', hair: '#555', email: '' },
+    { id: 'sarah', name: 'Sarah', color: '#9b59b6', hair: '#d4a017', email: '' },
+    { id: 'sandra', name: 'Sandra', color: '#1abc9c', hair: '#a0522d', email: '' },
+    { id: 'christian', name: 'Christian', color: '#34495e', hair: '#2c3e50', email: '' },
+    { id: 'fatou', name: 'Fatou', color: '#e67e22', hair: '#1a1a1a', email: '' },
+    { id: 'antoine', name: 'Antoine', color: '#27ae60', hair: '#333', email: '' },
+    { id: 'francois', name: 'Fran\u00e7ois', color: '#2980b9', hair: '#555', email: '' },
+    { id: 'sadiya', name: 'Sadiya', color: '#8e44ad', hair: '#1a1a1a', email: '' },
+    { id: 'elodie', name: 'Elodie', color: '#d35400', hair: '#8B4513', email: '' },
+    { id: 'ugo', name: 'Ugo', color: '#16a085', hair: '#2c3e50', email: '' },
+    { id: 'laurent', name: 'Laurent', color: '#c0392b', hair: '#666', email: '' },
+    { id: 'lorena', name: 'Lorena', color: '#8e44ad', hair: '#c0392b', email: '' },
+    { id: 'laura', name: 'Laura', color: '#2c3e50', hair: '#d4a017', email: '' },
+    { id: 'matias', name: 'Matias', color: '#f1c40f', hair: '#333', email: '' },
+    { id: 'maxime', name: 'Maxime', color: '#7f8c8d', hair: '#1a1a1a', email: '' },
+    { id: 'christophe', name: 'Christophe', color: '#e84393', hair: '#555', email: '' },
 ];
 
 // Desk positions — distributed across rooms (realistic Uccle building)
@@ -1766,6 +1850,79 @@ function renderDesks() {
 }
 
 // ============================
+// RENDER: RAPPELS
+// ============================
+function getCollabsWithoutStatus() {
+    const slot = getCurrentSlotReservations();
+    const assignedIds = new Set();
+    Object.values(slot).forEach(r => {
+        if (r.person) assignedIds.add(r.person);
+    });
+    return COLLABORATEURS.filter(c => !assignedIds.has(c.id));
+}
+
+function renderRappelSection(collabStatuses) {
+    const missing = collabStatuses.filter(c => !c.status);
+    if (missing.length === 0) {
+        return `<div class="rappel-section" style="background:#f0fff4;border-color:#c6f6d5">
+            <div class="rappel-ok">Tout le monde a indiqué son statut</div>
+        </div>`;
+    }
+
+    const dayLabel = DAYS[currentDayIndex];
+    const periodLabel = currentPeriod === 'am' ? 'matin' : 'après-midi';
+    const dateStr = (() => {
+        const d = new Date(currentWeekStart);
+        d.setDate(d.getDate() + currentDayIndex);
+        return d.toLocaleDateString('fr-BE', { day: 'numeric', month: 'long', year: 'numeric' });
+    })();
+
+    const names = missing.map(c => c.name).join(', ');
+    const emails = missing.map(c => c.email).filter(e => e).join(',');
+
+    const subject = encodeURIComponent(`Rappel — Merci d'indiquer votre statut pour ${dayLabel} ${dateStr}`);
+    const body = encodeURIComponent(
+`Bonjour,
+
+Nous n'avons pas encore votre statut pour ${dayLabel} ${dateStr} (${periodLabel}).
+
+Merci de mettre à jour votre présence sur l'outil de réservation des bureaux :
+https://ihsane222.github.io/dap-bureau-uccle/
+
+Les statuts possibles :
+• Bureau — Vous serez présent(e) au bureau d'Uccle
+• Télétravail — Vous travaillez depuis chez vous
+• Autre bureau — Vous êtes dans un autre bureau (Quaregnon, Leuze, Euracor…)
+• Congé — Jour de congé
+• Indisponible — Autre absence
+
+Cela permet à toute l'équipe de savoir qui est où et d'optimiser l'occupation des bureaux.
+
+Merci !`
+    );
+
+    const mailtoLink = emails
+        ? `mailto:${emails}?subject=${subject}&body=${body}`
+        : `mailto:?subject=${subject}&body=${body}`;
+
+    return `<div class="rappel-section">
+        <div class="rappel-title">
+            Statut manquant
+            <span class="rappel-count">${missing.length}</span>
+        </div>
+        <div class="rappel-list">
+            ${missing.map(c => `<div class="rappel-item">
+                <span class="rappel-dot"></span>
+                ${escapeHtml(c.name)}
+            </div>`).join('')}
+        </div>
+        <a class="btn-rappel" href="${mailtoLink}" title="Envoyer un rappel par email">
+            Envoyer un rappel (${missing.length})
+        </a>
+    </div>`;
+}
+
+// ============================
 // RENDER: SIDEBAR
 // ============================
 function renderSidebar() {
@@ -1835,6 +1992,7 @@ function renderSidebar() {
                 ${dayAppels.prio.length === 0 ? '<div style="font-size:0.72rem;color:#999">Aucune donn\u00e9e</div>' : ''}
             </div>
         </div>
+        ${renderRappelSection(collabStatuses)}
     `;
 }
 
