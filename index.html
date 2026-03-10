@@ -227,8 +227,8 @@
 
         .office-floor {
             position: relative;
-            width: 960px;
-            height: 700px;
+            width: 940px;
+            height: 820px;
             background: #e8e0d4;
             border: 3px solid #8a7b6b;
             border-radius: 4px;
@@ -1260,214 +1260,255 @@
     <div class="plan-container" id="planView">
         <div class="office-floor" id="officeFloor">
 
-            <!-- ===== PLAN RÉALISTE — 29 Place de Saint-Job, 1180 Uccle ===== -->
-            <!-- 2 niveaux côte à côte : REZ (gauche) | ÉTAGE (droite) -->
+            <!-- ===== 29 Place de Saint-Job — 3 ÉTAGES ===== -->
+            <!-- Chaque étage : Accueil/Bureaux | Couloir | Bur. Fermés | 10 postes face-à-face -->
 
-            <!-- ========== LABEL REZ ========== -->
-            <div style="position:absolute;left:10px;top:10px;width:450px;height:22px;background:linear-gradient(90deg,#8a7b6b,#a89888);border-radius:3px 3px 0 0;text-align:center;line-height:22px;font-family:'Press Start 2P',monospace;font-size:7px;color:white;z-index:20;letter-spacing:1px">
-                REZ &mdash; Place de Saint-Job (0.00)
+            <!-- ================================================ -->
+            <!-- ========== REZ — PRODUCTION (0.00) ============= -->
+            <!-- ================================================ -->
+            <div style="position:absolute;left:10px;top:6px;width:920px;height:20px;background:linear-gradient(90deg,#5a8a5a,#7aaa7a);border-radius:3px 3px 0 0;text-align:center;line-height:20px;font-family:'Press Start 2P',monospace;font-size:6px;color:white;z-index:20;letter-spacing:1px">
+                REZ &mdash; Production
             </div>
 
-            <!-- ========== LABEL ÉTAGE ========== -->
-            <div style="position:absolute;left:500px;top:10px;width:450px;height:22px;background:linear-gradient(90deg,#6b7a8a,#8899a8);border-radius:3px 3px 0 0;text-align:center;line-height:22px;font-family:'Press Start 2P',monospace;font-size:7px;color:white;z-index:20;letter-spacing:1px">
-                &Eacute;TAGE &mdash; Chauss&eacute;e de Saint-Job (+1.00)
+            <!-- N1 Accueil -->
+            <div class="room room-floor-accueil" style="left:10px;top:30px;width:100px;height:100px">
+                <span class="room-title" style="font-size:5px">N1 Accueil</span>
+            </div>
+            <!-- N2 Double bureau -->
+            <div class="room room-floor-openspace" style="left:125px;top:30px;width:115px;height:100px">
+                <span class="room-title" style="font-size:5px">N2</span>
+            </div>
+            <!-- Escalier REZ -->
+            <div class="room room-floor-couloir" style="left:255px;top:30px;width:40px;height:100px">
+                <span class="room-title" style="font-size:4px;top:40px">&uarr;</span>
+            </div>
+            <!-- Bureau fermé gauche REZ (N3/N4) -->
+            <div class="room room-floor-direction" style="left:310px;top:30px;width:90px;height:100px">
+                <span class="room-title" style="font-size:4px">N3 / N4</span>
+            </div>
+            <!-- Bureau fermé droite REZ (N6/N17) -->
+            <div class="room room-floor-direction" style="left:415px;top:30px;width:90px;height:100px">
+                <span class="room-title" style="font-size:4px">N6 / N17</span>
+            </div>
+            <!-- Couloir REZ -->
+            <div class="room room-floor-couloir" style="left:520px;top:30px;width:30px;height:100px">
+            </div>
+            <!-- 10 postes face-à-face REZ (5 gauche + 5 droite) -->
+            <div class="room room-floor-openspace" style="left:565px;top:30px;width:175px;height:100px">
+                <span class="room-title" style="font-size:4px">Postes 1-5</span>
+            </div>
+            <div class="room room-floor-openspace" style="left:755px;top:30px;width:175px;height:100px">
+                <span class="room-title" style="font-size:4px">Postes 6-10</span>
             </div>
 
-            <!-- ===================== -->
-            <!-- ====== REZ ========== -->
-            <!-- ===================== -->
+            <!-- Portes REZ -->
+            <div class="door" style="left:108px;top:80px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:238px;top:80px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:298px;top:65px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:403px;top:65px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:503px;top:65px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:548px;top:65px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:738px;top:65px"><div class="door-v" style="height:20px"></div></div>
+            <!-- Entrée -->
+            <div class="door" style="left:40px;top:128px"><div class="door-h" style="width:36px;background:#e94560;border-color:#c73a50"></div></div>
+            <div style="position:absolute;left:30px;top:135px;font-family:'Press Start 2P',monospace;font-size:4px;color:#e94560;z-index:20">Entr&eacute;e</div>
 
-            <!-- N1 — Accueil / Réception (entrée) -->
-            <div class="room room-floor-accueil" style="left:10px;top:38px;width:210px;height:165px">
-                <span class="room-title">N1 &mdash; Accueil</span>
+            <!-- Fenêtres REZ -->
+            <div class="window" style="left:50px;top:28px"><div class="window-h" style="width:30px"></div></div>
+            <div class="window" style="left:150px;top:28px"><div class="window-h" style="width:40px"></div></div>
+            <div class="window" style="left:600px;top:28px"><div class="window-h" style="width:50px"></div></div>
+            <div class="window" style="left:790px;top:28px"><div class="window-h" style="width:50px"></div></div>
+            <div class="window" style="left:890px;top:28px"><div class="window-h" style="width:30px"></div></div>
+
+            <!-- Meubles REZ -->
+            <div class="furniture" style="left:20px;top:55px;width:60px;height:14px;background:#c4a265;border:2px solid #a08050;border-radius:3px;z-index:5"></div>
+            <div class="furniture" style="left:920px;top:50px"><div class="printer-px"><div class="printer-slot"></div></div></div>
+
+            <!-- ================================================ -->
+            <!-- ========== 1ER ÉTAGE — SINISTRES (+1.00) ======= -->
+            <!-- ================================================ -->
+            <div style="position:absolute;left:10px;top:148px;width:920px;height:20px;background:linear-gradient(90deg,#5a6a8a,#7a8aaa);border-radius:3px 3px 0 0;text-align:center;line-height:20px;font-family:'Press Start 2P',monospace;font-size:6px;color:white;z-index:20;letter-spacing:1px">
+                1ER &Eacute;TAGE &mdash; Sinistres
             </div>
 
-            <!-- N2 — Bureau -->
-            <div class="room room-floor-openspace" style="left:235px;top:38px;width:225px;height:165px">
-                <span class="room-title">N2</span>
+            <!-- Bureaux d'entrée 1er -->
+            <div class="room room-floor-accueil" style="left:10px;top:172px;width:100px;height:100px">
+                <span class="room-title" style="font-size:5px">Bureau</span>
+            </div>
+            <div class="room room-floor-openspace" style="left:125px;top:172px;width:115px;height:100px">
+                <span class="room-title" style="font-size:5px">Bureau double</span>
+            </div>
+            <!-- Escalier 1er -->
+            <div class="room room-floor-couloir" style="left:255px;top:172px;width:40px;height:100px">
+                <span class="room-title" style="font-size:4px;top:40px">&uarr;&darr;</span>
+            </div>
+            <!-- Bureaux fermés 1er -->
+            <div class="room room-floor-direction" style="left:310px;top:172px;width:90px;height:100px">
+                <span class="room-title" style="font-size:4px">Bur. ferm&eacute;</span>
+            </div>
+            <div class="room room-floor-direction" style="left:415px;top:172px;width:90px;height:100px">
+                <span class="room-title" style="font-size:4px">Bur. ferm&eacute;</span>
+            </div>
+            <!-- Couloir 1er -->
+            <div class="room room-floor-couloir" style="left:520px;top:172px;width:30px;height:100px">
+            </div>
+            <!-- 10 postes 1er -->
+            <div class="room room-floor-openspace" style="left:565px;top:172px;width:175px;height:100px">
+                <span class="room-title" style="font-size:4px">Postes 1-5</span>
+            </div>
+            <div class="room room-floor-openspace" style="left:755px;top:172px;width:175px;height:100px">
+                <span class="room-title" style="font-size:4px">Postes 6-10</span>
             </div>
 
-            <!-- Entrée principale -->
-            <div class="door" style="left:90px;top:200px"><div class="door-h" style="width:48px;background:#e94560;border-color:#c73a50"></div></div>
-            <div style="position:absolute;left:72px;top:210px;font-family:'Press Start 2P',monospace;font-size:5px;color:#e94560;z-index:20">ENTR&Eacute;E</div>
+            <!-- Portes 1er -->
+            <div class="door" style="left:108px;top:222px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:238px;top:222px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:298px;top:207px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:403px;top:207px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:503px;top:207px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:548px;top:207px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:738px;top:207px"><div class="door-v" style="height:20px"></div></div>
 
-            <!-- Couloir REZ horizontal -->
-            <div class="room room-floor-couloir" style="left:10px;top:218px;width:450px;height:35px">
-                <span class="room-title" style="top:10px;left:180px;font-size:6px">Couloir</span>
+            <!-- Fenêtres 1er -->
+            <div class="window" style="left:50px;top:170px"><div class="window-h" style="width:30px"></div></div>
+            <div class="window" style="left:150px;top:170px"><div class="window-h" style="width:40px"></div></div>
+            <div class="window" style="left:600px;top:170px"><div class="window-h" style="width:50px"></div></div>
+            <div class="window" style="left:790px;top:170px"><div class="window-h" style="width:50px"></div></div>
+            <div class="window" style="left:890px;top:170px"><div class="window-h" style="width:30px"></div></div>
+
+            <!-- Imprimante 1er -->
+            <div class="furniture" style="left:920px;top:192px"><div class="printer-px"><div class="printer-slot"></div></div></div>
+
+            <!-- ================================================ -->
+            <!-- ========== 2ÈME ÉTAGE — ADMIN (+2.00) ========= -->
+            <!-- ================================================ -->
+            <div style="position:absolute;left:10px;top:290px;width:920px;height:20px;background:linear-gradient(90deg,#8a5a6a,#aa7a8a);border-radius:3px 3px 0 0;text-align:center;line-height:20px;font-family:'Press Start 2P',monospace;font-size:6px;color:white;z-index:20;letter-spacing:1px">
+                2&Egrave;ME &Eacute;TAGE &mdash; Admin + Divers
             </div>
 
-            <!-- SDR — Salle de Réunion -->
-            <div class="room room-floor-reunion" style="left:10px;top:268px;width:145px;height:175px">
+            <!-- Bureaux d'entrée 2ème -->
+            <div class="room room-floor-accueil" style="left:10px;top:314px;width:100px;height:100px">
+                <span class="room-title" style="font-size:5px">Bureau</span>
+            </div>
+            <div class="room room-floor-openspace" style="left:125px;top:314px;width:115px;height:100px">
+                <span class="room-title" style="font-size:5px">Bureau double</span>
+            </div>
+            <!-- Escalier 2ème -->
+            <div class="room room-floor-couloir" style="left:255px;top:314px;width:40px;height:100px">
+                <span class="room-title" style="font-size:4px;top:40px">&darr;</span>
+            </div>
+            <!-- 3 bureaux supplémentaires -->
+            <div class="room room-floor-reunion" style="left:310px;top:314px;width:90px;height:100px">
+                <span class="room-title" style="font-size:4px">Bureau A</span>
+            </div>
+            <div class="room room-floor-reunion" style="left:415px;top:314px;width:90px;height:100px">
+                <span class="room-title" style="font-size:4px">Bureau B</span>
+            </div>
+            <!-- Couloir 2ème -->
+            <div class="room room-floor-couloir" style="left:520px;top:314px;width:30px;height:100px">
+            </div>
+            <!-- Postes 2ème -->
+            <div class="room room-floor-openspace" style="left:565px;top:314px;width:175px;height:100px">
+                <span class="room-title" style="font-size:4px">Postes 1-5</span>
+            </div>
+            <div class="room room-floor-openspace" style="left:755px;top:314px;width:175px;height:100px">
+                <span class="room-title" style="font-size:4px">Postes 6-10</span>
+            </div>
+
+            <!-- Portes 2ème -->
+            <div class="door" style="left:108px;top:364px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:238px;top:364px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:298px;top:349px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:403px;top:349px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:503px;top:349px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:548px;top:349px"><div class="door-v" style="height:20px"></div></div>
+            <div class="door" style="left:738px;top:349px"><div class="door-v" style="height:20px"></div></div>
+
+            <!-- Fenêtres 2ème -->
+            <div class="window" style="left:50px;top:312px"><div class="window-h" style="width:30px"></div></div>
+            <div class="window" style="left:150px;top:312px"><div class="window-h" style="width:40px"></div></div>
+            <div class="window" style="left:600px;top:312px"><div class="window-h" style="width:50px"></div></div>
+            <div class="window" style="left:790px;top:312px"><div class="window-h" style="width:50px"></div></div>
+            <div class="window" style="left:890px;top:312px"><div class="window-h" style="width:30px"></div></div>
+
+            <!-- Bureau C supplémentaire 2ème -->
+            <div class="room room-floor-reunion" style="left:855px;top:314px;width:75px;height:100px">
+                <span class="room-title" style="font-size:4px">Bureau C</span>
+            </div>
+
+            <!-- ================================================ -->
+            <!-- ========== CUISINE / COMMUNS (bas) ============= -->
+            <!-- ================================================ -->
+            <div style="position:absolute;left:10px;top:432px;width:920px;height:20px;background:linear-gradient(90deg,#8a7b5a,#aaa07a);border-radius:3px 3px 0 0;text-align:center;line-height:20px;font-family:'Press Start 2P',monospace;font-size:6px;color:white;z-index:20;letter-spacing:1px">
+                COMMUNS &mdash; Cuisine, SDR, Sanitaires
+            </div>
+
+            <!-- SDR -->
+            <div class="room room-floor-reunion" style="left:10px;top:456px;width:200px;height:120px">
                 <span class="room-title">SDR &mdash; R&eacute;union</span>
             </div>
 
-            <!-- N3 / N4 -->
-            <div class="room room-floor-direction" style="left:170px;top:268px;width:100px;height:85px">
-                <span class="room-title" style="font-size:5px">N3</span>
-            </div>
-            <div class="room room-floor-direction" style="left:170px;top:358px;width:100px;height:85px">
-                <span class="room-title" style="font-size:5px">N4</span>
-            </div>
-
-            <!-- N6 — Bureau fermé -->
-            <div class="room room-floor-direction" style="left:285px;top:268px;width:80px;height:85px">
-                <span class="room-title" style="font-size:5px">N6</span>
-            </div>
-
-            <!-- N17 -->
-            <div class="room room-floor-direction" style="left:380px;top:268px;width:80px;height:85px">
-                <span class="room-title" style="font-size:5px">N17</span>
-            </div>
-
-            <!-- N7 -->
-            <div class="room room-floor-direction" style="left:285px;top:358px;width:80px;height:85px">
-                <span class="room-title" style="font-size:5px">N7</span>
-            </div>
-
-            <!-- N8 -->
-            <div class="room room-floor-direction" style="left:380px;top:358px;width:80px;height:85px">
-                <span class="room-title" style="font-size:5px">N8</span>
-            </div>
-
-            <!-- Escalier REZ -->
-            <div class="room room-floor-couloir" style="left:170px;top:458px;width:130px;height:60px">
-                <span class="room-title" style="top:20px;font-size:6px">Escalier &uarr;</span>
-            </div>
-
-            <!-- Sanitaires REZ -->
-            <div class="room room-floor-couloir" style="left:10px;top:458px;width:145px;height:115px">
-                <span class="room-title">WC</span>
-            </div>
-
-            <!-- Parking / Annexe REZ -->
-            <div class="room room-floor-couloir" style="left:315px;top:458px;width:145px;height:115px">
-                <span class="room-title" style="font-size:5px">Local Tech.</span>
-            </div>
-
-            <!-- ======================== -->
-            <!-- ====== ÉTAGE =========== -->
-            <!-- ======================== -->
-
-            <!-- Bureau Fermé Gauche — Postes 1 à 4 -->
-            <div class="room room-floor-openspace" style="left:500px;top:38px;width:215px;height:290px">
-                <span class="room-title">Bureau Ferm&eacute; &mdash; Postes 1-4</span>
-            </div>
-
-            <!-- Bureau Fermé Droite — Postes 5 à 10 -->
-            <div class="room room-floor-openspace" style="left:730px;top:38px;width:220px;height:290px">
-                <span class="room-title">Bureau Ferm&eacute; &mdash; Postes 5-10</span>
-            </div>
-
-            <!-- Couloir étage -->
-            <div class="room room-floor-couloir" style="left:500px;top:343px;width:450px;height:35px">
-                <span class="room-title" style="top:10px;left:180px;font-size:6px">Couloir</span>
-            </div>
-
             <!-- Cuisine / Pause -->
-            <div class="room room-floor-cuisine" style="left:500px;top:393px;width:200px;height:180px">
+            <div class="room room-floor-cuisine" style="left:225px;top:456px;width:250px;height:120px">
                 <span class="room-title">Cuisine / Pause</span>
             </div>
 
-            <!-- Zone Imprimantes / Postes supp -->
-            <div class="room room-floor-accueil" style="left:715px;top:393px;width:120px;height:180px">
-                <span class="room-title" style="font-size:5px">Imprimantes</span>
-            </div>
-
-            <!-- Toilettes étage -->
-            <div class="room room-floor-couloir" style="left:850px;top:393px;width:100px;height:180px">
+            <!-- Sanitaires -->
+            <div class="room room-floor-couloir" style="left:490px;top:456px;width:120px;height:120px">
                 <span class="room-title" style="font-size:5px">WC</span>
             </div>
 
-            <!-- Escalier étage -->
-            <div class="room room-floor-couloir" style="left:600px;top:588px;width:130px;height:60px">
-                <span class="room-title" style="top:20px;font-size:6px">Escalier &darr;</span>
+            <!-- Zone Imprimantes -->
+            <div class="room room-floor-accueil" style="left:625px;top:456px;width:140px;height:120px">
+                <span class="room-title" style="font-size:5px">Imprimantes</span>
             </div>
 
-            <!-- Séparateur visuel entre les 2 niveaux -->
-            <div style="position:absolute;left:478px;top:32px;width:4px;height:630px;background:repeating-linear-gradient(180deg,#8a7b6b 0px,#8a7b6b 8px,transparent 8px,transparent 16px);opacity:0.6;z-index:18"></div>
+            <!-- Local technique -->
+            <div class="room room-floor-couloir" style="left:780px;top:456px;width:150px;height:120px">
+                <span class="room-title" style="font-size:5px">Local Tech. / Archives</span>
+            </div>
 
-            <!-- ===== DOORS ===== -->
-            <!-- REZ -->
-            <div class="door" style="left:100px;top:200px"><div class="door-h"></div></div>
-            <div class="door" style="left:300px;top:200px"><div class="door-h"></div></div>
-            <div class="door" style="left:60px;top:251px"><div class="door-h"></div></div>
-            <div class="door" style="left:200px;top:251px"><div class="door-h"></div></div>
-            <div class="door" style="left:320px;top:251px"><div class="door-h"></div></div>
-            <div class="door" style="left:410px;top:251px"><div class="door-h"></div></div>
-            <!-- Étage -->
-            <div class="door" style="left:600px;top:326px"><div class="door-h"></div></div>
-            <div class="door" style="left:830px;top:326px"><div class="door-h"></div></div>
-            <div class="door" style="left:560px;top:376px"><div class="door-h"></div></div>
-            <div class="door" style="left:760px;top:376px"><div class="door-h"></div></div>
-            <div class="door" style="left:890px;top:376px"><div class="door-h"></div></div>
+            <!-- Portes communs -->
+            <div class="door" style="left:90px;top:454px"><div class="door-h"></div></div>
+            <div class="door" style="left:320px;top:454px"><div class="door-h"></div></div>
+            <div class="door" style="left:540px;top:454px"><div class="door-h"></div></div>
+            <div class="door" style="left:680px;top:454px"><div class="door-h"></div></div>
 
-            <!-- ===== WINDOWS ===== -->
-            <!-- REZ mur haut -->
-            <div class="window" style="left:50px;top:36px"><div class="window-h" style="width:50px"></div></div>
-            <div class="window" style="left:140px;top:36px"><div class="window-h" style="width:40px"></div></div>
-            <div class="window" style="left:280px;top:36px"><div class="window-h" style="width:60px"></div></div>
-            <div class="window" style="left:390px;top:36px"><div class="window-h" style="width:40px"></div></div>
-            <!-- REZ mur bas -->
-            <div class="window" style="left:50px;top:570px"><div class="window-h" style="width:50px"></div></div>
-            <div class="window" style="left:350px;top:570px"><div class="window-h" style="width:50px"></div></div>
-            <!-- REZ mur gauche -->
-            <div class="window" style="left:8px;top:80px"><div class="window-v" style="height:40px"></div></div>
-            <div class="window" style="left:8px;top:300px"><div class="window-v" style="height:50px"></div></div>
-            <div class="window" style="left:8px;top:400px"><div class="window-v" style="height:40px"></div></div>
-            <!-- Étage mur haut -->
-            <div class="window" style="left:550px;top:36px"><div class="window-h" style="width:60px"></div></div>
-            <div class="window" style="left:660px;top:36px"><div class="window-h" style="width:40px"></div></div>
-            <div class="window" style="left:780px;top:36px"><div class="window-h" style="width:60px"></div></div>
-            <div class="window" style="left:890px;top:36px"><div class="window-h" style="width:40px"></div></div>
-            <!-- Étage mur droit -->
-            <div class="window" style="left:947px;top:80px"><div class="window-v" style="height:50px"></div></div>
-            <div class="window" style="left:947px;top:200px"><div class="window-v" style="height:50px"></div></div>
-            <div class="window" style="left:947px;top:430px"><div class="window-v" style="height:50px"></div></div>
-            <!-- Étage mur bas -->
-            <div class="window" style="left:550px;top:570px"><div class="window-h" style="width:50px"></div></div>
-            <div class="window" style="left:780px;top:570px"><div class="window-h" style="width:50px"></div></div>
+            <!-- Meubles SDR -->
+            <div class="furniture meeting-table" style="left:40px;top:490px;width:120px;height:40px"></div>
+            <div class="furniture meeting-chair" style="left:55px;top:478px"></div>
+            <div class="furniture meeting-chair" style="left:80px;top:478px"></div>
+            <div class="furniture meeting-chair" style="left:105px;top:478px"></div>
+            <div class="furniture meeting-chair" style="left:130px;top:478px"></div>
+            <div class="furniture meeting-chair" style="left:55px;top:532px"></div>
+            <div class="furniture meeting-chair" style="left:80px;top:532px"></div>
+            <div class="furniture meeting-chair" style="left:105px;top:532px"></div>
+            <div class="furniture meeting-chair" style="left:130px;top:532px"></div>
+            <div class="furniture" style="left:170px;top:495px;width:12px;height:26px;background:#333;border:2px solid #555;border-radius:2px;z-index:5"></div>
 
-            <!-- ===== FURNITURE ===== -->
-
-            <!-- N1 Accueil : comptoir -->
-            <div class="furniture" style="left:40px;top:110px;width:90px;height:26px;background:#c4a265;border:2px solid #a08050;border-radius:4px;z-index:5"></div>
-
-            <!-- SDR : grande table + chaises -->
-            <div class="furniture meeting-table" style="left:30px;top:310px;width:100px;height:40px"></div>
-            <div class="furniture meeting-chair" style="left:40px;top:298px"></div>
-            <div class="furniture meeting-chair" style="left:65px;top:298px"></div>
-            <div class="furniture meeting-chair" style="left:90px;top:298px"></div>
-            <div class="furniture meeting-chair" style="left:115px;top:298px"></div>
-            <div class="furniture meeting-chair" style="left:40px;top:352px"></div>
-            <div class="furniture meeting-chair" style="left:65px;top:352px"></div>
-            <div class="furniture meeting-chair" style="left:90px;top:352px"></div>
-            <div class="furniture meeting-chair" style="left:115px;top:352px"></div>
-            <!-- Ecran SDR -->
-            <div class="furniture" style="left:135px;top:312px;width:12px;height:28px;background:#333;border:2px solid #555;border-radius:2px;z-index:5"></div>
-
-            <!-- Cuisine : comptoir, machine café, table, canapé -->
-            <div class="furniture kitchen-counter" style="left:515px;top:415px;width:80px;height:18px"></div>
-            <div class="furniture" style="left:610px;top:413px">
+            <!-- Meubles Cuisine -->
+            <div class="furniture kitchen-counter" style="left:240px;top:475px;width:80px;height:16px"></div>
+            <div class="furniture" style="left:335px;top:473px">
                 <div class="coffee-machine-px"><div class="coffee-top"></div></div>
             </div>
-            <div class="furniture meeting-table" style="left:530px;top:475px;width:60px;height:36px;border-radius:4px"></div>
-            <div class="furniture meeting-chair" style="left:540px;top:463px"></div>
-            <div class="furniture meeting-chair" style="left:568px;top:463px"></div>
-            <div class="furniture meeting-chair" style="left:540px;top:513px"></div>
-            <div class="furniture meeting-chair" style="left:568px;top:513px"></div>
-            <div class="furniture sofa-px" style="left:515px;top:540px;width:70px;height:20px"></div>
+            <div class="furniture meeting-table" style="left:260px;top:520px;width:60px;height:30px;border-radius:4px"></div>
+            <div class="furniture meeting-chair" style="left:270px;top:510px"></div>
+            <div class="furniture meeting-chair" style="left:298px;top:510px"></div>
+            <div class="furniture meeting-chair" style="left:270px;top:552px"></div>
+            <div class="furniture meeting-chair" style="left:298px;top:552px"></div>
+            <div class="furniture sofa-px" style="left:370px;top:520px;width:70px;height:18px"></div>
 
-            <!-- Imprimantes -->
-            <div class="furniture" style="left:735px;top:430px"><div class="printer-px"><div class="printer-slot"></div></div></div>
-            <div class="furniture" style="left:735px;top:510px"><div class="printer-px"><div class="printer-slot"></div></div></div>
+            <!-- Imprimantes zone -->
+            <div class="furniture" style="left:645px;top:480px"><div class="printer-px"><div class="printer-slot"></div></div></div>
+            <div class="furniture" style="left:715px;top:480px"><div class="printer-px"><div class="printer-slot"></div></div></div>
 
-            <!-- Plantes décoratives -->
-            <div class="furniture" style="left:15px;top:42px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:445px;top:42px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:505px;top:42px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:935px;top:42px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:15px;top:555px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:935px;top:555px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
+            <!-- Plantes -->
+            <div class="furniture" style="left:15px;top:34px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
+            <div class="furniture" style="left:920px;top:34px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
+            <div class="furniture" style="left:15px;top:176px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
+            <div class="furniture" style="left:920px;top:318px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
+            <div class="furniture" style="left:15px;top:460px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
+            <div class="furniture" style="left:920px;top:460px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
 
             <!-- ===== DESKS (generated by JS) ===== -->
             <div id="desksLayer"></div>
@@ -1541,7 +1582,7 @@
 // ============================
 // DATA
 // ============================
-const STORAGE_KEY = 'dap_bureau_uccle_v3';
+const STORAGE_KEY = 'dap_bureau_uccle_v4';
 
 // ============================
 // GOOGLE SHEETS BACKEND
@@ -1644,140 +1685,196 @@ const COLLABORATEURS = [
     { id: 'christophe', name: 'Christophe', color: '#e84393', hair: '#555', email: '' },
 ];
 
-// Desk positions — Plan réaliste 29 Place de Saint-Job (2 niveaux)
+// Desk positions — Plan 29 Place de Saint-Job (3 étages)
 const DESKS = [
-    // ===== REZ =====
-    // N1 — Accueil (2 postes)
-    { id: 'N1-1', x: 40,  y: 65,  room: 'N1' },
-    { id: 'N1-2', x: 120, y: 65,  room: 'N1' },
+    // ===== REZ — Production (rooms top:30) =====
+    { id: 'R0_N1',   x: 30,  y: 48,  room: 'R0_accueil', floor: 0 },
+    { id: 'R0_N2a',  x: 138, y: 42,  room: 'R0_N2', floor: 0 },
+    { id: 'R0_N2b',  x: 158, y: 74,  room: 'R0_N2', floor: 0 },
+    { id: 'R0_N3',   x: 320, y: 42,  room: 'R0_BFL', floor: 0 },
+    { id: 'R0_N4',   x: 338, y: 74,  room: 'R0_BFL', floor: 0 },
+    { id: 'R0_N6',   x: 425, y: 42,  room: 'R0_BFR', floor: 0 },
+    { id: 'R0_N17',  x: 443, y: 74,  room: 'R0_BFR', floor: 0 },
+    { id: 'R0_P01',  x: 575, y: 42,  room: 'R0_postes_l', floor: 0 },
+    { id: 'R0_P02',  x: 632, y: 42,  room: 'R0_postes_l', floor: 0 },
+    { id: 'R0_P03',  x: 689, y: 42,  room: 'R0_postes_l', floor: 0 },
+    { id: 'R0_P04',  x: 600, y: 77,  room: 'R0_postes_l', floor: 0 },
+    { id: 'R0_P05',  x: 660, y: 77,  room: 'R0_postes_l', floor: 0 },
+    { id: 'R0_P06',  x: 765, y: 42,  room: 'R0_postes_r', floor: 0 },
+    { id: 'R0_P07',  x: 822, y: 42,  room: 'R0_postes_r', floor: 0 },
+    { id: 'R0_P08',  x: 879, y: 42,  room: 'R0_postes_r', floor: 0 },
+    { id: 'R0_P09',  x: 790, y: 77,  room: 'R0_postes_r', floor: 0 },
+    { id: 'R0_P10',  x: 850, y: 77,  room: 'R0_postes_r', floor: 0 },
 
-    // N2 — Bureau (3 postes)
-    { id: 'N2-1', x: 260, y: 65,  room: 'N2' },
-    { id: 'N2-2', x: 345, y: 65,  room: 'N2' },
-    { id: 'N2-3', x: 300, y: 140, room: 'N2' },
+    // ===== 1ER ÉTAGE — Sinistres (rooms top:172) =====
+    { id: 'E1_B1',   x: 30,  y: 190, room: 'E1_bureau', floor: 1 },
+    { id: 'E1_B2a',  x: 138, y: 184, room: 'E1_double', floor: 1 },
+    { id: 'E1_B2b',  x: 158, y: 216, room: 'E1_double', floor: 1 },
+    { id: 'E1_BFL1', x: 320, y: 184, room: 'E1_BFL', floor: 1 },
+    { id: 'E1_BFL2', x: 338, y: 216, room: 'E1_BFL', floor: 1 },
+    { id: 'E1_BFR1', x: 425, y: 184, room: 'E1_BFR', floor: 1 },
+    { id: 'E1_BFR2', x: 443, y: 216, room: 'E1_BFR', floor: 1 },
+    { id: 'E1_P01',  x: 575, y: 184, room: 'E1_postes_l', floor: 1 },
+    { id: 'E1_P02',  x: 632, y: 184, room: 'E1_postes_l', floor: 1 },
+    { id: 'E1_P03',  x: 689, y: 184, room: 'E1_postes_l', floor: 1 },
+    { id: 'E1_P04',  x: 600, y: 219, room: 'E1_postes_l', floor: 1 },
+    { id: 'E1_P05',  x: 660, y: 219, room: 'E1_postes_l', floor: 1 },
+    { id: 'E1_P06',  x: 765, y: 184, room: 'E1_postes_r', floor: 1 },
+    { id: 'E1_P07',  x: 822, y: 184, room: 'E1_postes_r', floor: 1 },
+    { id: 'E1_P08',  x: 879, y: 184, room: 'E1_postes_r', floor: 1 },
+    { id: 'E1_P09',  x: 790, y: 219, room: 'E1_postes_r', floor: 1 },
+    { id: 'E1_P10',  x: 850, y: 219, room: 'E1_postes_r', floor: 1 },
 
-    // N3 (1 poste)
-    { id: 'N3-1', x: 195, y: 290, room: 'N3' },
-
-    // N4 (1 poste)
-    { id: 'N4-1', x: 195, y: 380, room: 'N4' },
-
-    // N6 (1 poste)
-    { id: 'N6-1', x: 300, y: 290, room: 'N6' },
-
-    // N17 (1 poste)
-    { id: 'N17-1', x: 400, y: 290, room: 'N17' },
-
-    // N7 (1 poste)
-    { id: 'N7-1', x: 300, y: 380, room: 'N7' },
-
-    // N8 (1 poste)
-    { id: 'N8-1', x: 400, y: 380, room: 'N8' },
-
-    // ===== ÉTAGE =====
-    // Bureau Fermé — Postes 1 à 4
-    { id: 'P01', x: 520, y: 65,  room: 'BFG' },
-    { id: 'P02', x: 620, y: 65,  room: 'BFG' },
-    { id: 'P03', x: 520, y: 150, room: 'BFG' },
-    { id: 'P04', x: 620, y: 150, room: 'BFG' },
-    { id: 'PG5', x: 520, y: 235, room: 'BFG' },
-    { id: 'PG6', x: 620, y: 235, room: 'BFG' },
-
-    // Bureau Fermé — Postes 5 à 10
-    { id: 'P05', x: 755, y: 65,  room: 'BFD' },
-    { id: 'P06', x: 855, y: 65,  room: 'BFD' },
-    { id: 'P07', x: 755, y: 150, room: 'BFD' },
-    { id: 'P08', x: 855, y: 150, room: 'BFD' },
-    { id: 'P09', x: 755, y: 235, room: 'BFD' },
-    { id: 'P10', x: 855, y: 235, room: 'BFD' },
-
-    // Zone Imprimantes — postes supplémentaires (flex)
-    { id: 'Z01', x: 740, y: 420, room: 'IMP' },
-    { id: 'Z02', x: 740, y: 500, room: 'IMP' },
+    // ===== 2ÈME ÉTAGE — Admin (rooms top:314) =====
+    { id: 'E2_B1',   x: 30,  y: 332, room: 'E2_bureau', floor: 2 },
+    { id: 'E2_B2a',  x: 138, y: 326, room: 'E2_double', floor: 2 },
+    { id: 'E2_B2b',  x: 158, y: 358, room: 'E2_double', floor: 2 },
+    { id: 'E2_BA',   x: 325, y: 340, room: 'E2_BA', floor: 2 },
+    { id: 'E2_BB',   x: 430, y: 340, room: 'E2_BB', floor: 2 },
+    { id: 'E2_P01',  x: 575, y: 326, room: 'E2_postes_l', floor: 2 },
+    { id: 'E2_P02',  x: 632, y: 326, room: 'E2_postes_l', floor: 2 },
+    { id: 'E2_P03',  x: 689, y: 326, room: 'E2_postes_l', floor: 2 },
+    { id: 'E2_P04',  x: 600, y: 361, room: 'E2_postes_l', floor: 2 },
+    { id: 'E2_P05',  x: 660, y: 361, room: 'E2_postes_l', floor: 2 },
+    { id: 'E2_P06',  x: 765, y: 326, room: 'E2_postes_r', floor: 2 },
+    { id: 'E2_P07',  x: 822, y: 326, room: 'E2_postes_r', floor: 2 },
+    { id: 'E2_P08',  x: 879, y: 326, room: 'E2_postes_r', floor: 2 },
+    { id: 'E2_P09',  x: 790, y: 361, room: 'E2_postes_r', floor: 2 },
+    { id: 'E2_P10',  x: 850, y: 361, room: 'E2_postes_r', floor: 2 },
+    { id: 'E2_BC',   x: 862, y: 340, room: 'E2_BC', floor: 2 },
 ];
 
 // ============================
 // AMBIENT MOVEMENT — DATA
 // ============================
 const WAYPOINTS = {
-    // Destinations
-    cuisine_coffee:   { x: 615, y: 435 },
-    cuisine_table:    { x: 560, y: 495 },
-    printer_zone:     { x: 750, y: 470 },
-    // REZ — Couloir horizontal
-    rez_couloir_l:    { x: 80,  y: 235 },
-    rez_couloir_m:    { x: 230, y: 235 },
-    rez_couloir_r:    { x: 400, y: 235 },
-    // REZ — Portes salles
-    door_N1:          { x: 110, y: 210 },
-    door_N2:          { x: 310, y: 210 },
-    door_SDR:         { x: 70,  y: 260 },
-    door_N3:          { x: 210, y: 260 },
-    door_N6:          { x: 330, y: 260 },
-    door_N17:         { x: 420, y: 260 },
-    door_N7:          { x: 330, y: 360 },
-    door_N8:          { x: 420, y: 360 },
-    // Escalier (connexion REZ ↔ Étage)
-    escalier_rez:     { x: 230, y: 480 },
-    escalier_etage:   { x: 660, y: 610 },
-    // ÉTAGE — Couloir horizontal
-    etage_couloir_l:  { x: 570, y: 360 },
-    etage_couloir_r:  { x: 830, y: 360 },
-    // ÉTAGE — Portes
-    door_BFG:         { x: 610, y: 335 },
-    door_BFD:         { x: 840, y: 335 },
-    door_cuisine:     { x: 570, y: 385 },
-    door_imp:         { x: 770, y: 385 },
+    // ===== REZ corridor (y≈80) =====
+    r0_entrance:   { x: 58,  y: 130 },
+    r0_d_n1:       { x: 108, y: 80 },
+    r0_left:       { x: 80,  y: 80 },
+    r0_d_n2:       { x: 238, y: 80 },
+    r0_escalier:   { x: 275, y: 80 },
+    r0_d_bfl:      { x: 310, y: 70 },
+    r0_mid:        { x: 400, y: 80 },
+    r0_d_bfr:      { x: 505, y: 70 },
+    r0_d_p15:      { x: 565, y: 80 },
+    r0_right:      { x: 650, y: 80 },
+    r0_d_p610:     { x: 755, y: 80 },
+    r0_far_right:  { x: 850, y: 80 },
+    // ===== 1ER corridor (y≈222) =====
+    e1_d_b1:       { x: 108, y: 222 },
+    e1_left:       { x: 80,  y: 222 },
+    e1_d_b2:       { x: 238, y: 222 },
+    e1_escalier:   { x: 275, y: 222 },
+    e1_d_bfl:      { x: 310, y: 212 },
+    e1_mid:        { x: 400, y: 222 },
+    e1_d_bfr:      { x: 505, y: 212 },
+    e1_d_p15:      { x: 565, y: 222 },
+    e1_right:      { x: 650, y: 222 },
+    e1_d_p610:     { x: 755, y: 222 },
+    e1_far_right:  { x: 850, y: 222 },
+    // ===== 2ÈME corridor (y≈364) =====
+    e2_d_b1:       { x: 108, y: 364 },
+    e2_left:       { x: 80,  y: 364 },
+    e2_d_b2:       { x: 238, y: 364 },
+    e2_escalier:   { x: 275, y: 364 },
+    e2_d_ba:       { x: 310, y: 354 },
+    e2_mid:        { x: 400, y: 364 },
+    e2_d_bb:       { x: 505, y: 354 },
+    e2_d_p15:      { x: 565, y: 364 },
+    e2_right:      { x: 650, y: 364 },
+    e2_d_p610:     { x: 755, y: 364 },
+    e2_far_right:  { x: 850, y: 364 },
+    e2_d_bc:       { x: 855, y: 364 },
+    // ===== COMMUNS (bottom section) =====
+    communs_top:     { x: 350, y: 445 },
+    sdr:             { x: 100, y: 510 },
+    cuisine_coffee:  { x: 340, y: 490 },
+    cuisine_table:   { x: 300, y: 540 },
+    imprimante:      { x: 690, y: 490 },
 };
 
 const WAYPOINT_EDGES = {
     // REZ
-    rez_couloir_l:  ['rez_couloir_m', 'door_N1', 'door_SDR'],
-    rez_couloir_m:  ['rez_couloir_l', 'rez_couloir_r', 'door_N2', 'door_N3'],
-    rez_couloir_r:  ['rez_couloir_m', 'door_N6', 'door_N17', 'escalier_rez'],
-    door_N1:        ['rez_couloir_l'],
-    door_N2:        ['rez_couloir_m'],
-    door_SDR:       ['rez_couloir_l'],
-    door_N3:        ['rez_couloir_m', 'door_N7'],
-    door_N6:        ['rez_couloir_r'],
-    door_N17:       ['rez_couloir_r'],
-    door_N7:        ['door_N3'],
-    door_N8:        ['door_N17'],
-    // Escalier
-    escalier_rez:   ['rez_couloir_r', 'escalier_etage'],
-    escalier_etage: ['escalier_rez', 'etage_couloir_l'],
-    // ÉTAGE
-    etage_couloir_l:['etage_couloir_r', 'door_BFG', 'door_cuisine', 'escalier_etage'],
-    etage_couloir_r:['etage_couloir_l', 'door_BFD', 'door_imp'],
-    door_BFG:       ['etage_couloir_l'],
-    door_BFD:       ['etage_couloir_r'],
-    door_cuisine:   ['etage_couloir_l', 'cuisine_coffee', 'cuisine_table'],
-    door_imp:       ['etage_couloir_r', 'printer_zone'],
-    cuisine_coffee: ['door_cuisine'],
-    cuisine_table:  ['door_cuisine'],
-    printer_zone:   ['door_imp'],
+    r0_entrance:  ['r0_d_n1'],
+    r0_d_n1:      ['r0_entrance', 'r0_left'],
+    r0_left:      ['r0_d_n1', 'r0_d_n2', 'communs_top'],
+    r0_d_n2:      ['r0_left', 'r0_escalier'],
+    r0_escalier:  ['r0_d_n2', 'r0_d_bfl', 'r0_mid', 'e1_escalier'],
+    r0_d_bfl:     ['r0_escalier', 'r0_mid'],
+    r0_mid:       ['r0_d_bfl', 'r0_d_bfr'],
+    r0_d_bfr:     ['r0_mid', 'r0_d_p15'],
+    r0_d_p15:     ['r0_d_bfr', 'r0_right'],
+    r0_right:     ['r0_d_p15', 'r0_d_p610'],
+    r0_d_p610:    ['r0_right', 'r0_far_right'],
+    r0_far_right: ['r0_d_p610'],
+    // 1ER
+    e1_d_b1:      ['e1_left'],
+    e1_left:      ['e1_d_b1', 'e1_d_b2'],
+    e1_d_b2:      ['e1_left', 'e1_escalier'],
+    e1_escalier:  ['e1_d_b2', 'e1_d_bfl', 'e1_mid', 'r0_escalier', 'e2_escalier'],
+    e1_d_bfl:     ['e1_escalier', 'e1_mid'],
+    e1_mid:       ['e1_d_bfl', 'e1_d_bfr'],
+    e1_d_bfr:     ['e1_mid', 'e1_d_p15'],
+    e1_d_p15:     ['e1_d_bfr', 'e1_right'],
+    e1_right:     ['e1_d_p15', 'e1_d_p610'],
+    e1_d_p610:    ['e1_right', 'e1_far_right'],
+    e1_far_right: ['e1_d_p610'],
+    // 2ÈME
+    e2_d_b1:      ['e2_left'],
+    e2_left:      ['e2_d_b1', 'e2_d_b2'],
+    e2_d_b2:      ['e2_left', 'e2_escalier'],
+    e2_escalier:  ['e2_d_b2', 'e2_d_ba', 'e2_mid', 'e1_escalier'],
+    e2_d_ba:      ['e2_escalier', 'e2_mid'],
+    e2_mid:       ['e2_d_ba', 'e2_d_bb'],
+    e2_d_bb:      ['e2_mid', 'e2_d_p15'],
+    e2_d_p15:     ['e2_d_bb', 'e2_right'],
+    e2_right:     ['e2_d_p15', 'e2_d_p610'],
+    e2_d_p610:    ['e2_right', 'e2_far_right', 'e2_d_bc'],
+    e2_far_right: ['e2_d_p610', 'e2_d_bc'],
+    e2_d_bc:      ['e2_far_right'],
+    // COMMUNS (accessible depuis REZ)
+    communs_top:    ['r0_left', 'sdr', 'cuisine_coffee', 'imprimante'],
+    sdr:            ['communs_top'],
+    cuisine_coffee: ['communs_top', 'cuisine_table'],
+    cuisine_table:  ['cuisine_coffee'],
+    imprimante:     ['communs_top'],
 };
 
 const DESK_TO_DOOR = {
-    'N1-1': 'door_N1', 'N1-2': 'door_N1',
-    'N2-1': 'door_N2', 'N2-2': 'door_N2', 'N2-3': 'door_N2',
-    'N3-1': 'door_N3',
-    'N4-1': 'door_N3',
-    'N6-1': 'door_N6',
-    'N17-1': 'door_N17',
-    'N7-1': 'door_N7',
-    'N8-1': 'door_N8',
-    'P01': 'door_BFG', 'P02': 'door_BFG', 'P03': 'door_BFG', 'P04': 'door_BFG',
-    'PG5': 'door_BFG', 'PG6': 'door_BFG',
-    'P05': 'door_BFD', 'P06': 'door_BFD', 'P07': 'door_BFD', 'P08': 'door_BFD',
-    'P09': 'door_BFD', 'P10': 'door_BFD',
-    'Z01': 'door_imp', 'Z02': 'door_imp',
+    // REZ
+    'R0_N1': 'r0_d_n1',
+    'R0_N2a': 'r0_d_n2', 'R0_N2b': 'r0_d_n2',
+    'R0_N3': 'r0_d_bfl', 'R0_N4': 'r0_d_bfl',
+    'R0_N6': 'r0_d_bfr', 'R0_N17': 'r0_d_bfr',
+    'R0_P01': 'r0_d_p15', 'R0_P02': 'r0_d_p15', 'R0_P03': 'r0_d_p15',
+    'R0_P04': 'r0_d_p15', 'R0_P05': 'r0_d_p15',
+    'R0_P06': 'r0_d_p610', 'R0_P07': 'r0_d_p610', 'R0_P08': 'r0_d_p610',
+    'R0_P09': 'r0_d_p610', 'R0_P10': 'r0_d_p610',
+    // 1ER
+    'E1_B1': 'e1_d_b1',
+    'E1_B2a': 'e1_d_b2', 'E1_B2b': 'e1_d_b2',
+    'E1_BFL1': 'e1_d_bfl', 'E1_BFL2': 'e1_d_bfl',
+    'E1_BFR1': 'e1_d_bfr', 'E1_BFR2': 'e1_d_bfr',
+    'E1_P01': 'e1_d_p15', 'E1_P02': 'e1_d_p15', 'E1_P03': 'e1_d_p15',
+    'E1_P04': 'e1_d_p15', 'E1_P05': 'e1_d_p15',
+    'E1_P06': 'e1_d_p610', 'E1_P07': 'e1_d_p610', 'E1_P08': 'e1_d_p610',
+    'E1_P09': 'e1_d_p610', 'E1_P10': 'e1_d_p610',
+    // 2ÈME
+    'E2_B1': 'e2_d_b1',
+    'E2_B2a': 'e2_d_b2', 'E2_B2b': 'e2_d_b2',
+    'E2_BA': 'e2_d_ba', 'E2_BB': 'e2_d_bb',
+    'E2_P01': 'e2_d_p15', 'E2_P02': 'e2_d_p15', 'E2_P03': 'e2_d_p15',
+    'E2_P04': 'e2_d_p15', 'E2_P05': 'e2_d_p15',
+    'E2_P06': 'e2_d_p610', 'E2_P07': 'e2_d_p610', 'E2_P08': 'e2_d_p610',
+    'E2_P09': 'e2_d_p610', 'E2_P10': 'e2_d_p610',
+    'E2_BC': 'e2_d_bc',
 };
 
 const TRIP_TYPES = [
     { name: 'coffee',   dest: 'cuisine_coffee', weight: 3 },
     { name: 'kitchen',  dest: 'cuisine_table',  weight: 2 },
-    { name: 'printer',  dest: 'printer_zone',   weight: 3 },
+    { name: 'printer',  dest: 'imprimante',     weight: 3 },
     { name: 'colleague',dest: null,             weight: 3 },
 ];
 
@@ -1841,25 +1938,29 @@ let reservations = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
 // [collabId, status_am, detail_am, status_pm, detail_pm]
 // Jean-Baptiste, Raphaël, Elodie, Maxime, Christophe: never filled in the sheet
 const DEFAULT_ASSIGNMENTS = [
-    // Bureau Fermé Gauche — Postes 1-4
-    ['caroline',   'P01'],
-    ['malki',      'P02'],
-    ['nelly',      'P03'],
-    ['sarah',      'P04'],
-    // Bureau Fermé Droite — Postes 5-8
-    ['sandra',     'P05'],
-    ['christian',  'P06'],
-    ['fatou',      'P07'],
-    ['antoine',    'P08'],
-    // Bureau Fermé Droite — Postes 9-10
-    ['francois',   'P09'],
-    ['sadiya',     'P10'],
-    // Bureaux individuels REZ
-    ['laurent',    'N6-1'],
-    ['lorena',     'N17-1'],
-    ['laura',      'N7-1'],
-    ['matias',     'N8-1'],
-    ['ugo',        'N1-1'],
+    // REZ — Production
+    ['caroline',   'R0_N3'],
+    ['malki',      'R0_N4'],
+    ['nelly',      'R0_N6'],
+    ['sarah',      'R0_N17'],
+    ['sandra',     'R0_P01'],
+    ['christian',  'R0_P02'],
+    ['fatou',      'R0_P03'],
+    ['antoine',    'R0_P04'],
+    ['francois',   'R0_P05'],
+    ['sadiya',     'R0_P06'],
+    // 1ER ÉTAGE — Sinistres
+    ['jeanbaptiste','E1_P01'],
+    ['raphael',    'E1_P02'],
+    ['elodie',     'E1_P03'],
+    ['ugo',        'E1_B1'],
+    ['maxime',     'E1_P04'],
+    ['christophe', 'E1_P05'],
+    // 2ÈME ÉTAGE — Admin
+    ['laurent',    'E2_BA'],
+    ['lorena',     'E2_BB'],
+    ['laura',      'E2_B1'],
+    ['matias',     'E2_BC'],
 ];
 
 // Patterns: day → collabId → { am: [status, detail], pm: [status, detail] }
@@ -1875,7 +1976,12 @@ const DEFAULT_PATTERNS = {
         antoine:   { am: ['bureau',null],       pm: ['bureau',null] },
         francois:  { am: ['bureau',null],       pm: ['bureau',null] },
         sadiya:    { am: ['bureau',null],       pm: ['bureau',null] },
+        jeanbaptiste: { am: ['bureau',null],    pm: ['bureau',null] },
+        raphael:   { am: ['bureau',null],       pm: ['bureau',null] },
+        elodie:    { am: ['bureau',null],       pm: ['bureau',null] },
         ugo:       { am: ['bureau',null],       pm: ['bureau',null] },
+        maxime:    { am: ['bureau',null],       pm: ['bureau',null] },
+        christophe:{ am: ['bureau',null],       pm: ['bureau',null] },
         laurent:   { am: ['conge',null],        pm: ['conge',null] },
         lorena:    { am: ['bureau',null],       pm: ['bureau',null] },
         laura:     { am: ['bureau',null],       pm: ['bureau',null] },
@@ -1892,7 +1998,12 @@ const DEFAULT_PATTERNS = {
         antoine:   { am: ['bureau',null],           pm: ['bureau',null] },
         francois:  { am: ['bureau',null],           pm: ['teletravail',null] },
         sadiya:    { am: ['autre','Quaregnon'],     pm: ['autre','Quaregnon'] },
+        jeanbaptiste: { am: ['bureau',null],        pm: ['bureau',null] },
+        raphael:   { am: ['bureau',null],           pm: ['bureau',null] },
+        elodie:    { am: ['bureau',null],           pm: ['bureau',null] },
         ugo:       { am: ['bureau',null],           pm: ['bureau',null] },
+        maxime:    { am: ['bureau',null],           pm: ['bureau',null] },
+        christophe:{ am: ['bureau',null],           pm: ['bureau',null] },
         laurent:   { am: ['conge',null],            pm: ['conge',null] },
         lorena:    { am: ['bureau',null],           pm: ['bureau',null] },
         laura:     { am: ['bureau',null],           pm: ['bureau',null] },
@@ -1909,7 +2020,12 @@ const DEFAULT_PATTERNS = {
         antoine:   { am: ['teletravail',null],      pm: ['teletravail',null] },
         francois:  { am: ['bureau',null],           pm: ['bureau',null] },
         sadiya:    { am: ['bureau',null],           pm: ['bureau',null] },
+        jeanbaptiste: { am: ['bureau',null],        pm: ['bureau',null] },
+        raphael:   { am: ['teletravail',null],      pm: ['teletravail',null] },
+        elodie:    { am: ['bureau',null],           pm: ['bureau',null] },
         ugo:       { am: ['teletravail',null],      pm: ['teletravail',null] },
+        maxime:    { am: ['bureau',null],           pm: ['bureau',null] },
+        christophe:{ am: ['teletravail',null],      pm: ['teletravail',null] },
         laurent:   { am: ['conge',null],            pm: ['conge',null] },
         lorena:    { am: ['teletravail',null],      pm: ['teletravail',null] },
         laura:     { am: ['bureau',null],           pm: ['bureau',null] },
@@ -1926,7 +2042,12 @@ const DEFAULT_PATTERNS = {
         antoine:   { am: ['bureau',null],           pm: ['bureau',null] },
         francois:  { am: ['bureau',null],           pm: ['bureau',null] },
         sadiya:    { am: ['autre','Quaregnon'],     pm: ['autre','Quaregnon'] },
+        jeanbaptiste: { am: ['bureau',null],        pm: ['bureau',null] },
+        raphael:   { am: ['bureau',null],           pm: ['bureau',null] },
+        elodie:    { am: ['teletravail',null],      pm: ['teletravail',null] },
         ugo:       { am: ['bureau',null],           pm: ['bureau',null] },
+        maxime:    { am: ['bureau',null],           pm: ['bureau',null] },
+        christophe:{ am: ['bureau',null],           pm: ['bureau',null] },
         laurent:   { am: ['conge',null],            pm: ['conge',null] },
         lorena:    { am: ['indisponible',null],     pm: ['indisponible',null] },
         laura:     { am: ['bureau',null],           pm: ['bureau',null] },
@@ -1943,7 +2064,12 @@ const DEFAULT_PATTERNS = {
         antoine:   { am: ['bureau',null],           pm: ['bureau',null] },
         francois:  { am: ['bureau',null],           pm: ['bureau',null] },
         sadiya:    { am: ['teletravail',null],      pm: ['teletravail',null] },
+        jeanbaptiste: { am: ['bureau',null],        pm: ['bureau',null] },
+        raphael:   { am: ['teletravail',null],      pm: ['teletravail',null] },
+        elodie:    { am: ['bureau',null],           pm: ['bureau',null] },
         ugo:       { am: ['bureau',null],           pm: ['bureau',null] },
+        maxime:    { am: ['teletravail',null],      pm: ['teletravail',null] },
+        christophe:{ am: ['bureau',null],           pm: ['bureau',null] },
         laurent:   { am: ['conge',null],            pm: ['conge',null] },
         lorena:    { am: ['indisponible',null],     pm: ['indisponible',null] },
         laura:     { am: ['bureau',null],           pm: ['bureau',null] },
@@ -2685,7 +2811,7 @@ function pickTrip(collabId, deskId) {
             .filter(dk => { const d = DESKS.find(dd => dd.id === dk); return d && d.room !== myRoom; });
         if (candidates.length) {
             const target = candidates[Math.floor(Math.random() * candidates.length)];
-            return { name: 'colleague', dest: DESK_TO_DOOR[target] || 'couloir_2' };
+            return { name: 'colleague', dest: DESK_TO_DOOR[target] || 'r0_mid' };
         }
         return { name: 'coffee', dest: 'cuisine_coffee' };
     }
