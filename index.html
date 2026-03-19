@@ -1986,7 +1986,7 @@ function canModifyDesk(deskId) {
 // GOOGLE SHEETS BACKEND
 // ============================
 // Coller ici l'URL du déploiement Apps Script (voir google-apps-script.js)
-const APPS_SCRIPT_URL = ''; // ← COLLER L'URL ICI
+const APPS_SCRIPT_URL = 'https://n8n.srv1387885.hstgr.cloud/webhook/bureau-uccle-api';
 
 let isSyncing = false;
 let lastSyncTime = null;
@@ -1998,12 +1998,23 @@ async function loadFromSheets() {
     try {
         isSyncing = true;
         updateSyncStatus();
-        const resp = await fetch(APPS_SCRIPT_URL);
+        const resp = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'getAll' }),
+        });
         const json = await resp.json();
         if (json.success && json.reservations) {
-            // Merge: Google Sheets est la source de vérité
+            // Le serveur est la source de vérité
             reservations = json.reservations;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
+            // Charger aussi les semaines types
+            if (json.semaines && currentUser) {
+                const myST = json.semaines[currentUser.id];
+                if (myST) {
+                    localStorage.setItem(SEMAINE_TYPE_KEY + currentUser.id, JSON.stringify(myST));
+                }
+            }
             lastSyncTime = new Date();
             isOnline = true;
         }
@@ -2027,7 +2038,8 @@ async function saveToSheets(key, data) {
         updateSyncStatus();
         const resp = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
-            body: JSON.stringify({ key, data }),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'saveSlot', key, data, user: currentUser?.id }),
         });
         const json = await resp.json();
         lastSyncTime = new Date();
@@ -2410,11 +2422,11 @@ function removeReservation(dayIndex, period, deskId) {
     save();
 }
 
-function save() {
+function save(changedKey) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
-    // Sync chaque clé modifiée vers Google Sheets
+    // Sync vers Google Sheets
     if (APPS_SCRIPT_URL) {
-        const key = getDateKey(currentDayIndex, currentPeriod);
+        const key = changedKey || getDateKey(currentDayIndex, currentPeriod);
         saveToSheets(key, reservations[key]);
     }
 }
@@ -3232,6 +3244,14 @@ function getUserSemaineType() {
 function saveUserSemaineType(data) {
     if (!currentUser) return;
     localStorage.setItem(SEMAINE_TYPE_KEY + currentUser.id, JSON.stringify(data));
+    // Sync semaine type vers Google Sheets
+    if (APPS_SCRIPT_URL) {
+        fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'saveSemaineType', userId: currentUser.id, semaineType: data }),
+        }).catch(() => {});
+    }
 }
 
 function getAccessibleDesks() {
@@ -3356,6 +3376,13 @@ function applySemaineType() {
     }
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
+    if (APPS_SCRIPT_URL) {
+        fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'saveAll', reservations, user: currentUser?.id }),
+        }).catch(() => {});
+    }
     renderAll();
     showToast(`Semaine type appliqu\u00e9e (${count} cr\u00e9neaux)`);
 }
@@ -3600,6 +3627,13 @@ function calEditSave(year, month, day) {
     });
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
+    if (APPS_SCRIPT_URL) {
+        fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'saveAll', reservations, user: currentUser?.id }),
+        }).catch(() => {});
+    }
     closeCalEdit();
     renderCalendar();
     showToast('Planning mis \u00e0 jour');
@@ -3621,6 +3655,13 @@ function calEditClear(year, month, day) {
     });
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
+    if (APPS_SCRIPT_URL) {
+        fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'saveAll', reservations, user: currentUser?.id }),
+        }).catch(() => {});
+    }
     closeCalEdit();
     renderCalendar();
     showToast('Jour effac\u00e9');
