@@ -3336,12 +3336,10 @@ function applySemaineType() {
             // Skip past dates
             if (monday < new Date(today.getFullYear(), today.getMonth(), today.getDate())) continue;
 
-            const weekStart = getMonday(monday);
-            const weekKey = getWeekKey(weekStart);
-            const dayIdx = day;
+            const applyISO = monday.toISOString().slice(0, 10);
 
             ['am', 'pm'].forEach(period => {
-                const key = weekKey + '-' + dayIdx + '-' + period;
+                const key = applyISO + '-' + period;
                 // Don't overwrite existing manual reservations
                 if (reservations[key]) {
                     const existingForUser = Object.values(reservations[key]).find(r => r.person === currentUser.id);
@@ -3463,15 +3461,14 @@ function renderCalendar() {
         const isPast = date < today;
 
         // Find user's status for this date
-        const weekStart = getMonday(date);
-        const weekKey = getWeekKey(weekStart);
         let userStatus = null;
         let userDesk = null;
         let isAuto = false;
 
         // Check explicit reservations
+        const dateISO = date.toISOString().slice(0, 10);
         ['am'].forEach(period => {
-            const key = weekKey + '-' + dayIdx + '-' + period;
+            const key = dateISO + '-' + period;
             if (reservations[key]) {
                 // Check desk reservations
                 for (const [dk, data] of Object.entries(reservations[key])) {
@@ -3514,17 +3511,15 @@ function openCalEdit(year, month, day, cellEl) {
     if (existing) existing.remove();
 
     const date = new Date(year, month, day);
-    const dayIdx = date.getDay() - 1;
-    const weekStart = getMonday(date);
-    const weekKey = getWeekKey(weekStart);
     const desks = getAccessibleDesks();
     const collab = COLLABORATEURS.find(c => c.id === currentUser.id);
 
     // Current status
     let curStatus = '';
     let curDesk = '';
+    const editDateISO = date.toISOString().slice(0, 10);
     ['am'].forEach(period => {
-        const key = weekKey + '-' + dayIdx + '-' + period;
+        const key = editDateISO + '-' + period;
         if (reservations[key]) {
             for (const [dk, data] of Object.entries(reservations[key])) {
                 if (data.person === currentUser.id) {
@@ -3598,12 +3593,10 @@ function calEditSave(year, month, day) {
     const desk = deskSel ? deskSel.value : '';
 
     const date = new Date(year, month, day);
-    const dayIdx = date.getDay() - 1;
-    const weekStart = getMonday(date);
-    const weekKey = getWeekKey(weekStart);
+    const saveISO = date.toISOString().slice(0, 10);
 
     ['am', 'pm'].forEach(period => {
-        const key = weekKey + '-' + dayIdx + '-' + period;
+        const key = saveISO + '-' + period;
 
         // Remove existing reservation for this user
         if (reservations[key]) {
@@ -3641,12 +3634,10 @@ function calEditSave(year, month, day) {
 
 function calEditClear(year, month, day) {
     const date = new Date(year, month, day);
-    const dayIdx = date.getDay() - 1;
-    const weekStart = getMonday(date);
-    const weekKey = getWeekKey(weekStart);
+    const clearISO = date.toISOString().slice(0, 10);
 
     ['am', 'pm'].forEach(period => {
-        const key = weekKey + '-' + dayIdx + '-' + period;
+        const key = clearISO + '-' + period;
         if (reservations[key]) {
             for (const [dk, data] of Object.entries(reservations[key])) {
                 if (data.person === currentUser.id) delete reservations[key][dk];
