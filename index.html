@@ -285,6 +285,179 @@
 
         .stat-label { color: var(--text-light); }
 
+        /* Floor occupancy gauges */
+        .floor-gauges {
+            display: flex;
+            gap: 16px;
+            padding: 0 16px;
+            margin-left: auto;
+        }
+        .floor-gauge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+        }
+        .floor-gauge-label {
+            font-weight: 600;
+            color: var(--text-light);
+            min-width: 28px;
+        }
+        .floor-gauge-bar {
+            width: 60px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .floor-gauge-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        .floor-gauge-count {
+            font-weight: 700;
+            font-size: 0.72rem;
+            min-width: 30px;
+        }
+
+        /* Collab week popup */
+        .collab-week-popup {
+            position: fixed;
+            z-index: 500;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            padding: 16px;
+            min-width: 300px;
+            max-width: 380px;
+            animation: popIn 0.15s ease;
+        }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .collab-week-popup h4 {
+            margin: 0 0 10px 0;
+            font-size: 0.9rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .collab-week-popup .cwp-close {
+            margin-left: auto;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: #a0aec0;
+            padding: 0 4px;
+        }
+        .cwp-grid {
+            display: grid;
+            grid-template-columns: 60px 1fr 1fr;
+            gap: 4px 8px;
+            font-size: 0.78rem;
+        }
+        .cwp-header {
+            font-weight: 700;
+            color: var(--text-light);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--border);
+        }
+        .cwp-day {
+            font-weight: 600;
+            padding: 3px 0;
+        }
+        .cwp-cell {
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+        }
+        .cwp-today { background: #ebf8ff; }
+
+        /* Week overview (vue semaine complète) */
+        .week-overview {
+            padding: 20px;
+            overflow-x: auto;
+        }
+        .week-overview h3 {
+            font-size: 0.95rem;
+            color: var(--primary);
+            margin: 0 0 12px 0;
+        }
+        .wo-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            min-width: 600px;
+        }
+        .wo-day-col {
+            background: white;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .wo-day-header {
+            padding: 8px 12px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        .wo-day-header .wo-count {
+            font-size: 0.65rem;
+            opacity: 0.85;
+            display: block;
+            font-weight: 400;
+        }
+        .wo-day-today { box-shadow: 0 0 0 2px var(--accent); }
+        .wo-day-list {
+            padding: 6px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+        .wo-person {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 6px;
+            border-radius: 5px;
+            font-size: 0.72rem;
+        }
+        .wo-person:hover { background: #f7fafc; }
+        .wo-person-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .wo-person-desk {
+            margin-left: auto;
+            font-size: 0.65rem;
+            color: var(--text-light);
+        }
+        .wo-heat-green { background: linear-gradient(135deg, #48bb78, #38a169); }
+        .wo-heat-yellow { background: linear-gradient(135deg, #ed8936, #dd6b20); }
+        .wo-heat-red { background: linear-gradient(135deg, #e53e3e, #c53030); }
+
+        /* Neighbors info */
+        .neighbors-bar {
+            padding: 8px 16px;
+            background: #ebf8ff;
+            border-bottom: 1px solid #bee3f8;
+            font-size: 0.78rem;
+            color: #2b6cb0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .neighbors-bar:empty { display: none; padding: 0; border: none; }
+
         /* ===== MAIN LAYOUT ===== */
         .main-layout {
             display: flex;
@@ -885,6 +1058,16 @@
             color: var(--text-light);
         }
 
+        .collab-week-btn {
+            font-size: 0.7rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.15s;
+            padding: 0 2px;
+        }
+        .collab-item:hover .collab-week-btn { opacity: 0.6; }
+        .collab-week-btn:hover { opacity: 1 !important; }
+
         /* Appels section */
         .appel-list { display: flex; flex-direction: column; gap: 3px; }
 
@@ -1468,6 +1651,7 @@
 
         <div class="view-toggle">
             <button class="view-btn active" onclick="setView('plan',this)">Plan</button>
+            <button class="view-btn" onclick="setView('week',this)">Semaine</button>
             <button class="view-btn" onclick="setView('myplanning',this)">Mon Planning</button>
             <button class="view-btn" onclick="setView('team',this)">Équipe</button>
         </div>
@@ -1478,6 +1662,7 @@
 
 <!-- ===== STATS BAR ===== -->
 <div class="stats-bar" id="statsBar"></div>
+<div class="neighbors-bar" id="neighborsBar"></div>
 
 <!-- ===== MAIN ===== -->
 <div class="main-layout">
@@ -1747,6 +1932,10 @@
         <table class="planning-table" id="planningTable"></table>
     </div>
 
+    <!-- Week overview view -->
+    <div class="week-overview" id="weekOverviewView" style="display:none">
+        <div id="weekOverviewContent"></div>
+    </div>
 
     <!-- Mon Planning view -->
     <div class="planning-perso-container" id="myPlanningView">
@@ -2520,7 +2709,195 @@ function renderStats() {
             <span class="stat-count">${libre}</span>
             <span class="stat-label">Libre</span>
         </div>
+        <div class="floor-gauges">
+            ${[{label:'RDC', floor:0}, {label:'1er', floor:1}, {label:'2ème', floor:2}].map(f => {
+                const floorDesks = DESKS.filter(d => d.floor === f.floor && d.id !== 'SR');
+                const occupied = floorDesks.filter(d => slot[d.id]).length;
+                const total = floorDesks.length;
+                const pct = total ? Math.round(occupied / total * 100) : 0;
+                const color = pct > 75 ? '#48bb78' : pct > 40 ? '#ed8936' : '#e53e3e';
+                return \`<div class="floor-gauge" title="\${f.label}: \${occupied}/\${total} bureaux occupés">
+                    <span class="floor-gauge-label">\${f.label}</span>
+                    <div class="floor-gauge-bar"><div class="floor-gauge-fill" style="width:\${pct}%;background:\${color}"></div></div>
+                    <span class="floor-gauge-count" style="color:\${color}">\${occupied}/\${total}</span>
+                </div>\`;
+            }).join('')}
+        </div>
     `;
+}
+
+// ============================
+// NEIGHBORS
+// ============================
+function renderNeighbors() {
+    const bar = document.getElementById('neighborsBar');
+    if (!bar || !currentUser) { if (bar) bar.innerHTML = ''; return; }
+
+    const slot = getCurrentSlotReservations();
+    // Find current user's desk
+    let myDeskId = null;
+    for (const [dk, data] of Object.entries(slot)) {
+        if (data.person === currentUser.id && data.status === 'bureau') { myDeskId = dk; break; }
+    }
+    if (!myDeskId) { bar.innerHTML = ''; return; }
+
+    const myDesk = DESKS.find(d => d.id === myDeskId);
+    if (!myDesk) { bar.innerHTML = ''; return; }
+
+    // Find desks in the same room
+    const roomDesks = DESKS.filter(d => d.room === myDesk.room && d.id !== myDeskId);
+    const neighbors = [];
+    roomDesks.forEach(d => {
+        const r = slot[d.id];
+        if (r && r.person && r.status === 'bureau') {
+            const c = getCollabById(r.person);
+            if (c) neighbors.push(c.name);
+        }
+    });
+
+    if (neighbors.length === 0) {
+        bar.innerHTML = '';
+    } else {
+        bar.innerHTML = '<strong>Voisins du jour :</strong> ' + neighbors.join(', ');
+    }
+}
+
+// ============================
+// COLLAB WEEK POPUP
+// ============================
+function showCollabWeek(collabId, event) {
+    // Remove existing popup
+    const existing = document.querySelector('.collab-week-popup');
+    if (existing) existing.remove();
+
+    const collab = getCollabById(collabId);
+    if (!collab) return;
+
+    const pop = document.createElement('div');
+    pop.className = 'collab-week-popup';
+
+    let gridHTML = '<div class="cwp-grid">';
+    gridHTML += '<div class="cwp-header">Jour</div><div class="cwp-header">AM</div><div class="cwp-header">PM</div>';
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    DAYS.forEach((day, i) => {
+        const d = new Date(currentWeekStart);
+        d.setDate(d.getDate() + i);
+        const isToday = d.getTime() === today.getTime();
+        const todayClass = isToday ? ' cwp-today' : '';
+
+        gridHTML += '<div class="cwp-day' + todayClass + '">' + day + ' ' + d.getDate() + '</div>';
+
+        ['am', 'pm'].forEach(period => {
+            const slot = getReservationsForSlot(i, period);
+            let status = null;
+            let deskId = null;
+            for (const [dk, data] of Object.entries(slot)) {
+                if (data.person === collabId) {
+                    status = data.status;
+                    if (!dk.startsWith('_status_')) deskId = dk;
+                    break;
+                }
+            }
+            if (status) {
+                const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.libre;
+                const label = cfg.label + (deskId ? ' (' + deskId + ')' : '');
+                gridHTML += '<div class="cwp-cell' + todayClass + '" style="color:' + cfg.dot + '">' + label + '</div>';
+            } else {
+                gridHTML += '<div class="cwp-cell' + todayClass + '" style="color:#cbd5e0">\u2014</div>';
+            }
+        });
+    });
+    gridHTML += '</div>';
+
+    pop.innerHTML = '<h4><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + collab.color + '"></span> ' + escapeHtml(collab.name) + '<button class="cwp-close" onclick="this.closest(\'.collab-week-popup\').remove()">\u2715</button></h4>' + gridHTML;
+
+    // Position near click
+    const x = Math.min((event?.clientX || 300), window.innerWidth - 400);
+    const y = Math.min((event?.clientY || 200), window.innerHeight - 300);
+    pop.style.left = x + 'px';
+    pop.style.top = y + 'px';
+
+    document.body.appendChild(pop);
+
+    // Close on outside click
+    setTimeout(() => {
+        document.addEventListener('click', function handler(e) {
+            if (!pop.contains(e.target)) {
+                pop.remove();
+                document.removeEventListener('click', handler);
+            }
+        });
+    }, 10);
+}
+
+// ============================
+// WEEK OVERVIEW
+// ============================
+function renderWeekOverview() {
+    const container = document.getElementById('weekOverviewContent');
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    let html = '<h3>Semaine du ' + currentWeekStart.toLocaleDateString('fr-BE') + '</h3>';
+    html += '<div class="wo-grid">';
+
+    DAYS.forEach((day, i) => {
+        const d = new Date(currentWeekStart);
+        d.setDate(d.getDate() + i);
+        const isToday = d.toDateString() === today.toDateString();
+
+        // Collect people present (AM — representative of the day)
+        const slotAM = getReservationsForSlot(i, 'am');
+        const slotPM = getReservationsForSlot(i, 'pm');
+
+        // Merge: get all people across both periods
+        const peopleMap = {};
+        [slotAM, slotPM].forEach((slot, pi) => {
+            for (const [dk, data] of Object.entries(slot)) {
+                if (!data.person) continue;
+                if (!peopleMap[data.person]) peopleMap[data.person] = { am: null, pm: null };
+                peopleMap[data.person][pi === 0 ? 'am' : 'pm'] = { status: data.status, desk: dk.startsWith('_status_') ? null : dk };
+            }
+        });
+
+        const people = Object.entries(peopleMap).map(([id, periods]) => {
+            const c = getCollabById(id);
+            const mainStatus = periods.am?.status || periods.pm?.status || 'libre';
+            const desk = periods.am?.desk || periods.pm?.desk;
+            return { id, name: c ? c.name : id, status: mainStatus, desk, color: c?.color };
+        }).sort((a, b) => a.name.localeCompare(b.name));
+
+        const presentCount = people.filter(p => p.status === 'bureau').length;
+        const totalDesks = DESKS.filter(dk => dk.id !== 'SR').length;
+        const pct = totalDesks ? Math.round(presentCount / totalDesks * 100) : 0;
+        const heatClass = pct > 60 ? 'wo-heat-green' : pct > 30 ? 'wo-heat-yellow' : 'wo-heat-red';
+
+        html += '<div class="wo-day-col ' + (isToday ? 'wo-day-today' : '') + '">';
+        html += '<div class="wo-day-header ' + heatClass + '">' + day + ' ' + d.getDate() + '/' + (d.getMonth()+1);
+        html += '<span class="wo-count">' + presentCount + ' présent' + (presentCount > 1 ? 's' : '') + '</span></div>';
+        html += '<div class="wo-day-list">';
+
+        people.forEach(p => {
+            const cfg = STATUS_CONFIG[p.status] || STATUS_CONFIG.libre;
+            html += '<div class="wo-person" onclick="showCollabWeek(\'' + p.id + '\', event)">';
+            html += '<div class="wo-person-dot" style="background:' + cfg.dot + '"></div>';
+            html += '<span>' + escapeHtml(p.name) + '</span>';
+            if (p.desk) html += '<span class="wo-person-desk">' + p.desk + '</span>';
+            html += '</div>';
+        });
+
+        if (people.length === 0) {
+            html += '<div style="font-size:0.72rem;color:#a0aec0;padding:8px;text-align:center">Aucune réservation</div>';
+        }
+
+        html += '</div></div>';
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
 }
 
 // ============================
@@ -2755,6 +3132,7 @@ function renderSidebar() {
                         onmouseenter="highlightCollab('${c.id}')" onmouseleave="unhighlightCollab()">
                         <div class="collab-dot" style="background:${cfg.dot}"></div>
                         <span class="collab-name">${escapeHtml(c.name)}${confirmBadge}</span>
+                        <span class="collab-week-btn" onclick="event.stopPropagation();showCollabWeek('${c.id}',event)" title="Voir la semaine">&#128197;</span>
                         <span class="collab-status">${c.deskId || ''}</span>
                     </div>`;
                 }).join('')}
@@ -3024,8 +3402,10 @@ function setView(v, btn) {
     if (btn) btn.classList.add('active');
     document.getElementById('planView').classList.toggle('hidden', v !== 'plan');
     document.getElementById('tableView').classList.toggle('active', v === 'team');
+    document.getElementById('weekOverviewView').style.display = v === 'week' ? '' : 'none';
     document.getElementById('myPlanningView').classList.toggle('active', v === 'myplanning');
     if (v === 'team') renderTable();
+    if (v === 'week') renderWeekOverview();
     if (v === 'myplanning') renderMyPlanning();
 }
 
@@ -3667,9 +4047,11 @@ function renderAll() {
     stopAllWalkers();
     renderHeader();
     renderStats();
+    renderNeighbors();
     renderDesks();
     renderSidebar();
     if (currentView === 'team') renderTable();
+    if (currentView === 'week') renderWeekOverview();
     if (currentView === 'myplanning') renderMyPlanning();
     startAmbientMovement();
 }
