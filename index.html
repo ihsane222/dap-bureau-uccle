@@ -2709,21 +2709,23 @@ function renderStats() {
             <span class="stat-count">${libre}</span>
             <span class="stat-label">Libre</span>
         </div>
-        <div class="floor-gauges">
-            ${[{label:'RDC', floor:0}, {label:'1er', floor:1}, {label:'2ème', floor:2}].map(f => {
-                const floorDesks = DESKS.filter(d => d.floor === f.floor && d.id !== 'SR');
-                const occupied = floorDesks.filter(d => slot[d.id]).length;
-                const total = floorDesks.length;
-                const pct = total ? Math.round(occupied / total * 100) : 0;
-                const color = pct > 75 ? '#48bb78' : pct > 40 ? '#ed8936' : '#e53e3e';
-                return \`<div class="floor-gauge" title="\${f.label}: \${occupied}/\${total} bureaux occupés">
-                    <span class="floor-gauge-label">\${f.label}</span>
-                    <div class="floor-gauge-bar"><div class="floor-gauge-fill" style="width:\${pct}%;background:\${color}"></div></div>
-                    <span class="floor-gauge-count" style="color:\${color}">\${occupied}/\${total}</span>
-                </div>\`;
-            }).join('')}
-        </div>
     `;
+
+    // Floor gauges
+    const gaugesHTML = [{label:'RDC', floor:0}, {label:'1er', floor:1}, {label:'2ème', floor:2}].map(f => {
+        const floorDesks = DESKS.filter(d => d.floor === f.floor && d.id !== 'SR');
+        const occupied = floorDesks.filter(d => slot[d.id]).length;
+        const total = floorDesks.length;
+        const pct = total ? Math.round(occupied / total * 100) : 0;
+        const color = pct > 75 ? '#48bb78' : pct > 40 ? '#ed8936' : '#e53e3e';
+        return `<div class="floor-gauge" title="${f.label}: ${occupied}/${total} bureaux occupés">
+            <span class="floor-gauge-label">${f.label}</span>
+            <div class="floor-gauge-bar"><div class="floor-gauge-fill" style="width:${pct}%;background:${color}"></div></div>
+            <span class="floor-gauge-count" style="color:${color}">${occupied}/${total}</span>
+        </div>`;
+    }).join('');
+
+    bar.innerHTML += `<div class="floor-gauges">${gaugesHTML}</div>`;
 }
 
 // ============================
