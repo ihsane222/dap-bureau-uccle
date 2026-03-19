@@ -2003,7 +2003,8 @@ async function loadFromSheets() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'getAll' }),
         });
-        const json = await resp.json();
+        const raw = await resp.json();
+        const json = Array.isArray(raw) ? raw[0] : raw;
         if (json.success && json.reservations) {
             // Le serveur est la source de vérité
             reservations = json.reservations;
@@ -2041,7 +2042,8 @@ async function saveToSheets(key, data) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'saveSlot', key, data, user: currentUser?.id }),
         });
-        const json = await resp.json();
+        const rawSave = await resp.json();
+        const json = Array.isArray(rawSave) ? rawSave[0] : rawSave;
         lastSyncTime = new Date();
         isSyncing = false;
         isOnline = true;
