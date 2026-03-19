@@ -35,6 +35,83 @@
             min-height: 100vh;
         }
 
+
+        /* ===== LOGIN SCREEN ===== */
+        .login-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 60%, #ed8936 100%);
+            display: flex; align-items: center; justify-content: center;
+            animation: loginFadeIn 0.4s ease;
+        }
+        @keyframes loginFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .login-card {
+            background: white; border-radius: 16px; padding: 40px 36px 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px; width: 90%; text-align: center;
+        }
+        .login-card h2 {
+            font-size: 1.3rem; color: #1a365d; margin-bottom: 6px;
+        }
+        .login-card .login-subtitle {
+            font-size: 0.85rem; color: #718096; margin-bottom: 24px;
+        }
+        .login-card .login-icon {
+            font-size: 2.5rem; margin-bottom: 12px;
+        }
+        .login-select {
+            width: 100%; padding: 12px 14px; font-size: 1rem;
+            border: 2px solid #e2e8f0; border-radius: 10px;
+            background: #f7fafc; color: #2d3748;
+            appearance: none; cursor: pointer;
+            margin-bottom: 16px; transition: border-color 0.2s;
+        }
+        .login-select:focus { outline: none; border-color: #ed8936; }
+        .login-btn {
+            width: 100%; padding: 13px; font-size: 1rem; font-weight: 700;
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white; border: none; border-radius: 10px;
+            cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .login-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(237,137,54,0.4); }
+        .login-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .login-search {
+            width: 100%; padding: 10px 14px; font-size: 0.9rem;
+            border: 2px solid #e2e8f0; border-radius: 10px;
+            background: #f7fafc; color: #2d3748;
+            margin-bottom: 10px; transition: border-color 0.2s;
+        }
+        .login-search:focus { outline: none; border-color: #4299e1; }
+
+        /* User badge in header */
+        .user-badge {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 8px; padding: 4px 12px 4px 8px;
+            cursor: pointer; transition: background 0.15s;
+            font-size: 0.8rem; color: white;
+        }
+        .user-badge:hover { background: rgba(255,255,255,0.25); }
+        .user-badge .user-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: #48bb78;
+        }
+        .user-badge .user-name { font-weight: 600; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .user-badge .logout-icon { margin-left: 4px; opacity: 0.7; font-size: 0.75rem; }
+
+        /* Admin badge */
+        .admin-tag {
+            font-size: 0.55rem; background: #ed8936; color: white;
+            padding: 1px 5px; border-radius: 4px; font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Lock icon on desks not owned by current user */
+        .desk-locked { opacity: 0.7; }
+        .desk-locked::after {
+            content: '\1F512'; font-size: 8px; position: absolute;
+            bottom: -2px; right: -2px;
+        }
+
         /* ===== HEADER ===== */
         .header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
@@ -1159,6 +1236,139 @@
 
         .autre-detail.show { display: block; }
 
+
+        /* ===== MON PLANNING ===== */
+        .planning-perso-container {
+            flex: 1; overflow: auto; padding: 20px; display: none;
+        }
+        .planning-perso-container.active { display: block; }
+
+        .semaine-type {
+            background: white; border-radius: 12px; padding: 20px 24px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 20px;
+        }
+        .semaine-type h3 {
+            font-size: 0.95rem; color: var(--primary); margin-bottom: 14px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .semaine-type-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+        }
+        .st-day {
+            border: 2px solid var(--border); border-radius: 10px; padding: 10px;
+            text-align: center; transition: border-color 0.2s;
+        }
+        .st-day:hover { border-color: var(--primary-light); }
+        .st-day .st-day-name {
+            font-size: 0.75rem; font-weight: 700; color: var(--primary);
+            margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .st-day select {
+            width: 100%; padding: 6px; font-size: 0.78rem; border: 1px solid var(--border);
+            border-radius: 6px; margin-bottom: 6px; background: var(--bg);
+        }
+        .st-day select:focus { outline: none; border-color: var(--accent); }
+        .st-day .st-desk-select { display: none; }
+        .st-day .st-desk-select.show { display: block; }
+        .st-apply-row {
+            display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px;
+        }
+        .st-apply-btn {
+            padding: 8px 18px; font-size: 0.8rem; font-weight: 600;
+            border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s;
+        }
+        .st-apply-btn.primary {
+            background: var(--accent); color: white;
+        }
+        .st-apply-btn.primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .st-apply-btn.secondary {
+            background: var(--bg); color: var(--text); border: 1px solid var(--border);
+        }
+        .st-apply-btn.secondary:hover { background: #edf2f7; }
+
+        /* Calendar */
+        .planning-calendar {
+            background: white; border-radius: 12px; padding: 20px 24px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .planning-calendar h3 {
+            font-size: 0.95rem; color: var(--primary); margin-bottom: 4px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .cal-nav { display: flex; align-items: center; gap: 8px; }
+        .cal-nav button {
+            background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+            width: 28px; height: 28px; cursor: pointer; font-size: 0.85rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .cal-nav button:hover { background: #edf2f7; }
+        .cal-month-label { font-size: 0.85rem; font-weight: 600; color: var(--text); min-width: 120px; text-align: center; }
+
+        .cal-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+            margin-top: 14px;
+        }
+        .cal-header {
+            font-size: 0.7rem; font-weight: 700; color: var(--text-light);
+            text-align: center; padding: 6px 0; text-transform: uppercase;
+        }
+        .cal-cell {
+            border: 2px solid var(--border); border-radius: 8px; padding: 8px 6px;
+            min-height: 70px; cursor: pointer; transition: all 0.15s; position: relative;
+        }
+        .cal-cell:hover { border-color: var(--primary-light); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .cal-cell.today { border-color: var(--accent); }
+        .cal-cell.past { opacity: 0.5; }
+        .cal-cell.weekend { display: none; }
+        .cal-cell .cal-date {
+            font-size: 0.7rem; font-weight: 700; color: var(--text-light); margin-bottom: 4px;
+        }
+        .cal-cell .cal-status {
+            font-size: 0.72rem; font-weight: 600; padding: 3px 6px; border-radius: 5px;
+            display: inline-block;
+        }
+        .cal-cell .cal-desk {
+            font-size: 0.65rem; color: var(--text-light); margin-top: 2px;
+        }
+        .cal-cell .cal-auto-tag {
+            position: absolute; top: 3px; right: 5px;
+            font-size: 0.5rem; color: var(--text-light); opacity: 0.6;
+        }
+        /* Status colors */
+        .cal-s-bureau { background: #c6f6d5; color: #276749; }
+        .cal-s-teletravail { background: #bee3f8; color: #2a4365; }
+        .cal-s-autre { background: #fefcbf; color: #744210; }
+        .cal-s-conge { background: #fed7d7; color: #9b2c2c; }
+        .cal-s-indisponible { background: #e9d8fd; color: #553c9a; }
+        .cal-s-event { background: #feebc8; color: #7b341e; }
+        .cal-s-libre { background: #edf2f7; color: #718096; }
+
+        /* Edit popover for calendar cell */
+        .cal-edit-pop {
+            position: fixed; z-index: 500;
+            background: white; border-radius: 12px; padding: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.18); min-width: 220px;
+        }
+        .cal-edit-pop h4 { font-size: 0.8rem; color: var(--primary); margin-bottom: 10px; }
+        .cal-edit-pop select, .cal-edit-pop input {
+            width: 100%; padding: 8px; font-size: 0.8rem; border: 1px solid var(--border);
+            border-radius: 6px; margin-bottom: 8px; background: var(--bg);
+        }
+        .cal-edit-pop .pop-actions { display: flex; gap: 8px; justify-content: flex-end; }
+        .cal-edit-pop .pop-btn {
+            padding: 6px 14px; font-size: 0.75rem; font-weight: 600;
+            border: none; border-radius: 6px; cursor: pointer;
+        }
+        .cal-edit-pop .pop-save { background: var(--accent); color: white; }
+        .cal-edit-pop .pop-cancel { background: var(--bg); border: 1px solid var(--border); }
+        .cal-edit-pop .pop-clear { background: #fed7d7; color: #9b2c2c; }
+
+        @media (max-width: 900px) {
+            .semaine-type-grid { grid-template-columns: repeat(2, 1fr); }
+            .cal-grid { grid-template-columns: repeat(3, 1fr); }
+            .planning-perso-container { padding: 12px; }
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1100px) {
             .sidebar { width: 220px; }
@@ -1223,6 +1433,20 @@
 <body>
 
 <!-- ===== HEADER ===== -->
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+        <div class="login-icon">🏢</div>
+        <h2>DAP &mdash; Bureau Uccle</h2>
+        <p class="login-subtitle">29 Place de Saint-Job &bull; S&eacute;lectionnez votre nom</p>
+        <input type="text" class="login-search" id="loginSearch" placeholder="Rechercher..." oninput="filterLoginList()">
+        <select class="login-select" id="loginSelect" size="8">
+            <option value="" disabled selected>Chargement...</option>
+        </select>
+        <button class="login-btn" id="loginBtn" onclick="doLogin()" disabled>Se connecter</button>
+    </div>
+</div>
+
 <div class="header">
     <div class="header-left">
         <h1>DAP — Bureau <span>Uccle</span></h1>
@@ -1244,9 +1468,11 @@
 
         <div class="view-toggle">
             <button class="view-btn active" onclick="setView('plan',this)">Plan</button>
-            <button class="view-btn" onclick="setView('table',this)">Tableau</button>
+            <button class="view-btn" onclick="setView('myplanning',this)">Mon Planning</button>
+            <button class="view-btn" onclick="setView('team',this)">Équipe</button>
         </div>
         <div id="syncStatus" style="font-size:12px;margin-left:8px;white-space:nowrap;"></div>
+        <div class="user-badge" id="userBadge" onclick="showUserMenu()" title="Changer d'utilisateur"><div class="user-dot"></div><span class="user-name" id="userBadgeName">—</span><span class="logout-icon">▾</span></div>
     </div>
 </div>
 
@@ -1521,6 +1747,30 @@
         <table class="planning-table" id="planningTable"></table>
     </div>
 
+
+    <!-- Mon Planning view -->
+    <div class="planning-perso-container" id="myPlanningView">
+        <div class="semaine-type" id="semaineType">
+            <h3>⚙️ Ma semaine type</h3>
+            <div class="semaine-type-grid" id="semaineTypeGrid"></div>
+            <div class="st-apply-row">
+                <button class="st-apply-btn secondary" onclick="clearSemaineType()">Réinitialiser</button>
+                <button class="st-apply-btn primary" onclick="applySemaineType()">Appliquer sur 4 semaines →</button>
+            </div>
+        </div>
+        <div class="planning-calendar" id="planningCalendar">
+            <h3>
+                <span>📅 Mon calendrier</span>
+                <div class="cal-nav">
+                    <button onclick="changeCalMonth(-1)">‹</button>
+                    <span class="cal-month-label" id="calMonthLabel"></span>
+                    <button onclick="changeCalMonth(1)">›</button>
+                </div>
+            </h3>
+            <div class="cal-grid" id="calGrid"></div>
+        </div>
+    </div>
+
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar"></div>
 </div>
@@ -1583,6 +1833,154 @@
 // DATA
 // ============================
 const STORAGE_KEY = 'dap_bureau_uccle_v6';
+
+// ============================
+// AUTHENTICATION
+// ============================
+const AUTH_KEY = 'dap_bureau_auth';
+const ADMIN_PIN = '2929'; // PIN admin = n° de la rue
+
+let currentUser = null; // { id, name, isAdmin }
+
+function initAuth() {
+    // Populate login select
+    populateLoginSelect();
+
+    const saved = localStorage.getItem(AUTH_KEY);
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved);
+            const collab = COLLABORATEURS.find(c => c.id === parsed.id);
+            if (collab) {
+                currentUser = { id: collab.id, name: collab.name, isAdmin: !!parsed.isAdmin };
+                hideLoginScreen();
+                updateUserBadge();
+                return;
+            }
+        } catch(e) {}
+    }
+    showLoginScreen();
+}
+
+function populateLoginSelect(filter) {
+    const sel = document.getElementById('loginSelect');
+    const search = (filter || '').toLowerCase().trim();
+    const sorted = [...COLLABORATEURS].sort((a,b) => a.name.localeCompare(b.name));
+    const filtered = search ? sorted.filter(c => c.name.toLowerCase().includes(search)) : sorted;
+    sel.innerHTML = filtered.map(c =>
+        `<option value="${c.id}">${c.name}</option>`
+    ).join('') || '<option value="" disabled>Aucun résultat</option>';
+    sel.selectedIndex = -1;
+    document.getElementById('loginBtn').disabled = true;
+    sel.onchange = () => { document.getElementById('loginBtn').disabled = !sel.value; };
+}
+
+function filterLoginList() {
+    populateLoginSelect(document.getElementById('loginSearch').value);
+}
+
+function doLogin() {
+    const sel = document.getElementById('loginSelect');
+    if (!sel.value) return;
+    const collab = COLLABORATEURS.find(c => c.id === sel.value);
+    if (!collab) return;
+    currentUser = { id: collab.id, name: collab.name, isAdmin: false };
+    localStorage.setItem(AUTH_KEY, JSON.stringify(currentUser));
+    hideLoginScreen();
+    updateUserBadge();
+    renderAll();
+}
+
+function showLoginScreen() {
+    document.getElementById('loginOverlay').style.display = 'flex';
+    document.getElementById('loginSearch').value = '';
+    populateLoginSelect();
+    setTimeout(() => document.getElementById('loginSearch').focus(), 200);
+}
+
+function hideLoginScreen() {
+    document.getElementById('loginOverlay').style.display = 'none';
+}
+
+function updateUserBadge() {
+    const el = document.getElementById('userBadgeName');
+    if (currentUser) {
+        el.textContent = currentUser.name + (currentUser.isAdmin ? ' ★' : '');
+    }
+}
+
+function showUserMenu() {
+    const choices = ['Changer d\'utilisateur', 'Mode admin'];
+    if (currentUser && currentUser.isAdmin) choices[1] = 'Quitter mode admin';
+    const choice = prompt(
+        `Connecté(e) : ${currentUser ? currentUser.name : '—'}\n` +
+        `1. Changer d'utilisateur\n` +
+        `2. ${choices[1]}\n\n` +
+        `Entrez 1 ou 2 :`
+    );
+    if (choice === '1') {
+        logout();
+    } else if (choice === '2') {
+        toggleAdmin();
+    }
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem(AUTH_KEY);
+    showLoginScreen();
+}
+
+function toggleAdmin() {
+    if (!currentUser) return;
+    if (currentUser.isAdmin) {
+        currentUser.isAdmin = false;
+        localStorage.setItem(AUTH_KEY, JSON.stringify(currentUser));
+        updateUserBadge();
+        renderAll();
+        showToast('Mode admin désactivé');
+    } else {
+        const pin = prompt('Entrez le code admin :');
+        if (pin === ADMIN_PIN) {
+            currentUser.isAdmin = true;
+            localStorage.setItem(AUTH_KEY, JSON.stringify(currentUser));
+            updateUserBadge();
+            renderAll();
+            showToast('Mode admin activé ★');
+        } else if (pin !== null) {
+            alert('Code incorrect.');
+        }
+    }
+}
+
+// Check if current user can modify a reservation on this desk
+function canModifyDesk(deskId) {
+    if (!currentUser) return false;
+    if (currentUser.isAdmin) return true;
+
+    const slot = getCurrentSlotReservations();
+    const reservation = slot[deskId];
+
+    // If desk is empty, check if user has floor access
+    if (!reservation) {
+        const collab = COLLABORATEURS.find(c => c.id === currentUser.id);
+        if (!collab) return false;
+        if (deskId === 'SR') return true;
+        if (collab.fixedDesk && collab.fixedDesk !== deskId) return false;
+        if (collab.fixedDesk === deskId) return true;
+        const deskInfo = DESKS.find(d => d.id === deskId);
+        if (!deskInfo) return false;
+        // Check if desk is a fixed desk for someone else
+        const isOtherFixed = COLLABORATEURS.some(c => c.fixedDesk === deskId && c.id !== currentUser.id);
+        if (isOtherFixed) return false;
+        return collab.floors && collab.floors.includes(deskInfo.floor);
+    }
+
+    // If desk is occupied, only the occupant can modify
+    return reservation.person === currentUser.id;
+}
+
+
 
 // ============================
 // GOOGLE SHEETS BACKEND
@@ -2401,9 +2799,9 @@ function renderTable() {
                     const cfg = STATUS_CONFIG[found.status] || STATUS_CONFIG.libre;
                     const cellClass = 'cell-' + found.status;
                     const label = found.status === 'autre' && found.detail ? found.detail : cfg.label;
-                    cells += `<td class="${cellClass}" style="cursor:pointer;font-size:0.65rem" title="${cfg.label}${found.detail ? ' (' + found.detail + ')' : ''}">${label}</td>`;
+                    cells += `<td class="${cellClass}" style="font-size:0.65rem" title="${cfg.label}${found.detail ? ' (' + found.detail + ')' : ''}">${label}</td>`;
                 } else {
-                    cells += '<td style="cursor:pointer;color:#cbd5e0" title="Cliquer pour réserver">—</td>';
+                    cells += '<td style="color:#cbd5e0">—</td>';
                 }
             });
         });
@@ -2417,6 +2815,18 @@ function renderTable() {
 // MODAL
 // ============================
 function openModal(deskId) {
+    if (!currentUser) { showLoginScreen(); return; }
+    if (!canModifyDesk(deskId)) {
+        const slot = getCurrentSlotReservations();
+        const r = slot[deskId];
+        if (r) {
+            const owner = getCollabById(r.person);
+            showToast('Ce bureau est réservé par ' + (owner ? owner.name : r.person));
+        } else {
+            showToast('Vous n\'avez pas accès à ce bureau');
+        }
+        return;
+    }
     selectedDeskId = deskId;
     const slot = getCurrentSlotReservations();
     const reservation = slot[deskId];
@@ -2436,6 +2846,15 @@ function openModal(deskId) {
     });
     personSelect.innerHTML = '<option value="">— Choisir —</option>' +
         eligibleCollabs.map(c => `<option value="${c.id}" ${reservation && reservation.person === c.id ? 'selected' : ''}>${escapeHtml(c.name)}</option>`).join('');
+
+    // Auto-select current user if not admin
+    if (!currentUser.isAdmin) {
+        personSelect.value = currentUser.id;
+        personSelect.closest('.modal-field').style.display = 'none';
+    } else {
+        personSelect.closest('.modal-field').style.display = '';
+        if (!reservation) personSelect.value = currentUser.id;
+    }
 
     // Status
     if (reservation) {
@@ -2481,8 +2900,10 @@ function setModalPeriod(p, btn) {
 }
 
 function reserveDesk() {
-    const person = document.getElementById('modalPerson').value;
+    let person = document.getElementById('modalPerson').value;
     const status = document.getElementById('modalStatus').value;
+    // Non-admin: force own ID
+    if (currentUser && !currentUser.isAdmin) person = currentUser.id;
     if (!person) { alert('Veuillez choisir un collaborateur.'); return; }
 
     const detail = status === 'autre' ? document.getElementById('modalAutreBureau').value : null;
@@ -2508,6 +2929,16 @@ function reserveDesk() {
 
 function freeDesk() {
     if (!selectedDeskId) return;
+    if (!currentUser) return;
+    // Non-admin can only free their own reservation
+    if (!currentUser.isAdmin) {
+        const slot = getCurrentSlotReservations();
+        const r = slot[selectedDeskId];
+        if (r && r.person !== currentUser.id) {
+            showToast('Vous ne pouvez libérer que votre propre réservation');
+            return;
+        }
+    }
     if (!confirm('Voulez-vous vraiment libérer ce bureau ?')) return;
     const periods = modalPeriod === 'full' ? ['am', 'pm'] : [modalPeriod];
     periods.forEach(p => removeReservation(currentDayIndex, p, selectedDeskId));
@@ -2572,8 +3003,10 @@ function setView(v, btn) {
     document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     document.getElementById('planView').classList.toggle('hidden', v !== 'plan');
-    document.getElementById('tableView').classList.toggle('active', v === 'table');
-    if (v === 'table') renderTable();
+    document.getElementById('tableView').classList.toggle('active', v === 'team');
+    document.getElementById('myPlanningView').classList.toggle('active', v === 'myplanning');
+    if (v === 'team') renderTable();
+    if (v === 'myplanning') renderMyPlanning();
 }
 
 function setSidebarFilter(f) {
@@ -2775,6 +3208,418 @@ function startAmbientMovement() {
     scheduleNextTrip();
 }
 
+
+// ============================
+// MON PLANNING
+// ============================
+const SEMAINE_TYPE_KEY = 'dap_semaine_type_';
+let calViewMonth = new Date().getMonth();
+let calViewYear = new Date().getFullYear();
+
+function getUserSemaineType() {
+    if (!currentUser) return {};
+    try {
+        return JSON.parse(localStorage.getItem(SEMAINE_TYPE_KEY + currentUser.id) || '{}');
+    } catch(e) { return {}; }
+}
+
+function saveUserSemaineType(data) {
+    if (!currentUser) return;
+    localStorage.setItem(SEMAINE_TYPE_KEY + currentUser.id, JSON.stringify(data));
+}
+
+function getAccessibleDesks() {
+    if (!currentUser) return [];
+    const collab = COLLABORATEURS.find(c => c.id === currentUser.id);
+    if (!collab) return [];
+    if (collab.fixedDesk) return [collab.fixedDesk];
+    return DESKS.filter(d => {
+        if (COLLABORATEURS.some(c => c.fixedDesk === d.id)) return false;
+        return collab.floors && collab.floors.includes(d.floor);
+    }).map(d => d.id).concat(['SR']);
+}
+
+function renderMyPlanning() {
+    if (!currentUser) return;
+    renderSemaineType();
+    renderCalendar();
+}
+
+function renderSemaineType() {
+    const grid = document.getElementById('semaineTypeGrid');
+    const st = getUserSemaineType();
+    const desks = getAccessibleDesks();
+    const collab = COLLABORATEURS.find(c => c.id === currentUser.id);
+
+    grid.innerHTML = DAYS.map((day, i) => {
+        const d = st[i] || {};
+        const status = d.status || '';
+        const desk = d.desk || '';
+        const showDesk = (status === 'bureau');
+        return `<div class="st-day">
+            <div class="st-day-name">${day}</div>
+            <select onchange="onSTStatusChange(${i}, this.value)">
+                <option value="" ${!status ? 'selected' : ''}>\u2014 Non d\u00e9fini \u2014</option>
+                <option value="bureau" ${status === 'bureau' ? 'selected' : ''}>\U0001F7E2 Au bureau</option>
+                <option value="teletravail" ${status === 'teletravail' ? 'selected' : ''}>\U0001F535 T\u00e9l\u00e9travail</option>
+                <option value="autre" ${status === 'autre' ? 'selected' : ''}>\U0001F7E1 Autre bureau</option>
+                <option value="conge" ${status === 'conge' ? 'selected' : ''}>\U0001F534 Cong\u00e9</option>
+            </select>
+            <select class="st-desk-select ${showDesk ? 'show' : ''}" onchange="onSTDeskChange(${i}, this.value)">
+                <option value="">Bureau auto</option>
+                ${collab && collab.fixedDesk
+                    ? `<option value="${collab.fixedDesk}" selected>${collab.fixedDesk} (fixe)</option>`
+                    : desks.map(dk => `<option value="${dk}" ${desk === dk ? 'selected' : ''}>${dk}</option>`).join('')
+                }
+            </select>
+        </div>`;
+    }).join('');
+}
+
+function onSTStatusChange(dayIdx, status) {
+    const st = getUserSemaineType();
+    if (!st[dayIdx]) st[dayIdx] = {};
+    st[dayIdx].status = status;
+    if (status !== 'bureau') st[dayIdx].desk = '';
+    saveUserSemaineType(st);
+    renderSemaineType();
+}
+
+function onSTDeskChange(dayIdx, desk) {
+    const st = getUserSemaineType();
+    if (!st[dayIdx]) st[dayIdx] = {};
+    st[dayIdx].desk = desk;
+    saveUserSemaineType(st);
+}
+
+function applySemaineType() {
+    if (!currentUser) return;
+    const st = getUserSemaineType();
+    const today = new Date();
+    let count = 0;
+
+    for (let week = 0; week < 4; week++) {
+        for (let day = 0; day < 5; day++) {
+            const d = st[day];
+            if (!d || !d.status) continue;
+
+            const date = new Date(today);
+            const monday = getMonday(date);
+            monday.setDate(monday.getDate() + (week * 7) + day);
+
+            // Skip past dates
+            if (monday < new Date(today.getFullYear(), today.getMonth(), today.getDate())) continue;
+
+            const weekStart = getMonday(monday);
+            const weekKey = getWeekKey(weekStart);
+            const dayIdx = day;
+
+            ['am', 'pm'].forEach(period => {
+                const key = weekKey + '-' + dayIdx + '-' + period;
+                // Don't overwrite existing manual reservations
+                if (reservations[key]) {
+                    const existingForUser = Object.values(reservations[key]).find(r => r.person === currentUser.id);
+                    if (existingForUser) return;
+                }
+
+                if (d.status === 'bureau') {
+                    const desk = d.desk || findAvailableDesk(key);
+                    if (desk) {
+                        if (!reservations[key]) reservations[key] = {};
+                        // Check if desk already taken
+                        if (reservations[key][desk] && reservations[key][desk].person !== currentUser.id) {
+                            // Try another desk
+                            const alt = findAvailableDeskExcluding(key, desk);
+                            if (alt) {
+                                reservations[key][alt] = { person: currentUser.id, status: 'bureau', detail: null, auto: true };
+                                count++;
+                            }
+                        } else {
+                            reservations[key][desk] = { person: currentUser.id, status: 'bureau', detail: null, auto: true };
+                            count++;
+                        }
+                    }
+                } else {
+                    // For non-bureau statuses, store with a virtual desk key
+                    if (!reservations[key]) reservations[key] = {};
+                    reservations[key]['_status_' + currentUser.id] = { person: currentUser.id, status: d.status, detail: null, auto: true };
+                    count++;
+                }
+            });
+        }
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
+    renderAll();
+    showToast(`Semaine type appliqu\u00e9e (${count} cr\u00e9neaux)`);
+}
+
+function findAvailableDesk(slotKey) {
+    const desks = getAccessibleDesks().filter(d => d !== 'SR');
+    const taken = reservations[slotKey] || {};
+    for (const dk of desks) {
+        if (!taken[dk]) return dk;
+    }
+    return desks[0] || null;
+}
+
+function findAvailableDeskExcluding(slotKey, excludeDesk) {
+    const desks = getAccessibleDesks().filter(d => d !== 'SR' && d !== excludeDesk);
+    const taken = reservations[slotKey] || {};
+    for (const dk of desks) {
+        if (!taken[dk]) return dk;
+    }
+    return null;
+}
+
+function clearSemaineType() {
+    if (!currentUser) return;
+    if (!confirm('R\u00e9initialiser votre semaine type ?')) return;
+    localStorage.removeItem(SEMAINE_TYPE_KEY + currentUser.id);
+    renderSemaineType();
+    showToast('Semaine type r\u00e9initialis\u00e9e');
+}
+
+function getWeekKey(monday) {
+    const jan1 = new Date(monday.getFullYear(), 0, 1);
+    const days = Math.floor((monday - jan1) / 86400000);
+    const weekNum = Math.ceil((days + jan1.getDay() + 1) / 7);
+    return monday.getFullYear() + '-W' + String(weekNum).padStart(2, '0');
+}
+
+// Calendar rendering
+function changeCalMonth(delta) {
+    calViewMonth += delta;
+    if (calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
+    if (calViewMonth < 0) { calViewMonth = 11; calViewYear--; }
+    renderCalendar();
+}
+
+function renderCalendar() {
+    if (!currentUser) return;
+    const months = ['Janvier', 'F\u00e9vrier', 'Mars', 'Avril', 'Mai', 'Juin',
+                     'Juillet', 'Ao\u00fbt', 'Septembre', 'Octobre', 'Novembre', 'D\u00e9cembre'];
+
+    document.getElementById('calMonthLabel').textContent = months[calViewMonth] + ' ' + calViewYear;
+
+    const grid = document.getElementById('calGrid');
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    // Headers
+    let html = DAY_SHORT.map(d => `<div class="cal-header">${d}</div>`).join('');
+
+    // Get all weekdays of the month
+    const firstDay = new Date(calViewYear, calViewMonth, 1);
+    const lastDay = new Date(calViewYear, calViewMonth + 1, 0);
+
+    // Padding for first week
+    let startDow = firstDay.getDay(); // 0=Sun
+    if (startDow === 0) startDow = 7;
+    for (let p = 1; p < startDow; p++) {
+        if (p <= 5) html += '<div class="cal-cell" style="visibility:hidden"></div>';
+    }
+
+    for (let d = 1; d <= lastDay.getDate(); d++) {
+        const date = new Date(calViewYear, calViewMonth, d);
+        const dow = date.getDay();
+        if (dow === 0 || dow === 6) continue; // Skip weekends
+
+        const dayIdx = dow - 1; // 0=Mon...4=Fri
+        const isToday = date.getTime() === today.getTime();
+        const isPast = date < today;
+
+        // Find user's status for this date
+        const weekStart = getMonday(date);
+        const weekKey = getWeekKey(weekStart);
+        let userStatus = null;
+        let userDesk = null;
+        let isAuto = false;
+
+        // Check explicit reservations
+        ['am'].forEach(period => {
+            const key = weekKey + '-' + dayIdx + '-' + period;
+            if (reservations[key]) {
+                // Check desk reservations
+                for (const [dk, data] of Object.entries(reservations[key])) {
+                    if (data.person === currentUser.id) {
+                        userStatus = data.status;
+                        if (dk.startsWith('_status_')) {
+                            userDesk = null;
+                        } else {
+                            userDesk = dk;
+                        }
+                        isAuto = !!data.auto;
+                        break;
+                    }
+                }
+            }
+        });
+
+        const statusLabel = userStatus ? (STATUS_CONFIG[userStatus]?.label || userStatus) : '';
+        const statusClass = userStatus ? 'cal-s-' + userStatus : '';
+
+        html += `<div class="cal-cell ${isToday ? 'today' : ''} ${isPast ? 'past' : ''}"
+                      onclick="${isPast ? '' : `openCalEdit(${calViewYear},${calViewMonth},${d}, this)`}">
+            <div class="cal-date">${d}</div>
+            ${userStatus
+                ? `<div class="cal-status ${statusClass}">${statusLabel}</div>
+                   ${userDesk ? `<div class="cal-desk">${userDesk}</div>` : ''}
+                   ${isAuto ? '<div class="cal-auto-tag">auto</div>' : ''}`
+                : '<div class="cal-status cal-s-libre">\u2014</div>'}
+        </div>`;
+    }
+
+    grid.innerHTML = html;
+}
+
+// Edit popover for a calendar cell
+function openCalEdit(year, month, day, cellEl) {
+    if (!currentUser) return;
+    // Remove existing popover
+    const existing = document.querySelector('.cal-edit-pop');
+    if (existing) existing.remove();
+
+    const date = new Date(year, month, day);
+    const dayIdx = date.getDay() - 1;
+    const weekStart = getMonday(date);
+    const weekKey = getWeekKey(weekStart);
+    const desks = getAccessibleDesks();
+    const collab = COLLABORATEURS.find(c => c.id === currentUser.id);
+
+    // Current status
+    let curStatus = '';
+    let curDesk = '';
+    ['am'].forEach(period => {
+        const key = weekKey + '-' + dayIdx + '-' + period;
+        if (reservations[key]) {
+            for (const [dk, data] of Object.entries(reservations[key])) {
+                if (data.person === currentUser.id) {
+                    curStatus = data.status;
+                    curDesk = dk.startsWith('_status_') ? '' : dk;
+                }
+            }
+        }
+    });
+
+    const dayNames = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+    const dateStr = dayNames[date.getDay()] + ' ' + day + '/' + (month+1);
+
+    const pop = document.createElement('div');
+    pop.className = 'cal-edit-pop';
+
+    pop.innerHTML = `
+        <h4>${dateStr}</h4>
+        <select id="calEditStatus">
+            <option value="">\u2014 Non d\u00e9fini \u2014</option>
+            <option value="bureau" ${curStatus === 'bureau' ? 'selected' : ''}>\U0001F7E2 Au bureau</option>
+            <option value="teletravail" ${curStatus === 'teletravail' ? 'selected' : ''}>\U0001F535 T\u00e9l\u00e9travail</option>
+            <option value="autre" ${curStatus === 'autre' ? 'selected' : ''}>\U0001F7E1 Autre bureau</option>
+            <option value="conge" ${curStatus === 'conge' ? 'selected' : ''}>\U0001F534 Cong\u00e9</option>
+            <option value="indisponible" ${curStatus === 'indisponible' ? 'selected' : ''}>\U0001F7E3 Indisponible</option>
+        </select>
+        <select id="calEditDesk" style="${curStatus === 'bureau' ? '' : 'display:none'}">
+            <option value="">Bureau auto</option>
+            ${collab && collab.fixedDesk
+                ? `<option value="${collab.fixedDesk}" selected>${collab.fixedDesk} (fixe)</option>`
+                : desks.map(dk => `<option value="${dk}" ${curDesk === dk ? 'selected' : ''}>${dk}</option>`).join('')}
+        </select>
+        <div class="pop-actions">
+            <button class="pop-btn pop-clear" onclick="calEditClear(${year},${month},${day})">Effacer</button>
+            <button class="pop-btn pop-cancel" onclick="closeCalEdit()">Annuler</button>
+            <button class="pop-btn pop-save" onclick="calEditSave(${year},${month},${day})">OK</button>
+        </div>
+    `;
+
+    // Position
+    const rect = cellEl.getBoundingClientRect();
+    pop.style.top = (rect.bottom + 4) + 'px';
+    pop.style.left = Math.min(rect.left, window.innerWidth - 240) + 'px';
+
+    document.body.appendChild(pop);
+
+    // Toggle desk select visibility
+    pop.querySelector('#calEditStatus').addEventListener('change', function() {
+        pop.querySelector('#calEditDesk').style.display = this.value === 'bureau' ? '' : 'none';
+    });
+
+    // Close on outside click
+    setTimeout(() => {
+        document.addEventListener('click', function handler(e) {
+            if (!pop.contains(e.target) && !cellEl.contains(e.target)) {
+                pop.remove();
+                document.removeEventListener('click', handler);
+            }
+        });
+    }, 10);
+}
+
+function closeCalEdit() {
+    const pop = document.querySelector('.cal-edit-pop');
+    if (pop) pop.remove();
+}
+
+function calEditSave(year, month, day) {
+    const status = document.getElementById('calEditStatus').value;
+    const deskSel = document.getElementById('calEditDesk');
+    const desk = deskSel ? deskSel.value : '';
+
+    const date = new Date(year, month, day);
+    const dayIdx = date.getDay() - 1;
+    const weekStart = getMonday(date);
+    const weekKey = getWeekKey(weekStart);
+
+    ['am', 'pm'].forEach(period => {
+        const key = weekKey + '-' + dayIdx + '-' + period;
+
+        // Remove existing reservation for this user
+        if (reservations[key]) {
+            for (const [dk, data] of Object.entries(reservations[key])) {
+                if (data.person === currentUser.id) delete reservations[key][dk];
+            }
+        }
+
+        if (!status) return; // No status = cleared
+
+        if (status === 'bureau') {
+            const chosenDesk = desk || findAvailableDesk(key);
+            if (chosenDesk) {
+                if (!reservations[key]) reservations[key] = {};
+                reservations[key][chosenDesk] = { person: currentUser.id, status: 'bureau', detail: null };
+            }
+        } else {
+            if (!reservations[key]) reservations[key] = {};
+            reservations[key]['_status_' + currentUser.id] = { person: currentUser.id, status: status, detail: null };
+        }
+    });
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
+    closeCalEdit();
+    renderCalendar();
+    showToast('Planning mis \u00e0 jour');
+}
+
+function calEditClear(year, month, day) {
+    const date = new Date(year, month, day);
+    const dayIdx = date.getDay() - 1;
+    const weekStart = getMonday(date);
+    const weekKey = getWeekKey(weekStart);
+
+    ['am', 'pm'].forEach(period => {
+        const key = weekKey + '-' + dayIdx + '-' + period;
+        if (reservations[key]) {
+            for (const [dk, data] of Object.entries(reservations[key])) {
+                if (data.person === currentUser.id) delete reservations[key][dk];
+            }
+        }
+    });
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
+    closeCalEdit();
+    renderCalendar();
+    showToast('Jour effac\u00e9');
+}
+
 // ============================
 // RENDER ALL
 // ============================
@@ -2784,7 +3629,8 @@ function renderAll() {
     renderStats();
     renderDesks();
     renderSidebar();
-    if (currentView === 'table') renderTable();
+    if (currentView === 'team') renderTable();
+    if (currentView === 'myplanning') renderMyPlanning();
     startAmbientMovement();
 }
 
