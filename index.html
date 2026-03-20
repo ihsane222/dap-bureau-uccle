@@ -1611,6 +1611,103 @@
         @media (max-width: 900px) {
             .mobile-sidebar-toggle { display: flex; align-items: center; justify-content: center; }
         }
+        /* ===== TUTORIAL ===== */
+        .tutorial-spotlight {
+            position: fixed;
+            z-index: 10000;
+            border-radius: 10px;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.65);
+            transition: top 0.45s cubic-bezier(0.4,0,0.2,1),
+                        left 0.45s cubic-bezier(0.4,0,0.2,1),
+                        width 0.45s cubic-bezier(0.4,0,0.2,1),
+                        height 0.45s cubic-bezier(0.4,0,0.2,1);
+            pointer-events: none;
+            display: none;
+        }
+        .tutorial-spotlight.active { display: block; }
+
+        .tutorial-bubble {
+            position: fixed;
+            z-index: 10001;
+            background: white;
+            border-radius: 14px;
+            padding: 20px 22px 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+            max-width: 340px;
+            min-width: 260px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease 0.15s, transform 0.3s ease 0.15s;
+            display: none;
+        }
+        .tutorial-bubble.visible { opacity: 1; transform: translateY(0); display: block; }
+
+        .tutorial-bubble::before {
+            content: '';
+            position: absolute;
+            width: 12px; height: 12px;
+            background: white;
+            transform: rotate(45deg);
+        }
+        .tutorial-bubble[data-arrow="top"]::before    { top: -6px; left: 30px; }
+        .tutorial-bubble[data-arrow="bottom"]::before { bottom: -6px; left: 30px; }
+        .tutorial-bubble[data-arrow="left"]::before   { left: -6px; top: 28px; }
+        .tutorial-bubble[data-arrow="right"]::before  { right: -6px; top: 28px; }
+
+        .tutorial-step-count {
+            font-size: 0.68rem; color: var(--accent); font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+        }
+        .tutorial-bubble h4 {
+            font-size: 0.95rem; color: var(--primary); margin: 0 0 8px 0;
+        }
+        .tutorial-bubble p {
+            font-size: 0.82rem; color: var(--text); line-height: 1.55; margin: 0 0 16px 0;
+        }
+        .tutorial-nav {
+            display: flex; align-items: center; gap: 8px; justify-content: space-between;
+        }
+        .tutorial-nav button {
+            padding: 7px 16px; border: none; border-radius: 6px;
+            font-size: 0.8rem; font-weight: 600; cursor: pointer;
+            font-family: inherit; transition: background 0.15s;
+        }
+        .tutorial-btn-next { background: var(--accent); color: white; }
+        .tutorial-btn-next:hover { background: var(--accent-hover); }
+        .tutorial-btn-prev { background: #e2e8f0; color: var(--text); }
+        .tutorial-btn-prev:hover { background: #cbd5e0; }
+        .tutorial-btn-skip { background: none; color: var(--text-light); font-size: 0.75rem; padding: 4px 8px; }
+        .tutorial-btn-skip:hover { color: var(--text); }
+
+        .tutorial-dots {
+            display: flex; gap: 5px; justify-content: center; margin-top: 10px;
+        }
+        .tutorial-dot {
+            width: 7px; height: 7px; border-radius: 50%; background: #e2e8f0; transition: background 0.2s;
+        }
+        .tutorial-dot.active { background: var(--accent); }
+        .tutorial-dot.done { background: var(--green); }
+
+        .help-btn {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+            color: white; font-size: 0.85rem; font-weight: 700;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background 0.15s; flex-shrink: 0;
+        }
+        .help-btn:hover { background: rgba(255,255,255,0.3); }
+
+        /* Clickthrough on dark overlay area */
+        .tutorial-click-blocker {
+            position: fixed; inset: 0; z-index: 9999;
+            display: none;
+        }
+        .tutorial-click-blocker.active { display: block; }
+
+        @media (max-width: 900px) {
+            .tutorial-bubble { max-width: 280px; min-width: 220px; padding: 16px 18px 14px; }
+        }
+
     </style>
 </head>
 <body>
@@ -1655,6 +1752,7 @@
             <button class="view-btn" onclick="setView('myplanning',this)">Mon Planning</button>
             <button class="view-btn" onclick="setView('team',this)">Équipe</button>
         </div>
+        <button class="help-btn" onclick="startTutorial()" title="Aide — Tutoriel d'utilisation">?</button>
         <div id="syncStatus" style="font-size:12px;margin-left:8px;white-space:nowrap;"></div>
         <div class="user-badge" id="userBadge" onclick="showUserMenu()" title="Changer d'utilisateur"><div class="user-dot"></div><span class="user-name" id="userBadgeName">—</span><span class="logout-icon">▾</span></div>
     </div>
@@ -2044,6 +2142,7 @@ function initAuth() {
                 currentUser = { id: collab.id, name: collab.name, isAdmin: !!parsed.isAdmin };
                 hideLoginScreen();
                 updateUserBadge();
+                if (!isTutorialDone()) setTimeout(startTutorial, 600);
                 return;
             }
         } catch(e) {}
@@ -2078,6 +2177,7 @@ function doLogin() {
     hideLoginScreen();
     updateUserBadge();
     renderAll();
+    if (!isTutorialDone()) setTimeout(startTutorial, 600);
 }
 
 function showLoginScreen() {
@@ -4041,6 +4141,273 @@ function calEditClear(year, month, day) {
     renderCalendar();
     showToast('Jour effac\u00e9');
 }
+
+// ============================
+// ONBOARDING TUTORIAL
+// ============================
+const TUTORIAL_KEY = 'dap_tutorial_done';
+const TUTORIAL_STEPS = [
+    {
+        selector: '#planView',
+        title: 'Le plan du bureau',
+        text: 'Voici le plan des 3 \u00e9tages du bureau (RDC, 1er, 2\u00e8me). Chaque petit personnage repr\u00e9sente un coll\u00e8gue \u00e0 son bureau. Les emplacements avec un \u00ab + \u00bb sont libres \u2014 cliquez dessus pour r\u00e9server.',
+        position: 'right',
+        view: 'plan'
+    },
+    {
+        selector: '#dayTabs',
+        title: 'Jours et cr\u00e9neaux',
+        text: 'S\u00e9lectionnez le jour de la semaine ici. Les boutons AM/PM \u00e0 droite permettent de basculer entre le matin et l\u2019apr\u00e8s-midi.',
+        position: 'bottom',
+        view: null
+    },
+    {
+        selector: '.week-nav',
+        title: 'Navigation par semaine',
+        text: 'Utilisez les fl\u00e8ches pour voir les semaines pass\u00e9es ou futures. Le bouton \u00ab Auj. \u00bb vous ram\u00e8ne \u00e0 aujourd\u2019hui.',
+        position: 'bottom',
+        view: null
+    },
+    {
+        selector: '.desk-unit',
+        title: 'R\u00e9server un bureau',
+        text: 'Cliquez sur n\u2019importe quel bureau pour ouvrir la fen\u00eatre de r\u00e9servation. Vous pourrez y choisir votre statut : pr\u00e9sent au bureau, t\u00e9l\u00e9travail, cong\u00e9\u2026',
+        position: 'right',
+        view: 'plan'
+    },
+    {
+        selector: '.view-toggle',
+        title: 'Modes d\u2019affichage',
+        text: 'Basculez entre 4 vues : Plan (le bureau graphique), Semaine (aper\u00e7u global de la semaine), Mon Planning (votre semaine type + calendrier), \u00c9quipe (tableau complet).',
+        position: 'bottom',
+        view: null
+    },
+    {
+        selector: '#sidebar',
+        title: 'Liste des collaborateurs',
+        text: 'Tous les coll\u00e8gues et leur statut du jour. Survolez un nom et cliquez sur l\u2019ic\u00f4ne \ud83d\udcc5 pour voir sa semaine compl\u00e8te. Filtrez par statut avec les boutons en haut.',
+        position: 'left',
+        view: 'plan',
+        mobileAction: 'openSidebar'
+    },
+    {
+        selector: '#statsBar',
+        title: 'Occupation & jauges',
+        text: 'Vue d\u2019ensemble de l\u2019occupation : combien de personnes au bureau, en t\u00e9l\u00e9travail, absentes. Les jauges RDC/1er/2\u00e8me montrent le taux de remplissage par \u00e9tage.',
+        position: 'bottom',
+        view: null
+    },
+    {
+        selector: '#myPlanningView',
+        title: 'Mon Planning',
+        text: 'D\u00e9finissez votre \u00ab semaine type \u00bb (ex: lundi bureau, mardi t\u00e9l\u00e9travail) et appliquez-la automatiquement sur 4 semaines. Le calendrier en dessous permet d\u2019ajuster jour par jour.',
+        position: 'top',
+        view: 'myplanning'
+    }
+];
+
+let tutorialActive = false;
+let tutorialStep = 0;
+
+function isTutorialDone() {
+    return localStorage.getItem(TUTORIAL_KEY) === 'true';
+}
+
+function startTutorial() {
+    tutorialActive = true;
+    tutorialStep = 0;
+    ensureTutorialDOM();
+    document.getElementById('tutorialSpotlight').classList.add('active');
+    document.getElementById('tutorialBlocker').classList.add('active');
+    showTutorialStep(0);
+}
+
+function ensureTutorialDOM() {
+    if (document.getElementById('tutorialSpotlight')) return;
+
+    const spotlight = document.createElement('div');
+    spotlight.id = 'tutorialSpotlight';
+    spotlight.className = 'tutorial-spotlight';
+    document.body.appendChild(spotlight);
+
+    const bubble = document.createElement('div');
+    bubble.id = 'tutorialBubble';
+    bubble.className = 'tutorial-bubble';
+    document.body.appendChild(bubble);
+
+    const blocker = document.createElement('div');
+    blocker.id = 'tutorialBlocker';
+    blocker.className = 'tutorial-click-blocker';
+    blocker.addEventListener('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    });
+    document.body.appendChild(blocker);
+}
+
+function showTutorialStep(index) {
+    const step = TUTORIAL_STEPS[index];
+    if (!step) { endTutorial(); return; }
+    tutorialStep = index;
+
+    // Switch view if needed
+    if (step.view) {
+        const viewBtn = document.querySelector('.view-btn');
+        const allBtns = document.querySelectorAll('.view-btn');
+        allBtns.forEach(b => {
+            if (b.textContent.trim().toLowerCase().includes(step.view === 'myplanning' ? 'planning' : step.view === 'team' ? 'quipe' : step.view)) {
+                setView(step.view, b);
+            }
+        });
+        if (step.view === 'plan') setView('plan', allBtns[0]);
+        else if (step.view === 'myplanning') setView('myplanning', allBtns[2]);
+    }
+
+    // Mobile sidebar
+    if (step.mobileAction === 'openSidebar' && window.innerWidth <= 900) {
+        const sb = document.querySelector('.sidebar');
+        if (sb && !sb.classList.contains('mobile-open')) toggleMobileSidebar();
+    }
+
+    // Wait for render
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            positionSpotlight(step);
+            renderBubble(step, index);
+        });
+    });
+}
+
+function positionSpotlight(step) {
+    const el = document.querySelector(step.selector);
+    const spot = document.getElementById('tutorialSpotlight');
+    if (!el || !spot) return;
+
+    const rect = el.getBoundingClientRect();
+    const pad = 12;
+
+    // Scroll into view if needed
+    if (rect.top < 0 || rect.bottom > window.innerHeight) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => {
+            const r2 = el.getBoundingClientRect();
+            spot.style.top = (r2.top - pad) + 'px';
+            spot.style.left = (r2.left - pad) + 'px';
+            spot.style.width = (r2.width + pad * 2) + 'px';
+            spot.style.height = (r2.height + pad * 2) + 'px';
+        }, 400);
+        return;
+    }
+
+    spot.style.top = (rect.top - pad) + 'px';
+    spot.style.left = (rect.left - pad) + 'px';
+    spot.style.width = (rect.width + pad * 2) + 'px';
+    spot.style.height = (rect.height + pad * 2) + 'px';
+}
+
+function renderBubble(step, index) {
+    const bubble = document.getElementById('tutorialBubble');
+    const el = document.querySelector(step.selector);
+    if (!el || !bubble) return;
+
+    const total = TUTORIAL_STEPS.length;
+
+    let dotsHtml = '<div class="tutorial-dots">';
+    for (let i = 0; i < total; i++) {
+        const cls = i < index ? 'done' : (i === index ? 'active' : '');
+        dotsHtml += '<div class="tutorial-dot ' + cls + '"></div>';
+    }
+    dotsHtml += '</div>';
+
+    bubble.innerHTML =
+        '<div class="tutorial-step-count">\u00c9tape ' + (index + 1) + '/' + total + '</div>' +
+        '<h4>' + step.title + '</h4>' +
+        '<p>' + step.text + '</p>' +
+        '<div class="tutorial-nav">' +
+            (index > 0
+                ? '<button class="tutorial-btn-prev" onclick="prevTutorialStep()">\u2190 Pr\u00e9c\u00e9dent</button>'
+                : '<button class="tutorial-btn-skip" onclick="endTutorial()">Passer \u2715</button>') +
+            '<button class="tutorial-btn-next" onclick="nextTutorialStep()">' +
+                (index < total - 1 ? 'Suivant \u2192' : 'Terminer \u2713') +
+            '</button>' +
+        '</div>' +
+        dotsHtml;
+
+    // Position bubble
+    bubble.classList.remove('visible');
+    const rect = el.getBoundingClientRect();
+    const bw = 340;
+    let top, left, arrow;
+
+    switch (step.position) {
+        case 'bottom':
+            top = rect.bottom + 16;
+            left = rect.left + rect.width / 2 - bw / 2;
+            arrow = 'top';
+            break;
+        case 'top':
+            top = rect.top - 220;
+            left = rect.left + rect.width / 2 - bw / 2;
+            arrow = 'bottom';
+            break;
+        case 'left':
+            top = rect.top + rect.height / 2 - 100;
+            left = rect.left - bw - 16;
+            arrow = 'right';
+            break;
+        case 'right':
+        default:
+            top = rect.top + rect.height / 2 - 100;
+            left = rect.right + 16;
+            arrow = 'left';
+            break;
+    }
+
+    // Clamp to viewport
+    left = Math.max(12, Math.min(left, window.innerWidth - bw - 12));
+    top = Math.max(12, Math.min(top, window.innerHeight - 260));
+
+    bubble.style.top = top + 'px';
+    bubble.style.left = left + 'px';
+    bubble.setAttribute('data-arrow', arrow);
+
+    requestAnimationFrame(() => bubble.classList.add('visible'));
+}
+
+function nextTutorialStep() {
+    if (tutorialStep < TUTORIAL_STEPS.length - 1) {
+        showTutorialStep(tutorialStep + 1);
+    } else {
+        endTutorial();
+    }
+}
+
+function prevTutorialStep() {
+    if (tutorialStep > 0) {
+        showTutorialStep(tutorialStep - 1);
+    }
+}
+
+function endTutorial() {
+    tutorialActive = false;
+    localStorage.setItem(TUTORIAL_KEY, 'true');
+    const spot = document.getElementById('tutorialSpotlight');
+    const bubble = document.getElementById('tutorialBubble');
+    const blocker = document.getElementById('tutorialBlocker');
+    if (spot) spot.classList.remove('active');
+    if (bubble) bubble.classList.remove('visible');
+    if (blocker) blocker.classList.remove('active');
+    // Retour au plan
+    const planBtn = document.querySelectorAll('.view-btn')[0];
+    setView('plan', planBtn);
+}
+
+window.addEventListener('resize', function() {
+    if (tutorialActive && TUTORIAL_STEPS[tutorialStep]) {
+        positionSpotlight(TUTORIAL_STEPS[tutorialStep]);
+        renderBubble(TUTORIAL_STEPS[tutorialStep], tutorialStep);
+    }
+});
 
 // ============================
 // RENDER ALL
