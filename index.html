@@ -1893,6 +1893,228 @@
             .tutorial-bubble { max-width: 280px; min-width: 220px; padding: 16px 18px 14px; }
         }
 
+        /* ===== ROOM TIME SLOTS ===== */
+        .room-time-section { margin-top: 8px; }
+        .room-time-row {
+            display: flex; gap: 8px; align-items: center; margin-bottom: 8px;
+        }
+        .room-time-row label { font-size: 0.8rem; font-weight: 600; color: #4a5568; min-width: 50px; }
+        .room-time-row select {
+            flex: 1; padding: 8px 10px; border: 2px solid #e2e8f0; border-radius: 8px;
+            font-size: 0.85rem; background: #f7fafc; color: #2d3748;
+        }
+        .room-time-row select:focus { outline: none; border-color: #ed8936; }
+        .room-slots-grid {
+            display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px; margin-top: 8px;
+        }
+        .room-slot {
+            padding: 4px 2px; text-align: center; font-size: 0.65rem; font-weight: 600;
+            border-radius: 4px; border: 1px solid #e2e8f0; background: #f0fff4; color: #276749;
+            cursor: default; line-height: 1.2;
+        }
+        .room-slot.booked {
+            background: #fed7d7; color: #9b2c2c; border-color: #feb2b2;
+        }
+        .room-slot.mine {
+            background: #bee3f8; color: #2a4365; border-color: #90cdf4;
+        }
+        .room-slot.selected-slot {
+            background: #feebc8; color: #7b341e; border-color: #ed8936;
+            box-shadow: 0 0 0 2px rgba(237,137,54,0.3);
+        }
+        .room-slot-name {
+            font-size: 0.55rem; font-weight: 400; display: block;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .room-bookings-title {
+            font-size: 0.75rem; font-weight: 700; color: #718096; margin: 10px 0 4px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        /* ===== MINI WIDGET MODE ===== */
+        .mini-widget {
+            display: none;
+            flex-direction: column;
+            max-width: 340px;
+            margin: 0 auto;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 13px;
+            color: #2d3748;
+            height: 100vh;
+            overflow-y: auto;
+            background: #f7fafc;
+        }
+        .mini-header {
+            background: linear-gradient(135deg, #1a365d, #2b6cb0);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .mini-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mini-header h2 {
+            font-size: 14px;
+            margin: 0;
+            font-weight: 700;
+        }
+        .mini-header .mini-user {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        .mini-expand-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .mini-expand-btn:hover { background: rgba(255,255,255,0.25); }
+        .mini-section {
+            background: white;
+            margin: 8px;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .mini-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #718096;
+            margin-bottom: 8px;
+        }
+        .mini-gauges {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .mini-gauge-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mini-gauge-label {
+            font-size: 12px;
+            font-weight: 600;
+            width: 32px;
+            color: #4a5568;
+        }
+        .mini-gauge-bar {
+            flex: 1;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .mini-gauge-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.4s ease;
+        }
+        .mini-gauge-count {
+            font-size: 11px;
+            font-weight: 600;
+            width: 30px;
+            text-align: right;
+        }
+        .mini-my-desk {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: #f0fff4;
+            border-radius: 8px;
+            border: 1px solid #c6f6d5;
+        }
+        .mini-my-desk-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #48bb78;
+            flex-shrink: 0;
+        }
+        .mini-my-desk-text {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .mini-no-desk {
+            color: #a0aec0;
+            font-style: italic;
+            font-size: 12px;
+        }
+        .mini-neighbors-list {
+            font-size: 12px;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        .mini-chat-msg {
+            font-size: 12px;
+            color: #4a5568;
+            font-style: italic;
+            line-height: 1.4;
+        }
+        .mini-chat-msg .mini-chat-author {
+            font-weight: 600;
+            font-style: normal;
+            color: #2d3748;
+        }
+        .mini-chat-msg .mini-chat-time {
+            font-size: 10px;
+            color: #a0aec0;
+            margin-left: 4px;
+        }
+        .mini-action-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            margin: 8px;
+            box-sizing: border-box;
+            transition: transform 0.15s;
+        }
+        .mini-action-btn:hover { transform: translateY(-1px); }
+        .mini-stats-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .mini-stat-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .mini-stat-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
     </style>
 </head>
 <body>
@@ -1910,6 +2132,19 @@
         </select>
         <button class="login-btn" id="loginBtn" onclick="doLogin()" disabled>Se connecter</button>
     </div>
+</div>
+
+<!-- ===== MINI WIDGET ===== -->
+<div class="mini-widget" id="miniWidget">
+    <div class="mini-header">
+        <div class="mini-header-left">
+            <h2>DAP Bureau Uccle</h2>
+            <span class="mini-user" id="miniUserName"></span>
+        </div>
+        <button class="mini-expand-btn" onclick="expandFromMini()" title="Ouvrir en plein écran">Ouvrir ↗</button>
+    </div>
+    <div id="miniContent"></div>
+    <button class="mini-action-btn" onclick="expandFromMini()">Ouvrir l'app complète ↗</button>
 </div>
 
 <div class="header">
@@ -1937,6 +2172,7 @@
             <button class="view-btn" onclick="setView('myplanning',this)">Mon Planning</button>
             <button class="view-btn" onclick="setView('team',this)">Équipe</button>
         </div>
+        <button class="help-btn" onclick="openMiniWindow()" title="Ouvrir en mini-fenêtre">⬜</button>
         <button class="help-btn" onclick="startTutorial()" title="Aide — Tutoriel d'utilisation">?</button>
         <div id="syncStatus" style="font-size:12px;margin-left:8px;white-space:nowrap;"></div>
         <div class="user-badge" id="userBadge" onclick="showUserMenu()" title="Changer d'utilisateur"><div class="user-dot"></div><span class="user-name" id="userBadgeName">—</span><span class="logout-icon">▾</span></div>
@@ -2046,7 +2282,7 @@
             </div>
 
             <!-- X1 Accueil -->
-            <div class="room room-floor-accueil" style="left:10px;top:454px;width:100px;height:170px">
+            <div class="room room-floor-accueil" style="left:10px;top:454px;width:100px;height:120px">
                 <span class="room-title">Accueil</span>
             </div>
             <!-- Escalier RDC -->
@@ -2078,6 +2314,11 @@
             <!-- SC Salle Clientèle (non réservable) -->
             <div class="room room-floor-reunion" style="left:900px;top:454px;width:50px;height:170px">
                 <span class="room-title" style="font-size:5px">SC</span>
+            </div>
+
+            <!-- SAC Salle Accueil Clientèle (réservable) -->
+            <div class="room room-floor-reunion" style="left:10px;top:578px;width:100px;height:46px;border:2px solid #c4a265;background:linear-gradient(135deg,#f5f0e6,#e8dcc8)">
+                <span class="room-title" style="font-size:4.5px;top:4px;left:4px;color:#8a6a3a">Accueil Client&egrave;le</span>
             </div>
 
             <!-- Portes RDC -->
@@ -2172,9 +2413,16 @@
             <!-- Armoire dans couloir RDC -->
             <div class="furniture" style="left:288px;top:465px;width:18px;height:30px;background:#8a7b6b;border:2px solid #6a5b4b;border-radius:1px;z-index:5"></div>
             <div class="furniture" style="left:540px;top:465px;width:18px;height:30px;background:#8a7b6b;border:2px solid #6a5b4b;border-radius:1px;z-index:5"></div>
+            <!-- Table accueil clientèle SAC -->
+            <div class="furniture" style="left:40px;top:590px;width:40px;height:12px;background:#c4a265;border:2px solid #a08050;border-radius:2px;z-index:5"></div>
+            <!-- Chaises SAC -->
+            <div class="furniture" style="left:45px;top:585px;width:8px;height:4px;background:#8a7b6b;border:1px solid #6a5b4b;border-radius:1px;z-index:5"></div>
+            <div class="furniture" style="left:67px;top:585px;width:8px;height:4px;background:#8a7b6b;border:1px solid #6a5b4b;border-radius:1px;z-index:5"></div>
+            <div class="furniture" style="left:45px;top:604px;width:8px;height:4px;background:#8a7b6b;border:1px solid #6a5b4b;border-radius:1px;z-index:5"></div>
+            <div class="furniture" style="left:67px;top:604px;width:8px;height:4px;background:#8a7b6b;border:1px solid #6a5b4b;border-radius:1px;z-index:5"></div>
+            <!-- Porte SAC -->
+            <div class="door" style="left:90px;top:590px"><div class="door-v" style="height:18px"></div></div>
             <!-- Plantes RDC -->
-            <div class="furniture" style="left:14px;top:600px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:88px;top:600px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
             <div class="furniture" style="left:258px;top:600px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
             <div class="furniture" style="left:880px;top:600px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
             <!-- Corbeilles RDC -->
@@ -2283,7 +2531,7 @@
                     </select>
                 </div>
             </div>
-            <div class="modal-field">
+            <div class="modal-field" id="modalPeriodField">
                 <label>P&eacute;riode</label>
                 <div class="modal-period">
                     <button class="period-btn active" data-p="full" onclick="setModalPeriod('full',this)">Journ&eacute;e</button>
@@ -2291,11 +2539,29 @@
                     <button class="period-btn" data-p="pm" onclick="setModalPeriod('pm',this)">Apr&egrave;s-midi (PM)</button>
                 </div>
             </div>
+            <!-- Section horaire pour salles SR/SAC -->
+            <div class="modal-field room-time-section" id="roomTimeSection" style="display:none">
+                <label>Cr&eacute;neau horaire</label>
+                <div class="room-time-row">
+                    <label>D&eacute;but</label>
+                    <select id="roomStartHour"></select>
+                </div>
+                <div class="room-time-row">
+                    <label>Dur&eacute;e</label>
+                    <select id="roomDuration">
+                        <option value="1">1 heure</option>
+                        <option value="2">2 heures</option>
+                        <option value="3">3 heures</option>
+                    </select>
+                </div>
+                <div class="room-bookings-title">Cr&eacute;neaux du jour</div>
+                <div class="room-slots-grid" id="roomSlotsGrid"></div>
+            </div>
         </div>
         <div class="modal-actions">
             <button class="btn-modal btn-cancel" onclick="closeModal()">Annuler</button>
-            <button class="btn-modal btn-free" onclick="freeDesk()">Lib&eacute;rer</button>
-            <button class="btn-modal btn-reserve" onclick="reserveDesk()">R&eacute;server</button>
+            <button class="btn-modal btn-free" onclick="isRoomDesk(selectedDeskId)?freeRoomSlots():freeDesk()">Lib&eacute;rer</button>
+            <button class="btn-modal btn-reserve" onclick="isRoomDesk(selectedDeskId)?reserveRoom():reserveDesk()">R&eacute;server</button>
         </div>
     </div>
 </div>
@@ -2439,7 +2705,7 @@ function canModifyDesk(deskId) {
     if (!reservation) {
         const collab = COLLABORATEURS.find(c => c.id === currentUser.id);
         if (!collab) return false;
-        if (deskId === 'SR') return true;
+        if (deskId === 'SR' || deskId === 'SAC') return true;
         if (collab.fixedDesk && collab.fixedDesk !== deskId) return false;
         if (collab.fixedDesk === deskId) return true;
         const deskInfo = DESKS.find(d => d.id === deskId);
@@ -2606,6 +2872,8 @@ const COLLABORATEURS = [
     { id: 'francois', name: 'François Witmeur', color: '#2980b9', hair: '#555', email: '', floors: [0,1,2] },
     { id: 'philippe_le', name: 'Philippe Lescot', color: '#636e72', hair: '#2c3e50', email: '', floors: [0,1,2] },
     { id: 'ugo', name: 'Ugo Spada', color: '#16a085', hair: '#2c3e50', email: '', floors: [0,1,2] },
+    { id: 'irina', name: 'Irina Fernandez Garcia', color: '#e056a0', hair: '#1a1a1a', email: '', floors: [0,1,2] },
+    { id: 'patrick', name: 'Patrick Kodjane', color: '#2d98da', hair: '#1a1a1a', email: '', floors: [0,1,2] },
 ];
 
 // Desk positions — Plan 29 Place de Saint-Job (3 étages, pièces 170px haut)
@@ -2622,6 +2890,8 @@ const DESKS = [
     { id: 'X7',  x: 650, y: 475, room: 'rdc_open', floor: 0 },
     { id: 'X8',  x: 740, y: 475, room: 'rdc_open', floor: 0 },
     { id: 'X9',  x: 810, y: 475, room: 'rdc_open', floor: 0 },
+    // Salle Accueil Clientèle (réservable)
+    { id: 'SAC', x: 36, y: 586, room: 'rdc_sac', floor: 0 },
     // Open space RDC — rangée du bas (6 bureaux, face à face)
     { id: 'X10', x: 576, y: 565, room: 'rdc_open', floor: 0 },
     { id: 'X11', x: 624, y: 565, room: 'rdc_open', floor: 0 },
@@ -3002,7 +3272,7 @@ function renderStats() {
 
     // Floor gauges
     const gaugesHTML = [{label:'RDC', floor:0}, {label:'1er', floor:1}, {label:'2ème', floor:2}].map(f => {
-        const floorDesks = DESKS.filter(d => d.floor === f.floor && d.id !== 'SR');
+        const floorDesks = DESKS.filter(d => d.floor === f.floor && d.id !== 'SR' && d.id !== 'SAC');
         const occupied = floorDesks.filter(d => slot[d.id]).length;
         const total = floorDesks.length;
         const pct = total ? Math.round(occupied / total * 100) : 0;
@@ -3162,7 +3432,7 @@ function renderWeekOverview() {
         }).sort((a, b) => a.name.localeCompare(b.name));
 
         const presentCount = people.filter(p => p.status === 'bureau').length;
-        const totalDesks = DESKS.filter(dk => dk.id !== 'SR').length;
+        const totalDesks = DESKS.filter(dk => dk.id !== 'SR' && dk.id !== 'SAC').length;
         const pct = totalDesks ? Math.round(presentCount / totalDesks * 100) : 0;
         const heatClass = pct > 60 ? 'wo-heat-green' : pct > 30 ? 'wo-heat-yellow' : 'wo-heat-red';
 
@@ -3200,11 +3470,26 @@ function renderDesks() {
     const slot = getCurrentSlotReservations();
 
     DESKS.forEach(desk => {
-        const reservation = slot[desk.id];
-        const collab = reservation ? getCollabById(reservation.person) : null;
-        const status = reservation ? reservation.status : 'libre';
-        const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.libre;
-        const isAtDesk = status === 'bureau';
+        // For rooms (SR/SAC), use hourly booking system
+        let reservation, collab, status, cfg, isAtDesk;
+        if (isRoomDesk(desk.id)) {
+            const roomStatus = getRoomCurrentStatus(desk.id);
+            if (roomStatus && !roomStatus.nextAt) {
+                reservation = roomStatus;
+                collab = getCollabById(roomStatus.person);
+                status = 'bureau';
+            } else {
+                reservation = null;
+                collab = null;
+                status = 'libre';
+            }
+        } else {
+            reservation = slot[desk.id];
+            collab = reservation ? getCollabById(reservation.person) : null;
+            status = reservation ? reservation.status : 'libre';
+        }
+        cfg = STATUS_CONFIG[status] || STATUS_CONFIG.libre;
+        isAtDesk = status === 'bureau';
         const isHighlighted = highlightedCollab && reservation && reservation.person === highlightedCollab;
         const isDimmed = highlightedCollab && (!reservation || reservation.person !== highlightedCollab);
 
@@ -3517,20 +3802,21 @@ function openModal(deskId) {
         return;
     }
     selectedDeskId = deskId;
+    const isRoom = isRoomDesk(deskId);
     const slot = getCurrentSlotReservations();
-    const reservation = slot[deskId];
+    const reservation = isRoom ? null : slot[deskId]; // Rooms use hourly system
 
-    document.getElementById('modalTitle').textContent = `Bureau ${deskId}`;
+    const roomNames = { SR: 'Salle Réunion', SAC: 'Accueil Clientèle' };
+    document.getElementById('modalTitle').textContent = roomNames[deskId] || `Bureau ${deskId}`;
 
     // Person select — filtré par étage et bureau fixe
     const personSelect = document.getElementById('modalPerson');
     const deskInfo = DESKS.find(d => d.id === deskId);
     const deskFloor = deskInfo ? deskInfo.floor : -1;
-    const isSR = (deskId === 'SR');
     const isFixedDesk = COLLABORATEURS.some(c => c.fixedDesk === deskId);
     const eligibleCollabs = COLLABORATEURS.filter(c => {
         if (isFixedDesk) return c.fixedDesk === deskId;
-        if (isSR) return true;
+        if (isRoom) return true;
         return !c.fixedDesk && c.floors && c.floors.includes(deskFloor);
     });
     personSelect.innerHTML = '<option value="">— Choisir —</option>' +
@@ -3556,13 +3842,26 @@ function openModal(deskId) {
     }
 
     onStatusChange();
-    // Période par défaut = celle de la vue en cours
-    modalPeriod = currentPeriod;
-    document.querySelectorAll('.period-btn').forEach(b => b.classList.toggle('active', b.dataset.p === currentPeriod));
+
+    // Room hourly mode vs standard period mode
+    document.getElementById('modalPeriodField').style.display = isRoom ? 'none' : '';
+    document.getElementById('roomTimeSection').style.display = isRoom ? '' : 'none';
+    // Hide status selector for rooms (always "bureau")
+    document.getElementById('modalStatus').closest('.modal-field').style.display = isRoom ? 'none' : '';
+    document.getElementById('autreDetail').classList.remove('show');
+
+    if (isRoom) {
+        document.getElementById('modalStatus').value = 'bureau';
+        populateRoomStartHours(deskId);
+        renderRoomSlotsGrid(deskId);
+    } else {
+        // Période par défaut = celle de la vue en cours
+        modalPeriod = currentPeriod;
+        document.querySelectorAll('.period-btn').forEach(b => b.classList.toggle('active', b.dataset.p === currentPeriod));
+    }
 
     const overlay = document.getElementById('modalOverlay');
     overlay.classList.add('show');
-    // Focus trap : focus sur le premier élément
     setTimeout(() => document.getElementById('modalPerson').focus(), 100);
 }
 
@@ -3649,6 +3948,194 @@ function showToast(message) {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 300);
     }, 2500);
+}
+
+// ============================
+// ROOM HOURLY BOOKINGS (SR / SAC)
+// ============================
+const ROOM_IDS = ['SR', 'SAC'];
+const ROOM_HOURS = [];
+for (let h = 7; h <= 18; h++) ROOM_HOURS.push(h); // 7h à 18h (dernier créneau = 18h-19h)
+
+function isRoomDesk(deskId) {
+    return ROOM_IDS.includes(deskId);
+}
+
+function getRoomDateKey(dayIndex) {
+    const d = new Date(currentWeekStart);
+    d.setDate(d.getDate() + dayIndex);
+    return d.toISOString().slice(0, 10);
+}
+
+// Room bookings stored in reservations as: "2026-03-20-SR-09" => { person, detail }
+function getRoomSlotKey(dateStr, roomId, hour) {
+    return dateStr + '-' + roomId + '-' + String(hour).padStart(2, '0');
+}
+
+function getRoomBookingsForDay(dayIndex, roomId) {
+    const dateStr = getRoomDateKey(dayIndex);
+    const bookings = {};
+    ROOM_HOURS.forEach(h => {
+        const key = getRoomSlotKey(dateStr, roomId, h);
+        if (reservations[key]) {
+            bookings[h] = reservations[key];
+        }
+    });
+    return bookings;
+}
+
+function isRoomHourAvailable(dayIndex, roomId, hour) {
+    const dateStr = getRoomDateKey(dayIndex);
+    const key = getRoomSlotKey(dateStr, roomId, hour);
+    return !reservations[key];
+}
+
+function populateRoomStartHours(roomId) {
+    const sel = document.getElementById('roomStartHour');
+    sel.innerHTML = '';
+    ROOM_HOURS.forEach(h => {
+        const label = String(h).padStart(2, '0') + ':00';
+        const opt = document.createElement('option');
+        opt.value = h;
+        opt.textContent = label;
+        sel.appendChild(opt);
+    });
+    // Default to current hour or next available
+    const now = new Date();
+    const currentH = now.getHours();
+    const bestH = ROOM_HOURS.find(h => h >= currentH) || ROOM_HOURS[0];
+    sel.value = bestH;
+    sel.onchange = () => renderRoomSlotsGrid(roomId);
+    document.getElementById('roomDuration').onchange = () => renderRoomSlotsGrid(roomId);
+}
+
+function renderRoomSlotsGrid(roomId) {
+    const grid = document.getElementById('roomSlotsGrid');
+    const bookings = getRoomBookingsForDay(currentDayIndex, roomId);
+    const startH = parseInt(document.getElementById('roomStartHour').value);
+    const duration = parseInt(document.getElementById('roomDuration').value);
+
+    let html = '';
+    ROOM_HOURS.forEach(h => {
+        const label = String(h).padStart(2, '0') + 'h';
+        const booking = bookings[h];
+        let cls = 'room-slot';
+        let nameHtml = '';
+        if (booking) {
+            const c = getCollabById(booking.person);
+            nameHtml = '<span class="room-slot-name">' + escapeHtml(c ? c.name.split(' ')[0] : '—') + '</span>';
+            if (currentUser && booking.person === currentUser.id) {
+                cls += ' mine';
+            } else {
+                cls += ' booked';
+            }
+        }
+        // Highlight selected range
+        if (h >= startH && h < startH + duration && !booking) {
+            cls += ' selected-slot';
+        }
+        html += '<div class="' + cls + '">' + label + nameHtml + '</div>';
+    });
+    grid.innerHTML = html;
+}
+
+function reserveRoom() {
+    if (!currentUser) return;
+    const roomId = selectedDeskId;
+    const startH = parseInt(document.getElementById('roomStartHour').value);
+    const duration = parseInt(document.getElementById('roomDuration').value);
+    let person = document.getElementById('modalPerson').value;
+    if (currentUser && !currentUser.isAdmin) person = currentUser.id;
+    if (!person) { alert('Veuillez choisir un collaborateur.'); return; }
+
+    const dateStr = getRoomDateKey(currentDayIndex);
+
+    // Check availability
+    for (let h = startH; h < startH + duration && h <= 19; h++) {
+        const key = getRoomSlotKey(dateStr, roomId, h);
+        if (reservations[key] && reservations[key].person !== person) {
+            const c = getCollabById(reservations[key].person);
+            alert('Créneau ' + String(h).padStart(2, '0') + 'h déjà réservé par ' + (c ? c.name : '—'));
+            return;
+        }
+    }
+
+    // Book all hours
+    const bookedKeys = [];
+    for (let h = startH; h < startH + duration && h <= 19; h++) {
+        const key = getRoomSlotKey(dateStr, roomId, h);
+        reservations[key] = { person: person, status: 'bureau', detail: String(startH).padStart(2, '0') + 'h-' + String(startH + duration).padStart(2, '0') + 'h' };
+        bookedKeys.push(key);
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
+    if (APPS_SCRIPT_URL) {
+        bookedKeys.forEach(k => saveToSheets(k, reservations[k]));
+    }
+    closeModal();
+    renderAll();
+    const collabName = getCollabById(person)?.name || person;
+    showToast(collabName + ' — ' + roomId + ' réservé ' + String(startH).padStart(2, '0') + 'h-' + String(startH + duration).padStart(2, '0') + 'h');
+}
+
+function freeRoomSlots() {
+    if (!selectedDeskId || !currentUser) return;
+    const roomId = selectedDeskId;
+    const dateStr = getRoomDateKey(currentDayIndex);
+    let freed = 0;
+
+    const freedKeys = [];
+    ROOM_HOURS.forEach(h => {
+        const key = getRoomSlotKey(dateStr, roomId, h);
+        if (reservations[key]) {
+            if (currentUser.isAdmin || reservations[key].person === currentUser.id) {
+                delete reservations[key];
+                freedKeys.push(key);
+                freed++;
+            }
+        }
+    });
+
+    if (freed === 0) {
+        showToast('Aucun créneau à libérer');
+        return;
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
+    if (APPS_SCRIPT_URL) {
+        freedKeys.forEach(k => saveToSheets(k, null));
+    }
+    closeModal();
+    renderAll();
+    showToast(roomId + ' — ' + freed + ' créneau(x) libéré(s)');
+}
+
+// Get current room status for display on plan
+function getRoomCurrentStatus(roomId) {
+    const bookings = getRoomBookingsForDay(currentDayIndex, roomId);
+    const now = new Date();
+    const currentH = now.getHours();
+
+    // Find current booking
+    if (bookings[currentH]) {
+        return bookings[currentH];
+    }
+
+    // Find next booking
+    for (const h of ROOM_HOURS) {
+        if (h > currentH && bookings[h]) {
+            return { ...bookings[h], nextAt: h };
+        }
+    }
+
+    // Check if any booking today
+    const hours = Object.keys(bookings);
+    if (hours.length > 0) {
+        const firstH = Math.min(...hours.map(Number));
+        return { ...bookings[firstH], nextAt: firstH };
+    }
+
+    return null;
 }
 
 // ============================
@@ -3935,7 +4422,7 @@ function getAccessibleDesks() {
     return DESKS.filter(d => {
         if (COLLABORATEURS.some(c => c.fixedDesk === d.id)) return false;
         return collab.floors && collab.floors.includes(d.floor);
-    }).map(d => d.id).concat(['SR']);
+    }).map(d => d.id).concat(['SR', 'SAC']);
 }
 
 function renderMyPlanning() {
@@ -4059,7 +4546,7 @@ function applySemaineType() {
 }
 
 function findAvailableDesk(slotKey) {
-    const desks = getAccessibleDesks().filter(d => d !== 'SR');
+    const desks = getAccessibleDesks().filter(d => d !== 'SR' && d !== 'SAC');
     const taken = reservations[slotKey] || {};
     for (const dk of desks) {
         if (!taken[dk]) return dk;
@@ -4068,7 +4555,7 @@ function findAvailableDesk(slotKey) {
 }
 
 function findAvailableDeskExcluding(slotKey, excludeDesk) {
-    const desks = getAccessibleDesks().filter(d => d !== 'SR' && d !== excludeDesk);
+    const desks = getAccessibleDesks().filter(d => d !== 'SR' && d !== 'SAC' && d !== excludeDesk);
     const taken = reservations[slotKey] || {};
     for (const dk of desks) {
         if (!taken[dk]) return dk;
@@ -4764,9 +5251,150 @@ window.addEventListener('resize', function() {
 });
 
 // ============================
+// MINI WIDGET MODE
+// ============================
+const IS_MINI = new URLSearchParams(window.location.search).get('mode') === 'mini';
+
+function openMiniWindow() {
+    const url = window.location.href.split('?')[0] + '?mode=mini';
+    window.open(url, 'dap_mini', 'width=340,height=500,resizable=yes,scrollbars=yes');
+}
+
+function expandFromMini() {
+    const url = window.location.href.split('?')[0];
+    window.open(url, '_blank');
+}
+
+function initMiniMode() {
+    if (!IS_MINI) return;
+    document.title = 'DAP Bureau — Mini';
+    // Hide main app elements
+    document.querySelectorAll('.header, .main-layout, .sidebar, #statsBar, #neighborsBar, #chatFab, #chatPanel').forEach(el => {
+        if (el) el.style.display = 'none';
+    });
+    document.getElementById('miniWidget').style.display = 'flex';
+}
+
+function renderMiniWidget() {
+    if (!IS_MINI || !currentUser) return;
+
+    // User name
+    const miniUser = document.getElementById('miniUserName');
+    if (miniUser) miniUser.textContent = currentUser.name;
+
+    const slot = getCurrentSlotReservations();
+    let html = '';
+
+    // --- Floor gauges ---
+    const floors = [{label:'RDC', floor:0}, {label:'1er', floor:1}, {label:'2ème', floor:2}];
+    let gaugesInner = '';
+    floors.forEach(f => {
+        const floorDesks = DESKS.filter(d => d.floor === f.floor && d.id !== 'SR' && d.id !== 'SAC');
+        const occupied = floorDesks.filter(d => slot[d.id]).length;
+        const total = floorDesks.length;
+        const pct = total ? Math.round(occupied / total * 100) : 0;
+        const color = pct > 75 ? '#48bb78' : pct > 40 ? '#ed8936' : '#e53e3e';
+        gaugesInner += '<div class="mini-gauge-row">' +
+            '<span class="mini-gauge-label">' + f.label + '</span>' +
+            '<div class="mini-gauge-bar"><div class="mini-gauge-fill" style="width:' + pct + '%;background:' + color + '"></div></div>' +
+            '<span class="mini-gauge-count" style="color:' + color + '">' + occupied + '/' + total + '</span>' +
+        '</div>';
+    });
+    html += '<div class="mini-section">' +
+        '<div class="mini-section-title">Occupation</div>' +
+        '<div class="mini-gauges">' + gaugesInner + '</div>' +
+    '</div>';
+
+    // --- Quick status counts ---
+    const counts = {};
+    Object.values(slot).forEach(r => { counts[r.status] = (counts[r.status] || 0) + 1; });
+    const statuses = ['bureau', 'teletravail', 'conge'];
+    let statsInner = '';
+    statuses.forEach(s => {
+        const n = counts[s] || 0;
+        if (n > 0) {
+            statsInner += '<div class="mini-stat-badge" style="background:' + STATUS_CONFIG[s].bg + ';color:' + STATUS_CONFIG[s].textColor + '">' +
+                '<div class="mini-stat-dot" style="background:' + STATUS_CONFIG[s].dot + '"></div>' +
+                n + ' ' + STATUS_CONFIG[s].label +
+            '</div>';
+        }
+    });
+    if (statsInner) {
+        html += '<div class="mini-section">' +
+            '<div class="mini-stats-row">' + statsInner + '</div>' +
+        '</div>';
+    }
+
+    // --- My desk ---
+    let myDeskId = null;
+    let myStatus = null;
+    for (const [dk, data] of Object.entries(slot)) {
+        if (data.person === currentUser.id) { myDeskId = dk; myStatus = data.status; break; }
+    }
+    html += '<div class="mini-section">';
+    html += '<div class="mini-section-title">Mon bureau</div>';
+    if (myDeskId && myStatus === 'bureau') {
+        const deskInfo = DESKS.find(d => d.id === myDeskId);
+        const floorLabel = deskInfo ? ['RDC', '1er', '2ème'][deskInfo.floor] : '';
+        html += '<div class="mini-my-desk">' +
+            '<div class="mini-my-desk-dot"></div>' +
+            '<span class="mini-my-desk-text">Bureau ' + myDeskId + (floorLabel ? ' — ' + floorLabel : '') + '</span>' +
+        '</div>';
+    } else if (myDeskId) {
+        html += '<div class="mini-no-desk">' + (STATUS_CONFIG[myStatus] ? STATUS_CONFIG[myStatus].label : myStatus) + '</div>';
+    } else {
+        html += '<div class="mini-no-desk">Pas de réservation pour ce créneau</div>';
+    }
+    html += '</div>';
+
+    // --- Neighbors ---
+    if (myDeskId && myStatus === 'bureau') {
+        const myDesk = DESKS.find(d => d.id === myDeskId);
+        if (myDesk) {
+            const roomDesks = DESKS.filter(d => d.room === myDesk.room && d.id !== myDeskId);
+            const neighbors = [];
+            roomDesks.forEach(d => {
+                const r = slot[d.id];
+                if (r && r.person && r.status === 'bureau') {
+                    const c = getCollabById(r.person);
+                    if (c) neighbors.push(c.name);
+                }
+            });
+            if (neighbors.length > 0) {
+                html += '<div class="mini-section">' +
+                    '<div class="mini-section-title">Voisins</div>' +
+                    '<div class="mini-neighbors-list">' + neighbors.join(', ') + '</div>' +
+                '</div>';
+            }
+        }
+    }
+
+    // --- Last chat messages ---
+    if (typeof chatMessages !== 'undefined' && chatMessages.length > 0) {
+        const lastMsgs = chatMessages.slice(-2);
+        let chatInner = '';
+        lastMsgs.forEach(m => {
+            const time = m.ts ? new Date(m.ts).toLocaleTimeString('fr-BE', {hour:'2-digit', minute:'2-digit'}) : '';
+            chatInner += '<div class="mini-chat-msg">' +
+                '<span class="mini-chat-author">' + escapeHtml(m.userName || 'Bureau') + '</span>' +
+                '<span class="mini-chat-time">' + time + '</span><br>' +
+                escapeHtml(m.text) +
+            '</div>';
+        });
+        html += '<div class="mini-section">' +
+            '<div class="mini-section-title">Chat</div>' +
+            chatInner +
+        '</div>';
+    }
+
+    document.getElementById('miniContent').innerHTML = html;
+}
+
+// ============================
 // RENDER ALL
 // ============================
 function renderAll() {
+    if (IS_MINI) { renderMiniWidget(); return; }
     stopAllWalkers();
     renderHeader();
     renderStats();
@@ -4783,6 +5411,8 @@ function renderAll() {
 // INIT
 // ============================
 (async function init() {
+    initAuth();
+    initMiniMode();
     updateSyncStatus();
     renderAll();
     // Charger depuis Google Sheets si configuré
