@@ -4456,22 +4456,23 @@ function checkAutoMessages() {
     const m = now.getMinutes();
     const dow = now.getDay(); // 0=Sun, 1=Mon...5=Fri
 
+    // Weekends: no auto messages
+    if (dow === 0 || dow === 6) return;
+
     let allAuto = [...AUTO_MESSAGES];
     if (dow === 1) allAuto = allAuto.concat(MONDAY_MESSAGES);
     if (dow === 5) allAuto = allAuto.concat(FRIDAY_MESSAGES);
 
+    const nowMinutes = h * 60 + m;
+
     allAuto.forEach(msg => {
-        const nowMinutes = h * 60 + m;
         const msgMinutes = msg.hour * 60 + msg.min;
-        // Send if within 5-minute window and not already sent
-        if (nowMinutes >= msgMinutes && nowMinutes < msgMinutes + 5 && !autoMessagesSent[msg.key]) {
-            // Check if this message is already in chat (from another user's trigger)
+        // Send if time has passed and not already sent by anyone
+        if (nowMinutes >= msgMinutes && !autoMessagesSent[msg.key]) {
             const alreadyExists = chatMessages.some(cm => cm.auto && cm.text === msg.text);
+            autoMessagesSent[msg.key] = true;
             if (!alreadyExists) {
-                autoMessagesSent[msg.key] = true;
                 sendAutoMessage(msg.text);
-            } else {
-                autoMessagesSent[msg.key] = true;
             }
         }
     });
