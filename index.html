@@ -964,6 +964,136 @@
             border-radius: 4px;
         }
 
+        /* === VARIED DECORATIONS === */
+        .water-cooler-px {
+            width: 14px; height: 24px; position: relative;
+        }
+        .water-cooler-px .wc-tank {
+            width: 10px; height: 12px; background: #b3d9ff; border: 2px solid #80bfff;
+            border-radius: 6px 6px 2px 2px; margin: 0 auto;
+        }
+        .water-cooler-px .wc-base {
+            width: 14px; height: 12px; background: #ddd; border: 2px solid #bbb;
+            border-radius: 0 0 2px 2px;
+        }
+
+        .fire-ext-px {
+            width: 10px; height: 22px; position: relative;
+        }
+        .fire-ext-px .fe-body {
+            width: 10px; height: 16px; background: #e53e3e; border: 2px solid #c53030;
+            border-radius: 2px; position: absolute; bottom: 0;
+        }
+        .fire-ext-px .fe-top {
+            width: 6px; height: 6px; background: #555; border: 1px solid #444;
+            border-radius: 2px 2px 0 0; position: absolute; top: 0; left: 2px;
+        }
+
+        .coat-rack-px {
+            width: 16px; height: 28px; position: relative;
+        }
+        .coat-rack-px .cr-pole {
+            width: 4px; height: 28px; background: #8B6914; border: 1px solid #6B4F10;
+            position: absolute; left: 6px;
+        }
+        .coat-rack-px .cr-hooks {
+            width: 16px; height: 4px; background: #8B6914; border: 1px solid #6B4F10;
+            border-radius: 2px; position: absolute; top: 2px;
+        }
+        .coat-rack-px .cr-base {
+            width: 14px; height: 4px; background: #8B6914; border: 1px solid #6B4F10;
+            border-radius: 2px; position: absolute; bottom: 0; left: 1px;
+        }
+
+        .picture-frame-px {
+            border: 2px solid #8B6914; border-radius: 1px;
+            background: linear-gradient(135deg, #e8d5b0, #d4c4a0);
+            position: relative;
+        }
+        .picture-frame-px .pf-inner {
+            position: absolute; inset: 2px; border: 1px solid #a08050;
+        }
+
+        .whiteboard-px {
+            background: #f8f8f8; border: 3px solid #aaa; border-radius: 2px;
+            position: relative;
+        }
+        .whiteboard-px .wb-line {
+            position: absolute; height: 1px; background: #ccc;
+        }
+
+        .clock-px {
+            width: 14px; height: 14px; border-radius: 50%;
+            background: white; border: 2px solid #555; position: relative;
+        }
+        .clock-px .ck-h {
+            width: 4px; height: 2px; background: #333;
+            position: absolute; top: 5px; left: 5px; transform-origin: left center;
+        }
+        .clock-px .ck-m {
+            width: 5px; height: 1px; background: #333;
+            position: absolute; top: 6px; left: 5px; transform-origin: left center;
+            transform: rotate(-60deg);
+        }
+
+        .cactus-px {
+            width: 12px; height: 20px; position: relative;
+        }
+        .cactus-px .ca-body {
+            width: 8px; height: 14px; background: #68d391; border: 2px solid #48bb78;
+            border-radius: 4px 4px 2px 2px; position: absolute; bottom: 6px; left: 2px;
+        }
+        .cactus-px .ca-arm-l {
+            width: 4px; height: 6px; background: #68d391; border: 1px solid #48bb78;
+            border-radius: 3px 0 0 3px; position: absolute; bottom: 10px; left: 0;
+        }
+        .cactus-px .ca-arm-r {
+            width: 4px; height: 8px; background: #68d391; border: 1px solid #48bb78;
+            border-radius: 0 3px 3px 0; position: absolute; bottom: 8px; right: 0;
+        }
+        .cactus-px .ca-pot {
+            width: 10px; height: 7px; background: #dd6b20; border-radius: 0 0 3px 3px;
+            position: absolute; bottom: 0; left: 1px;
+        }
+
+        .tall-plant-px {
+            width: 14px; height: 28px; position: relative;
+        }
+        .tall-plant-px .tp-leaves {
+            width: 14px; height: 16px; position: absolute; top: 0;
+        }
+        .tall-plant-px .tp-leaf {
+            width: 6px; height: 8px; background: #2f855a; border-radius: 50% 50% 50% 0;
+            position: absolute;
+        }
+        .tall-plant-px .tp-leaf:nth-child(1) { top: 0; left: 4px; transform: rotate(-15deg); }
+        .tall-plant-px .tp-leaf:nth-child(2) { top: 3px; left: 0; transform: rotate(-40deg); }
+        .tall-plant-px .tp-leaf:nth-child(3) { top: 3px; right: 0; transform: rotate(40deg); }
+        .tall-plant-px .tp-leaf:nth-child(4) { top: 8px; left: 2px; transform: rotate(-20deg); }
+        .tall-plant-px .tp-leaf:nth-child(5) { top: 8px; right: 2px; transform: rotate(20deg); }
+        .tall-plant-px .tp-stem {
+            width: 4px; height: 14px; background: #68d391; border: 1px solid #48bb78;
+            position: absolute; bottom: 0; left: 5px;
+        }
+        .tall-plant-px .tp-pot {
+            width: 12px; height: 8px; background: #718096; border-radius: 0 0 3px 3px;
+            position: absolute; bottom: 0; left: 1px;
+        }
+
+        .bookshelf-px {
+            background: #8B6914; border: 2px solid #6B4F10; border-radius: 1px;
+            position: relative;
+        }
+        .bookshelf-px .bs-shelf {
+            position: absolute; left: 1px; right: 1px; height: 2px; background: #6B4F10;
+        }
+        .bookshelf-px .bs-books {
+            position: absolute; left: 2px; display: flex; gap: 1px;
+        }
+        .bookshelf-px .bs-book {
+            width: 3px; border-radius: 1px 1px 0 0;
+        }
+
         /* Phone icon for appels */
         .phone-icon {
             position: absolute;
@@ -2340,13 +2470,30 @@
             <!-- === 2ÈME ÉTAGE déco === -->
             <!-- TV/écran salle réunion -->
             <div class="furniture" style="left:225px;top:90px;width:14px;height:40px;background:#333;border:2px solid #555;border-radius:2px;z-index:5"></div>
-            <!-- Plantes 2ème -->
-            <div class="furniture" style="left:270px;top:180px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
+            <!-- Whiteboard salle réunion -->
+            <div class="furniture whiteboard-px" style="left:35px;top:56px;width:60px;height:24px">
+                <div class="wb-line" style="top:6px;left:4px;width:40px"></div>
+                <div class="wb-line" style="top:11px;left:4px;width:48px"></div>
+                <div class="wb-line" style="top:16px;left:4px;width:30px"></div>
+            </div>
+            <!-- Horloge salle réunion -->
+            <div class="furniture" style="left:130px;top:42px"><div class="clock-px"><div class="ck-h"></div><div class="ck-m"></div></div></div>
+            <!-- Plantes 2ème (variées) -->
+            <div class="furniture" style="left:270px;top:180px"><div class="cactus-px"><div class="ca-body"></div><div class="ca-arm-l"></div><div class="ca-arm-r"></div><div class="ca-pot"></div></div></div>
             <div class="furniture" style="left:538px;top:180px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:840px;top:180px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
+            <div class="furniture" style="left:840px;top:180px"><div class="tall-plant-px"><div class="tp-leaves"><div class="tp-leaf"></div><div class="tp-leaf"></div><div class="tp-leaf"></div><div class="tp-leaf"></div><div class="tp-leaf"></div></div><div class="tp-stem"></div><div class="tp-pot"></div></div></div>
             <!-- Étagère open space 2ème -->
-            <div class="furniture" style="left:280px;top:180px;width:80px;height:10px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
-            <div class="furniture" style="left:548px;top:180px;width:80px;height:10px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
+            <div class="furniture" style="left:282px;top:182px;width:80px;height:10px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
+            <div class="furniture" style="left:548px;top:182px;width:80px;height:10px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
+            <!-- Cadre photo Open Space 2ème -->
+            <div class="furniture picture-frame-px" style="left:430px;top:40px;width:20px;height:14px"><div class="pf-inner"></div></div>
+            <div class="furniture picture-frame-px" style="left:700px;top:40px;width:16px;height:12px"><div class="pf-inner"></div></div>
+            <!-- Bibliothèque Open Space 2 -->
+            <div class="furniture bookshelf-px" style="left:750px;top:180px;width:30px;height:22px">
+                <div class="bs-shelf" style="top:10px"></div>
+                <div class="bs-books" style="top:2px"><div class="bs-book" style="height:7px;background:#e53e3e"></div><div class="bs-book" style="height:6px;background:#4299e1"></div><div class="bs-book" style="height:7px;background:#48bb78"></div><div class="bs-book" style="height:5px;background:#ecc94b"></div></div>
+                <div class="bs-books" style="top:12px"><div class="bs-book" style="height:6px;background:#805ad5"></div><div class="bs-book" style="height:7px;background:#ed8936"></div><div class="bs-book" style="height:6px;background:#38b2ac"></div></div>
+            </div>
             <!-- Corbeille -->
             <div class="furniture" style="left:830px;top:50px;width:10px;height:10px;background:#777;border:2px solid #555;border-radius:2px;z-index:5"></div>
             <!-- Fenêtres supplémentaires 2ème -->
@@ -2360,8 +2507,15 @@
             <div class="furniture" style="left:100px;top:280px;width:50px;height:30px;background:#c4a265;border:2px solid #a08050;border-radius:2px;z-index:5;opacity:0.4"></div>
             <div class="furniture" style="left:30px;top:350px;width:50px;height:30px;background:#c4a265;border:2px solid #a08050;border-radius:2px;z-index:5;opacity:0.4"></div>
             <div class="furniture" style="left:100px;top:350px;width:50px;height:30px;background:#c4a265;border:2px solid #a08050;border-radius:2px;z-index:5;opacity:0.4"></div>
+            <!-- Chaises fantômes espace externe -->
+            <div class="furniture" style="left:50px;top:316px;width:10px;height:10px;background:#8a8a8a;border:1px solid #666;border-radius:2px;z-index:5;opacity:0.3"></div>
+            <div class="furniture" style="left:120px;top:316px;width:10px;height:10px;background:#8a8a8a;border:1px solid #666;border-radius:2px;z-index:5;opacity:0.3"></div>
+            <div class="furniture" style="left:50px;top:386px;width:10px;height:10px;background:#8a8a8a;border:1px solid #666;border-radius:2px;z-index:5;opacity:0.3"></div>
+            <div class="furniture" style="left:120px;top:386px;width:10px;height:10px;background:#8a8a8a;border:1px solid #666;border-radius:2px;z-index:5;opacity:0.3"></div>
+            <!-- Cadre espace externe -->
+            <div class="furniture picture-frame-px" style="left:70px;top:248px;width:22px;height:14px;opacity:0.4"><div class="pf-inner"></div></div>
             <!-- X barré sur espace externe -->
-            <div style="position:absolute;left:70px;top:310px;font-size:20px;color:rgba(0,0,0,0.12);z-index:6;font-weight:900;pointer-events:none">✕</div>
+            <div style="position:absolute;left:70px;top:310px;font-size:20px;color:rgba(0,0,0,0.12);z-index:6;font-weight:900;pointer-events:none">&#10005;</div>
             <!-- Escalier détail 1er (marches) -->
             <div class="furniture" style="left:202px;top:260px;width:28px;height:4px;background:#bbb;border:1px solid #999;z-index:5"></div>
             <div class="furniture" style="left:202px;top:272px;width:28px;height:4px;background:#bbb;border:1px solid #999;z-index:5"></div>
@@ -2374,15 +2528,32 @@
             <div class="furniture" style="left:258px;top:270px;width:16px;height:12px;background:#ddd;border:2px solid #bbb;border-radius:6px 6px 2px 2px;z-index:5"></div>
             <div class="furniture" style="left:285px;top:270px;width:16px;height:12px;background:#ddd;border:2px solid #bbb;border-radius:6px 6px 2px 2px;z-index:5"></div>
             <div class="furniture" style="left:258px;top:370px;width:40px;height:14px;background:#ddd;border:2px solid #bbb;border-radius:2px;z-index:5"></div>
-            <!-- Plantes 1er -->
-            <div class="furniture" style="left:315px;top:390px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:545px;top:390px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:935px;top:390px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
+            <!-- Distributeur savon WC -->
+            <div class="furniture" style="left:300px;top:370px;width:8px;height:10px;background:#b3d9ff;border:1px solid #80bfff;border-radius:2px;z-index:5"></div>
+            <!-- Plantes 1er (variées) -->
+            <div class="furniture" style="left:315px;top:390px"><div class="tall-plant-px"><div class="tp-leaves"><div class="tp-leaf"></div><div class="tp-leaf"></div><div class="tp-leaf"></div><div class="tp-leaf"></div><div class="tp-leaf"></div></div><div class="tp-stem"></div><div class="tp-pot"></div></div></div>
+            <div class="furniture" style="left:545px;top:392px"><div class="cactus-px"><div class="ca-body"></div><div class="ca-arm-l"></div><div class="ca-arm-r"></div><div class="ca-pot"></div></div></div>
+            <div class="furniture" style="left:935px;top:392px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
             <!-- Étagères 1er -->
-            <div class="furniture" style="left:324px;top:390px;width:60px;height:10px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
-            <div class="furniture" style="left:562px;top:390px;width:80px;height:10px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
+            <div class="furniture" style="left:327px;top:392px;width:60px;height:10px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
+            <div class="furniture" style="left:556px;top:392px;width:80px;height:10px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
+            <!-- Cadres photos 1er -->
+            <div class="furniture picture-frame-px" style="left:470px;top:250px;width:18px;height:12px"><div class="pf-inner"></div></div>
+            <div class="furniture picture-frame-px" style="left:660px;top:250px;width:22px;height:14px"><div class="pf-inner"></div></div>
+            <!-- Horloge 1er open space -->
+            <div class="furniture" style="left:800px;top:252px"><div class="clock-px"><div class="ck-h"></div><div class="ck-m"></div></div></div>
+            <!-- Fontaine à eau 1er -->
+            <div class="furniture" style="left:555px;top:268px"><div class="water-cooler-px"><div class="wc-tank"></div><div class="wc-base"></div></div></div>
+            <!-- Bibliothèque 1er -->
+            <div class="furniture bookshelf-px" style="left:870px;top:392px;width:28px;height:20px">
+                <div class="bs-shelf" style="top:9px"></div>
+                <div class="bs-books" style="top:2px"><div class="bs-book" style="height:6px;background:#e53e3e"></div><div class="bs-book" style="height:5px;background:#38b2ac"></div><div class="bs-book" style="height:6px;background:#ecc94b"></div></div>
+                <div class="bs-books" style="top:11px"><div class="bs-book" style="height:5px;background:#805ad5"></div><div class="bs-book" style="height:6px;background:#4299e1"></div></div>
+            </div>
             <!-- Imprimante 1er étage -->
             <div class="furniture" style="left:900px;top:280px"><div class="printer-px"><div class="printer-slot"></div></div></div>
+            <!-- Corbeille 1er -->
+            <div class="furniture" style="left:910px;top:310px;width:10px;height:10px;background:#777;border:2px solid #555;border-radius:2px;z-index:5"></div>
             <!-- Fenêtres supplémentaires 1er -->
             <div class="window" style="left:150px;top:242px"><div class="window-h" style="width:30px"></div></div>
             <div class="window" style="left:560px;top:242px"><div class="window-h" style="width:50px"></div></div>
@@ -2391,6 +2562,10 @@
             <!-- === RDC déco === -->
             <!-- Comptoir d'accueil X1 -->
             <div class="furniture" style="left:20px;top:480px;width:70px;height:14px;background:#c4a265;border:2px solid #a08050;border-radius:3px;z-index:5"></div>
+            <!-- Horloge accueil -->
+            <div class="furniture" style="left:60px;top:460px"><div class="clock-px"><div class="ck-h"></div><div class="ck-m"></div></div></div>
+            <!-- Porte-manteau entrée -->
+            <div class="furniture" style="left:16px;top:590px"><div class="coat-rack-px"><div class="cr-pole"></div><div class="cr-hooks"></div><div class="cr-base"></div></div></div>
             <!-- Escalier détail RDC (marches) -->
             <div class="furniture" style="left:122px;top:470px;width:28px;height:4px;background:#bbb;border:1px solid #999;z-index:5"></div>
             <div class="furniture" style="left:122px;top:482px;width:28px;height:4px;background:#bbb;border:1px solid #999;z-index:5"></div>
@@ -2399,8 +2574,12 @@
             <div class="furniture" style="left:122px;top:518px;width:28px;height:4px;background:#bbb;border:1px solid #999;z-index:5"></div>
             <div class="furniture" style="left:122px;top:530px;width:28px;height:4px;background:#bbb;border:1px solid #999;z-index:5"></div>
             <div class="furniture" style="left:122px;top:542px;width:28px;height:4px;background:#bbb;border:1px solid #999;z-index:5"></div>
+            <!-- Cadre photo bureau X2/X3 -->
+            <div class="furniture picture-frame-px" style="left:200px;top:458px;width:18px;height:12px"><div class="pf-inner"></div></div>
             <!-- Étagères bureau X4 -->
             <div class="furniture" style="left:344px;top:460px;width:90px;height:8px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
+            <!-- Cadre X4 -->
+            <div class="furniture picture-frame-px" style="left:390px;top:460px;width:14px;height:10px"><div class="pf-inner"></div></div>
             <!-- Étagères bureau X5 -->
             <div class="furniture" style="left:452px;top:460px;width:90px;height:8px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
             <!-- Armoire dans couloir RDC -->
@@ -2412,26 +2591,43 @@
             <div class="furniture meeting-chair" style="left:313px;top:500px"></div>
             <div class="furniture meeting-chair" style="left:293px;top:545px"></div>
             <div class="furniture meeting-chair" style="left:313px;top:545px"></div>
-            <!-- Plantes RDC -->
-            <div class="furniture" style="left:258px;top:600px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:920px;top:600px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
+            <!-- Plantes RDC (variées) -->
+            <div class="furniture" style="left:258px;top:600px"><div class="cactus-px"><div class="ca-body"></div><div class="ca-arm-l"></div><div class="ca-arm-r"></div><div class="ca-pot"></div></div></div>
+            <div class="furniture" style="left:920px;top:598px"><div class="tall-plant-px"><div class="tp-leaves"><div class="tp-leaf"></div><div class="tp-leaf"></div><div class="tp-leaf"></div><div class="tp-leaf"></div><div class="tp-leaf"></div></div><div class="tp-stem"></div><div class="tp-pot"></div></div></div>
             <!-- Corbeilles RDC -->
             <div class="furniture" style="left:560px;top:600px;width:10px;height:10px;background:#777;border:2px solid #555;border-radius:2px;z-index:5"></div>
+            <div class="furniture" style="left:850px;top:600px;width:10px;height:10px;background:#777;border:2px solid #555;border-radius:2px;z-index:5"></div>
             <!-- Machine à café dans couloir RDC -->
             <div class="furniture" style="left:560px;top:505px">
                 <div class="coffee-machine-px"><div class="coffee-top"></div></div>
             </div>
+            <!-- Extincteur couloir RDC -->
+            <div class="furniture" style="left:565px;top:545px"><div class="fire-ext-px"><div class="fe-top"></div><div class="fe-body"></div></div></div>
+            <!-- Cadres Open Space RDC -->
+            <div class="furniture picture-frame-px" style="left:650px;top:458px;width:20px;height:14px"><div class="pf-inner"></div></div>
+            <div class="furniture picture-frame-px" style="left:820px;top:458px;width:16px;height:12px"><div class="pf-inner"></div></div>
+            <!-- Bibliothèque Open Space RDC -->
+            <div class="furniture bookshelf-px" style="left:600px;top:600px;width:28px;height:18px">
+                <div class="bs-shelf" style="top:8px"></div>
+                <div class="bs-books" style="top:1px"><div class="bs-book" style="height:6px;background:#4299e1"></div><div class="bs-book" style="height:5px;background:#ed8936"></div><div class="bs-book" style="height:6px;background:#48bb78"></div></div>
+                <div class="bs-books" style="top:10px"><div class="bs-book" style="height:5px;background:#e53e3e"></div><div class="bs-book" style="height:4px;background:#ecc94b"></div></div>
+            </div>
+            <!-- Fontaine à eau Open Space RDC -->
+            <div class="furniture" style="left:770px;top:600px"><div class="water-cooler-px"><div class="wc-tank"></div><div class="wc-base"></div></div></div>
             <!-- Fenêtres supplémentaires RDC -->
             <div class="window" style="left:360px;top:452px"><div class="window-h" style="width:40px"></div></div>
             <div class="window" style="left:470px;top:452px"><div class="window-h" style="width:40px"></div></div>
 
-            <!-- === PLANTES DÉCORATIVES GÉNÉRALES === -->
-            <div class="furniture" style="left:942px;top:40px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:942px;top:130px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:942px;top:250px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:942px;top:340px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:942px;top:460px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:942px;top:560px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
+            <!-- === DÉCORATIONS LATÉRALES (variées) === -->
+            <!-- 2ème étage : plante haute + extincteur -->
+            <div class="furniture" style="left:942px;top:38px"><div class="tall-plant-px"><div class="tp-leaves"><div class="tp-leaf"></div><div class="tp-leaf"></div><div class="tp-leaf"></div><div class="tp-leaf"></div><div class="tp-leaf"></div></div><div class="tp-stem"></div><div class="tp-pot"></div></div></div>
+            <div class="furniture" style="left:946px;top:150px"><div class="fire-ext-px"><div class="fe-top"></div><div class="fe-body"></div></div></div>
+            <!-- 1er étage : fontaine à eau + cactus -->
+            <div class="furniture" style="left:940px;top:250px"><div class="water-cooler-px"><div class="wc-tank"></div><div class="wc-base"></div></div></div>
+            <div class="furniture" style="left:944px;top:370px"><div class="cactus-px"><div class="ca-body"></div><div class="ca-arm-l"></div><div class="ca-arm-r"></div><div class="ca-pot"></div></div></div>
+            <!-- RDC : porte-manteau + plante classique -->
+            <div class="furniture" style="left:942px;top:460px"><div class="coat-rack-px"><div class="cr-pole"></div><div class="cr-hooks"></div><div class="cr-base"></div></div></div>
+            <div class="furniture" style="left:942px;top:570px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
 
             <!-- ===== DESKS (generated by JS) ===== -->
             <div id="desksLayer"></div>
