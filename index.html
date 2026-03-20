@@ -2302,7 +2302,7 @@
             <button class="view-btn" onclick="setView('myplanning',this)">Mon Planning</button>
             <button class="view-btn" onclick="setView('team',this)">Équipe</button>
         </div>
-        <button class="help-btn" onclick="openMiniWindow()" title="Ouvrir en mini-fenêtre">⬜</button>
+        <button class="help-btn" id="miniFenBtn" onclick="openMiniWindow()" title="Ouvrir en mini-fenêtre">⬜</button>
         <button class="help-btn" onclick="startTutorial()" title="Aide — Tutoriel d'utilisation">?</button>
         <div id="syncStatus" style="font-size:12px;margin-left:8px;white-space:nowrap;"></div>
         <div class="user-badge" id="userBadge" onclick="showUserMenu()" title="Changer d'utilisateur"><div class="user-dot"></div><span class="user-name" id="userBadgeName">—</span><span class="logout-icon">▾</span></div>
@@ -5168,6 +5168,13 @@ const TUTORIAL_STEPS = [
         text: 'D\u00e9finissez votre \u00ab semaine type \u00bb (ex: lundi bureau, mardi t\u00e9l\u00e9travail) et appliquez-la automatiquement sur 4 semaines. Le calendrier en dessous permet d\u2019ajuster jour par jour.',
         position: 'top',
         view: 'myplanning'
+    },
+    {
+        selector: '#miniFenBtn',
+        title: 'Mini-fen\u00eatre / Widget',
+        text: 'Cliquez sur ce bouton pour ouvrir une mini-fen\u00eatre compacte. Elle affiche les stats d\u2019occupation, votre bureau et vos voisins. Id\u00e9al pour garder un \u0153il sur le bureau sans quitter votre travail !',
+        position: 'bottom',
+        view: 'plan'
     },
     {
         selector: '#chatFab',
