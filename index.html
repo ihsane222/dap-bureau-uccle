@@ -2664,6 +2664,9 @@
                         <option value="1">1 heure</option>
                         <option value="2">2 heures</option>
                         <option value="3">3 heures</option>
+                        <option value="am">Matin&eacute;e (7h-13h)</option>
+                        <option value="pm">Apr&egrave;s-midi (13h-19h)</option>
+                        <option value="full">Journ&eacute;e (7h-19h)</option>
                     </select>
                 </div>
                 <div class="room-bookings-title">Cr&eacute;neaux du jour</div>
@@ -3983,6 +3986,8 @@ function openModal(deskId) {
 
     if (isRoom) {
         document.getElementById('modalStatus').value = 'bureau';
+        document.getElementById('roomDuration').value = '1';
+        document.getElementById('roomStartHour').disabled = false;
         populateRoomStartHours(deskId);
         renderRoomSlotsGrid(deskId);
     } else {
@@ -4137,14 +4142,20 @@ function populateRoomStartHours(roomId) {
     const bestH = ROOM_HOURS.find(h => h >= currentH) || ROOM_HOURS[0];
     sel.value = bestH;
     sel.onchange = () => renderRoomSlotsGrid(roomId);
-    document.getElementById('roomDuration').onchange = () => renderRoomSlotsGrid(roomId);
+    document.getElementById('roomDuration').onchange = () => {
+        const durVal = document.getElementById('roomDuration').value;
+        if (durVal === 'am') { sel.value = 7; sel.disabled = true; }
+        else if (durVal === 'pm') { sel.value = 13; sel.disabled = true; }
+        else if (durVal === 'full') { sel.value = 7; sel.disabled = true; }
+        else { sel.disabled = false; }
+        renderRoomSlotsGrid(roomId);
+    };
 }
 
 function renderRoomSlotsGrid(roomId) {
     const grid = document.getElementById('roomSlotsGrid');
     const bookings = getRoomBookingsForDay(currentDayIndex, roomId);
-    const startH = parseInt(document.getElementById('roomStartHour').value);
-    const duration = parseInt(document.getElementById('roomDuration').value);
+    const { startH, duration } = resolveRoomDuration();
 
     let html = '';
     ROOM_HOURS.forEach(h => {
@@ -4170,11 +4181,24 @@ function renderRoomSlotsGrid(roomId) {
     grid.innerHTML = html;
 }
 
+function resolveRoomDuration() {
+    const durVal = document.getElementById('roomDuration').value;
+    let startH, duration, label;
+    if (durVal === 'am') { startH = 7; duration = 6; label = 'Matinée (7h-13h)'; }
+    else if (durVal === 'pm') { startH = 13; duration = 6; label = 'Après-midi (13h-19h)'; }
+    else if (durVal === 'full') { startH = 7; duration = 12; label = 'Journée (7h-19h)'; }
+    else {
+        startH = parseInt(document.getElementById('roomStartHour').value);
+        duration = parseInt(durVal);
+        label = String(startH).padStart(2, '0') + 'h-' + String(startH + duration).padStart(2, '0') + 'h';
+    }
+    return { startH, duration, label };
+}
+
 function reserveRoom() {
     if (!currentUser) return;
     const roomId = selectedDeskId;
-    const startH = parseInt(document.getElementById('roomStartHour').value);
-    const duration = parseInt(document.getElementById('roomDuration').value);
+    const { startH, duration, label } = resolveRoomDuration();
     let person = document.getElementById('modalPerson').value;
     if (currentUser && !currentUser.isAdmin) person = currentUser.id;
     if (!person) { alert('Veuillez choisir un collaborateur.'); return; }
@@ -4195,7 +4219,7 @@ function reserveRoom() {
     const bookedKeys = [];
     for (let h = startH; h < startH + duration && h <= 19; h++) {
         const key = getRoomSlotKey(dateStr, roomId, h);
-        reservations[key] = { person: person, status: 'bureau', detail: String(startH).padStart(2, '0') + 'h-' + String(startH + duration).padStart(2, '0') + 'h' };
+        reservations[key] = { person: person, status: 'bureau', detail: label };
         bookedKeys.push(key);
     }
 
@@ -4206,7 +4230,7 @@ function reserveRoom() {
     closeModal();
     renderAll();
     const collabName = getCollabById(person)?.name || person;
-    showToast(collabName + ' — ' + roomId + ' réservé ' + String(startH).padStart(2, '0') + 'h-' + String(startH + duration).padStart(2, '0') + 'h');
+    showToast(collabName + ' — ' + roomId + ' réservé ' + label);
 }
 
 function freeRoomSlots() {
