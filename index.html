@@ -2478,9 +2478,8 @@
             <!-- Étagère open space 2ème -->
             <div class="furniture" style="left:280px;top:182px;width:80px;height:10px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
             <div class="furniture" style="left:548px;top:182px;width:80px;height:10px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
-            <!-- Plantes open spaces 2ème (alignées en bas des pièces) -->
+            <!-- Plante open space 2ème -->
             <div class="furniture" style="left:530px;top:180px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:830px;top:180px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
             <!-- Imprimante 2ème -->
             <div class="furniture" style="left:840px;top:100px"><div class="printer-px"><div class="printer-slot"></div></div></div>
             <!-- Fenêtres supplémentaires 2ème -->
@@ -2508,10 +2507,8 @@
             <div class="furniture" style="left:258px;top:270px;width:16px;height:12px;background:#ddd;border:2px solid #bbb;border-radius:6px 6px 2px 2px;z-index:5"></div>
             <div class="furniture" style="left:285px;top:270px;width:16px;height:12px;background:#ddd;border:2px solid #bbb;border-radius:6px 6px 2px 2px;z-index:5"></div>
             <div class="furniture" style="left:258px;top:370px;width:40px;height:14px;background:#ddd;border:2px solid #bbb;border-radius:2px;z-index:5"></div>
-            <!-- Plantes 1er (alignées en bas des pièces) -->
-            <div class="furniture" style="left:315px;top:392px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
+            <!-- Plante 1er -->
             <div class="furniture" style="left:545px;top:392px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:930px;top:392px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
             <!-- Étagères 1er -->
             <div class="furniture" style="left:327px;top:392px;width:60px;height:10px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
             <div class="furniture" style="left:700px;top:392px;width:80px;height:10px;background:#a08050;border:1px solid #8a6a3a;border-radius:1px;z-index:5"></div>
@@ -2548,9 +2545,8 @@
             <div class="furniture meeting-chair" style="left:313px;top:500px"></div>
             <div class="furniture meeting-chair" style="left:293px;top:545px"></div>
             <div class="furniture meeting-chair" style="left:313px;top:545px"></div>
-            <!-- Plantes RDC (alignées en bas des pièces) -->
+            <!-- Plante RDC -->
             <div class="furniture" style="left:258px;top:600px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
-            <div class="furniture" style="left:920px;top:600px"><div class="plant-pixel"><div class="plant-leaves-px"></div><div class="plant-pot-px"></div></div></div>
             <!-- Corbeille RDC -->
             <div class="furniture" style="left:560px;top:600px;width:10px;height:10px;background:#777;border:2px solid #555;border-radius:2px;z-index:5"></div>
             <!-- Machine à café dans couloir RDC -->
@@ -2821,6 +2817,7 @@ function canModifyDesk(deskId) {
     if (!reservation) {
         const collab = COLLABORATEURS.find(c => c.id === currentUser.id);
         if (!collab) return false;
+        if (collab.accessAll) return true;
         if (deskId === 'SR' || deskId === 'SC') return true;
         if (collab.fixedDesk && collab.fixedDesk !== deskId) return false;
         if (collab.fixedDesk === deskId) return true;
@@ -2956,7 +2953,7 @@ const COLLABORATEURS = [
     { id: 'marc_d', name: 'Marc Daubresse', color: '#d63031', hair: '#666', email: '', floors: [0] },
     { id: 'dimitri', name: 'Dimitri Mahy', color: '#0984e3', hair: '#1a1a1a', email: '', floors: [0] },
     { id: 'philippe_l', name: 'Philippe Lefebvre', color: '#6c5ce7', hair: '#555', email: '', floors: [0] },
-    { id: 'etienne', name: 'Etienne Devolder', color: '#00cec9', hair: '#2c3e50', email: '', floors: [0,1,2] },
+    { id: 'etienne', name: 'Etienne Devolder', color: '#00cec9', hair: '#2c3e50', email: '', floors: [0,1,2], accessAll: true },
     // === 1ER ÉTAGE MOBILES ===
     { id: 'antoine', name: 'Antoine Cardinael', color: '#27ae60', hair: '#333', email: '', floors: [1] },
     { id: 'fatou', name: 'Fatou Oularé', color: '#e67e22', hair: '#1a1a1a', email: '', floors: [1] },
@@ -2990,6 +2987,9 @@ const COLLABORATEURS = [
     { id: 'ugo', name: 'Ugo Spada', color: '#16a085', hair: '#2c3e50', email: '', floors: [0,1,2] },
     { id: 'irina', name: 'Irina Fernandez Garcia', color: '#e056a0', hair: '#1a1a1a', email: '', floors: [0,1,2] },
     { id: 'patrick', name: 'Patrick Kodjane', color: '#2d98da', hair: '#1a1a1a', email: '', floors: [0,1,2] },
+    { id: 'annette', name: 'Annette Senn', color: '#e17055', hair: '#d4a017', email: '', floors: [0,1,2], accessAll: true },
+    { id: 'severine', name: 'Séverine Delehouze', color: '#6c5ce7', hair: '#8B4513', email: '', floors: [0,1,2], accessAll: true },
+    { id: 'christophe_m', name: 'Christophe Meulemans', color: '#00b894', hair: '#333', email: '', floors: [0,1,2], accessAll: true },
 ];
 
 // Desk positions — Plan 29 Place de Saint-Job (3 étages, pièces 170px haut)
@@ -3585,7 +3585,13 @@ function renderDesks() {
     container.innerHTML = '';
     const slot = getCurrentSlotReservations();
 
+    // Build set of accessible desks for current user
+    const accessibleSet = new Set(getAccessibleDesks());
+
     DESKS.forEach(desk => {
+        // Hide desks the user cannot reserve (unless occupied — show as info)
+        const canAccess = accessibleSet.has(desk.id) || isRoomDesk(desk.id);
+
         // For rooms (SR/SAC), use hourly booking system
         let reservation, collab, status, cfg, isAtDesk;
         if (isRoomDesk(desk.id)) {
@@ -3615,11 +3621,17 @@ function renderDesks() {
 
         const el = document.createElement('div');
         const ariaLabel = collab ? `${collab.name} — ${cfg.label}` : `Bureau ${desk.id} — Libre, cliquer pour réserver`;
-        el.className = `desk-unit ${isHighlighted ? 'highlighted' : ''} ${isDimmed ? 'dimmed' : ''}`;
+        const notAccessible = !canAccess && !reservation;
+        el.className = `desk-unit ${isHighlighted ? 'highlighted' : ''} ${isDimmed ? 'dimmed' : ''} ${notAccessible ? 'no-access' : ''}`;
         el.style.cssText = `left:${desk.x}px;top:${desk.y}px;`;
+        if (notAccessible) {
+            el.style.opacity = '0.25';
+            el.style.pointerEvents = 'none';
+            el.style.filter = 'grayscale(1)';
+        }
         el.setAttribute('role', 'button');
         el.setAttribute('aria-label', ariaLabel);
-        el.setAttribute('tabindex', '0');
+        el.setAttribute('tabindex', notAccessible ? '-1' : '0');
         el.onclick = () => openModal(desk.id);
         el.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(desk.id); } };
 
@@ -4574,6 +4586,7 @@ function getAccessibleDesks() {
     if (!currentUser) return [];
     const collab = COLLABORATEURS.find(c => c.id === currentUser.id);
     if (!collab) return [];
+    if (collab.accessAll) return DESKS.map(d => d.id);
     if (collab.fixedDesk) return [collab.fixedDesk];
     return DESKS.filter(d => {
         if (COLLABORATEURS.some(c => c.fixedDesk === d.id)) return false;
@@ -4875,12 +4888,17 @@ function openCalEdit(year, month, day, cellEl) {
         </div>
     `;
 
-    // Position
-    const rect = cellEl.getBoundingClientRect();
-    pop.style.top = (rect.bottom + 4) + 'px';
-    pop.style.left = Math.min(rect.left, window.innerWidth - 240) + 'px';
-
+    // Position — open above if near bottom of viewport
     document.body.appendChild(pop);
+    const rect = cellEl.getBoundingClientRect();
+    const popHeight = pop.offsetHeight || 200;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    if (spaceBelow < popHeight + 10) {
+        pop.style.top = Math.max(4, rect.top - popHeight - 4) + 'px';
+    } else {
+        pop.style.top = (rect.bottom + 4) + 'px';
+    }
+    pop.style.left = Math.min(rect.left, window.innerWidth - 240) + 'px';
 
     // Toggle desk select visibility
     pop.querySelector('#calEditStatus').addEventListener('change', function() {
