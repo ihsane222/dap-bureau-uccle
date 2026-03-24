@@ -2851,14 +2851,27 @@ async function loadFromSheets() {
     try {
         isSyncing = true;
         updateSyncStatus();
+        const ctrl = new AbortController();
+        const timeout = setTimeout(() => ctrl.abort(), 15000);
         const resp = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'getAll' }),
+            signal: ctrl.signal,
         });
+        clearTimeout(timeout);
         const raw = await resp.json();
         const json = Array.isArray(raw) ? raw[0] : raw;
         if (json.success && json.reservations) {
+            // Ne re-render que si les données ont changé
+            const newData = JSON.stringify(json.reservations);
+            const oldData = JSON.stringify(reservations);
+            if (newData === oldData) {
+                lastSyncTime = new Date();
+                isSyncing = false;
+                updateSyncStatus();
+                return false; // Pas de changement
+            }
             // Le serveur est la source de vérité
             reservations = json.reservations;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
@@ -2894,11 +2907,15 @@ async function saveToSheets(key, data) {
     try {
         isSyncing = true;
         updateSyncStatus();
+        const ctrl = new AbortController();
+        const timeout = setTimeout(() => ctrl.abort(), 15000);
         const resp = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'saveSlot', key, data, user: currentUser?.id }),
+            signal: ctrl.signal,
         });
+        clearTimeout(timeout);
         const rawSave = await resp.json();
         const json = Array.isArray(rawSave) ? rawSave[0] : rawSave;
         lastSyncTime = new Date();
@@ -3257,6 +3274,13 @@ function getDateKey(dayIndex, period) {
     return d.toISOString().slice(0, 10) + '-' + period;
 }
 
+function isDayInPast(dayIndex) {
+    const d = new Date(currentWeekStart);
+    d.setDate(d.getDate() + dayIndex);
+    d.setHours(23, 59, 59, 999);
+    return d < new Date();
+}
+
 function getReservationsForSlot(dayIndex, period) {
     const key = getDateKey(dayIndex, period);
     // If user has saved reservations for this slot, use them
@@ -3293,7 +3317,9 @@ function save(changedKey) {
     // Sync vers Google Sheets
     if (APPS_SCRIPT_URL) {
         const key = changedKey || getDateKey(currentDayIndex, currentPeriod);
-        saveToSheets(key, reservations[key]);
+        saveToSheets(key, reservations[key]).then(ok => {
+            if (!ok) showToast('⚠️ Sync échouée — vos changements sont sauvés localement');
+        });
     }
 }
 
@@ -3928,7 +3954,8 @@ function renderTable() {
                     const cfg = STATUS_CONFIG[found.status] || STATUS_CONFIG.libre;
                     const cellClass = 'cell-' + found.status;
                     const label = found.status === 'autre' && found.detail ? found.detail : cfg.label;
-                    cells += `<td class="${cellClass}" style="font-size:0.65rem" title="${cfg.label}${found.detail ? ' (' + found.detail + ')' : ''}">${label}</td>`;
+                    const titleAttr = (cfg.label + (found.detail ? ' (' + found.detail + ')' : '')).replace(/"/g, '&quot;');
+                    cells += `<td class="${cellClass}" style="font-size:0.65rem" title="${titleAttr}">${label}</td>`;
                 } else {
                     cells += '<td style="color:#cbd5e0">—</td>';
                 }
@@ -3943,8 +3970,10 @@ function renderTable() {
 // ============================
 // MODAL
 // ============================
-function openModal(deskId) {
+async function openModal(deskId) {
     if (!currentUser) { showLoginScreen(); return; }
+    // Recharger les données serveur pour éviter les conflits
+    if (APPS_SCRIPT_URL) await loadFromSheets();
     if (!canModifyDesk(deskId)) {
         const slot = getCurrentSlotReservations();
         const r = slot[deskId];
@@ -4045,6 +4074,7 @@ function setModalPeriod(p, btn) {
 }
 
 function reserveDesk() {
+    if (isDayInPast(currentDayIndex)) { showToast('Impossible de réserver dans le passé'); closeModal(); return; }
     let person = document.getElementById('modalPerson').value;
     const status = document.getElementById('modalStatus').value;
     // Non-admin: force own ID
@@ -4054,8 +4084,20 @@ function reserveDesk() {
     const detail = status === 'autre' ? document.getElementById('modalAutreBureau').value : null;
     const data = { person, status, detail };
 
-    // Remove person from any other desk in the same slots
+    // Vérifier si le bureau est déjà pris par quelqu'un d'autre
     const periods = modalPeriod === 'full' ? ['am', 'pm'] : [modalPeriod];
+    if (status === 'bureau') {
+        for (const p of periods) {
+            const key = getDateKey(currentDayIndex, p);
+            const existing = reservations[key] && reservations[key][selectedDeskId];
+            if (existing && existing.person !== person) {
+                const occupant = getCollabById(existing.person);
+                if (!confirm(`Ce bureau est déjà réservé par ${occupant ? occupant.name : '—'} (${p.toUpperCase()}). Remplacer ?`)) return;
+            }
+        }
+    }
+
+    // Remove person from any other desk in the same slots
     periods.forEach(p => {
         const key = getDateKey(currentDayIndex, p);
         if (reservations[key]) {
@@ -4075,6 +4117,7 @@ function reserveDesk() {
 function freeDesk() {
     if (!selectedDeskId) return;
     if (!currentUser) return;
+    if (isDayInPast(currentDayIndex)) { showToast('Impossible de modifier le passé'); closeModal(); return; }
     // Non-admin can only free their own reservation
     if (!currentUser.isAdmin) {
         const slot = getCurrentSlotReservations();
@@ -4218,11 +4261,18 @@ function resolveRoomDuration() {
 
 function reserveRoom() {
     if (!currentUser) return;
+    if (isDayInPast(currentDayIndex)) { showToast('Impossible de réserver dans le passé'); closeModal(); return; }
     const roomId = selectedDeskId;
     const { startH, duration, label } = resolveRoomDuration();
     let person = document.getElementById('modalPerson').value;
     if (currentUser && !currentUser.isAdmin) person = currentUser.id;
     if (!person) { alert('Veuillez choisir un collaborateur.'); return; }
+
+    // Vérifier que la durée ne dépasse pas 19h
+    if (startH + duration > 19) {
+        alert('La réservation dépasse 19h. Veuillez réduire la durée ou changer l\'heure de début.');
+        return;
+    }
 
     const dateStr = getRoomDateKey(currentDayIndex);
 
@@ -4256,6 +4306,7 @@ function reserveRoom() {
 
 function freeRoomSlots() {
     if (!selectedDeskId || !currentUser) return;
+    if (isDayInPast(currentDayIndex)) { showToast('Impossible de modifier le passé'); closeModal(); return; }
     const roomId = selectedDeskId;
     const dateStr = getRoomDateKey(currentDayIndex);
     let freed = 0;
@@ -5606,7 +5657,14 @@ function renderAll() {
     renderAll();
     // Charger depuis Google Sheets si configuré
     if (APPS_SCRIPT_URL) {
+        // Bloquer les clics pendant le chargement initial
+        const blocker = document.createElement('div');
+        blocker.id = 'initBlocker';
+        blocker.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(255,255,255,0.6);display:flex;align-items:center;justify-content:center;font-size:14px;color:#2d3748;font-weight:600;';
+        blocker.innerHTML = '<div style="background:white;padding:16px 28px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.15)">Chargement des réservations...</div>';
+        document.body.appendChild(blocker);
         const ok = await loadFromSheets();
+        blocker.remove();
         if (ok) renderAll();
         // Rafraîchir toutes les 30 secondes
         setInterval(async () => {
