@@ -3970,10 +3970,8 @@ function renderTable() {
 // ============================
 // MODAL
 // ============================
-async function openModal(deskId) {
+function openModal(deskId) {
     if (!currentUser) { showLoginScreen(); return; }
-    // Recharger les données serveur pour éviter les conflits
-    if (APPS_SCRIPT_URL) await loadFromSheets();
     if (!canModifyDesk(deskId)) {
         const slot = getCurrentSlotReservations();
         const r = slot[deskId];
