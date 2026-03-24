@@ -3251,6 +3251,14 @@ function getDefaultSlot(dayIndex, period) {
 // ============================
 // UTILS
 // ============================
+// Date ISO locale (sans décalage UTC — corrige le bug timezone Belgique)
+Date.prototype.toLocalISODate = function() {
+    const y = this.getFullYear();
+    const m = String(this.getMonth() + 1).padStart(2, '0');
+    const d = String(this.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + d;
+};
+
 function getMonday(d) {
     const date = new Date(d);
     const day = date.getDay();
@@ -3271,7 +3279,7 @@ function getWeekNumber(d) {
 function getDateKey(dayIndex, period) {
     const d = new Date(currentWeekStart);
     d.setDate(d.getDate() + dayIndex);
-    return d.toISOString().slice(0, 10) + '-' + period;
+    return d.toLocalISODate() + '-' + period;
 }
 
 function isDayInPast(dayIndex) {
@@ -4162,7 +4170,7 @@ function isRoomDesk(deskId) {
 function getRoomDateKey(dayIndex) {
     const d = new Date(currentWeekStart);
     d.setDate(d.getDate() + dayIndex);
-    return d.toISOString().slice(0, 10);
+    return d.toLocalISODate();
 }
 
 // Room bookings stored in reservations as: "2026-03-20-SR-09" => { person, detail }
@@ -4722,7 +4730,7 @@ function applySemaineType() {
             // Skip past dates
             if (monday < new Date(today.getFullYear(), today.getMonth(), today.getDate())) continue;
 
-            const applyISO = monday.toISOString().slice(0, 10);
+            const applyISO = monday.toLocalISODate();
 
             ['am', 'pm'].forEach(period => {
                 const key = applyISO + '-' + period;
@@ -4852,7 +4860,7 @@ function renderCalendar() {
         let isAuto = false;
 
         // Check explicit reservations
-        const dateISO = date.toISOString().slice(0, 10);
+        const dateISO = date.toLocalISODate();
         ['am'].forEach(period => {
             const key = dateISO + '-' + period;
             if (reservations[key]) {
@@ -4903,7 +4911,7 @@ function openCalEdit(year, month, day, cellEl) {
     // Current status
     let curStatus = '';
     let curDesk = '';
-    const editDateISO = date.toISOString().slice(0, 10);
+    const editDateISO = date.toLocalISODate();
     ['am'].forEach(period => {
         const key = editDateISO + '-' + period;
         if (reservations[key]) {
@@ -4984,7 +4992,7 @@ function calEditSave(year, month, day) {
     const desk = deskSel ? deskSel.value : '';
 
     const date = new Date(year, month, day);
-    const saveISO = date.toISOString().slice(0, 10);
+    const saveISO = date.toLocalISODate();
 
     ['am', 'pm'].forEach(period => {
         const key = saveISO + '-' + period;
@@ -5025,7 +5033,7 @@ function calEditSave(year, month, day) {
 
 function calEditClear(year, month, day) {
     const date = new Date(year, month, day);
-    const clearISO = date.toISOString().slice(0, 10);
+    const clearISO = date.toLocalISODate();
 
     ['am', 'pm'].forEach(period => {
         const key = clearISO + '-' + period;
