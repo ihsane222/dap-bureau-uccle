@@ -3621,7 +3621,8 @@ function renderDesks() {
 
         const el = document.createElement('div');
         const ariaLabel = collab ? `${collab.name} — ${cfg.label}` : `Bureau ${desk.id} — Libre, cliquer pour réserver`;
-        const notAccessible = !canAccess && !reservation;
+        const isFixedDesk = COLLABORATEURS.some(c => c.fixedDesk === desk.id);
+        const notAccessible = !canAccess && !reservation && !isFixedDesk;
         el.className = `desk-unit ${isHighlighted ? 'highlighted' : ''} ${isDimmed ? 'dimmed' : ''} ${notAccessible ? 'no-access' : ''}`;
         el.style.cssText = `left:${desk.x}px;top:${desk.y}px;`;
         if (notAccessible) {
