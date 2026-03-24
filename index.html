@@ -3622,17 +3622,24 @@ function renderDesks() {
         const el = document.createElement('div');
         const ariaLabel = collab ? `${collab.name} — ${cfg.label}` : `Bureau ${desk.id} — Libre, cliquer pour réserver`;
         const isFixedDesk = COLLABORATEURS.some(c => c.fixedDesk === desk.id);
+        const isMyFixedDesk = currentUser && COLLABORATEURS.some(c => c.fixedDesk === desk.id && c.id === currentUser.id);
         const notAccessible = !canAccess && !reservation && !isFixedDesk;
-        el.className = `desk-unit ${isHighlighted ? 'highlighted' : ''} ${isDimmed ? 'dimmed' : ''} ${notAccessible ? 'no-access' : ''}`;
+        const userCollab = currentUser ? COLLABORATEURS.find(c => c.id === currentUser.id) : null;
+        const fixedNotMine = isFixedDesk && !isMyFixedDesk && !currentUser?.isAdmin && !(userCollab && userCollab.accessAll);
+        el.className = `desk-unit ${isHighlighted ? 'highlighted' : ''} ${isDimmed ? 'dimmed' : ''} ${notAccessible || fixedNotMine ? 'no-access' : ''}`;
         el.style.cssText = `left:${desk.x}px;top:${desk.y}px;`;
         if (notAccessible) {
             el.style.opacity = '0.25';
             el.style.pointerEvents = 'none';
             el.style.filter = 'grayscale(1)';
         }
+        if (fixedNotMine) {
+            el.style.pointerEvents = 'none';
+            el.style.cursor = 'default';
+        }
         el.setAttribute('role', 'button');
         el.setAttribute('aria-label', ariaLabel);
-        el.setAttribute('tabindex', notAccessible ? '-1' : '0');
+        el.setAttribute('tabindex', notAccessible || fixedNotMine ? '-1' : '0');
         el.onclick = () => openModal(desk.id);
         el.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(desk.id); } };
 
