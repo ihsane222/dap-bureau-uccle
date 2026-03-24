@@ -3266,6 +3266,17 @@ Date.prototype.toLocalISODate = function() {
     return y + '-' + m + '-' + d;
 };
 
+// Date d'ouverture des bureaux — aucune réservation possible avant
+const OPENING_DATE = new Date(2026, 3, 1); // 1er avril 2026
+OPENING_DATE.setHours(0, 0, 0, 0);
+
+function isDayBeforeOpening(dayIndex) {
+    const d = new Date(currentWeekStart);
+    d.setDate(d.getDate() + dayIndex);
+    d.setHours(0, 0, 0, 0);
+    return d < OPENING_DATE;
+}
+
 function getMonday(d) {
     const date = new Date(d);
     const day = date.getDay();
@@ -3987,6 +3998,10 @@ function renderTable() {
 // ============================
 function openModal(deskId) {
     if (!currentUser) { showLoginScreen(); return; }
+    if (isDayBeforeOpening(currentDayIndex)) {
+        showToast('Les bureaux ouvrent le 1er avril — réservations possibles à partir de cette semaine');
+        return;
+    }
     if (!canModifyDesk(deskId)) {
         const slot = getCurrentSlotReservations();
         const r = slot[deskId];
@@ -5000,11 +5015,17 @@ function closeCalEdit() {
 }
 
 function calEditSave(year, month, day) {
+    const date = new Date(year, month, day);
+    date.setHours(0, 0, 0, 0);
+    if (date < OPENING_DATE) {
+        showToast('Les bureaux ouvrent le 1er avril');
+        closeCalEdit();
+        return;
+    }
     const status = document.getElementById('calEditStatus').value;
     const deskSel = document.getElementById('calEditDesk');
     const desk = deskSel ? deskSel.value : '';
 
-    const date = new Date(year, month, day);
     const saveISO = date.toLocalISODate();
 
     ['am', 'pm'].forEach(period => {
