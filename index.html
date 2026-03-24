@@ -5081,6 +5081,7 @@ let autoMessagesSent = {}; // track which auto messages were sent today
 const AUTO_MESSAGES = [
     { hour: 9, min: 0, key: 'morning', text: 'Bonne journ\u00e9e \u00e0 tous ! \u2615' },
     { hour: 12, min: 15, key: 'lunch', text: 'Bon app\u00e9tit ! \ud83c\udf7d\ufe0f' },
+    { hour: 15, min: 30, key: 'afternoon', text: 'Bon courage pour la fin de journ\u00e9e ! \u2728' },
 ];
 
 // Monday-only messages
@@ -5203,12 +5204,17 @@ function checkAutoMessages() {
 
     allAuto.forEach(msg => {
         const msgMinutes = msg.hour * 60 + msg.min;
-        // Send if time has passed and not already sent by anyone
-        if (nowMinutes >= msgMinutes && !autoMessagesSent[msg.key]) {
-            const alreadyExists = chatMessages.some(cm => cm.auto && cm.text === msg.text);
+        if (nowMinutes >= msgMinutes && nowMinutes < msgMinutes + 30 && !autoMessagesSent[msg.key]) {
             autoMessagesSent[msg.key] = true;
-            if (!alreadyExists) {
-                sendAutoMessage(msg.text);
+            const alreadyExists = chatMessages.some(cm => cm.auto && cm.text === msg.text);
+            if (!alreadyExists && Math.random() < 0.05) {
+                // Délai aléatoire 2-15s pour éviter que plusieurs clients envoient en même temps
+                const delay = 2000 + Math.random() * 13000;
+                setTimeout(async () => {
+                    // Re-vérifier après le délai (les données ont pu être rafraîchies)
+                    const stillMissing = !chatMessages.some(cm => cm.auto && cm.text === msg.text);
+                    if (stillMissing) sendAutoMessage(msg.text);
+                }, delay);
             }
         }
     });
