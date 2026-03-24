@@ -3688,10 +3688,10 @@ function renderDesks() {
             const roomLabel = roomLabels[desk.id] || desk.id;
             el.innerHTML = `
                 <div style="width:42px;height:42px;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-                    background:${bookedCount > 0 ? 'linear-gradient(135deg,#fed7d7,#feb2b2)' : 'linear-gradient(135deg,#c6f6d5,#9ae6b4)'};
-                    border:2px solid ${bookedCount > 0 ? '#fc8181' : '#68d391'};font-family:'Segoe UI',sans-serif;text-align:center">
+                    background:${bookedCount >= 12 ? 'linear-gradient(135deg,#fed7d7,#feb2b2)' : bookedCount > 0 ? 'linear-gradient(135deg,#fefcbf,#faf089)' : 'linear-gradient(135deg,#c6f6d5,#9ae6b4)'};
+                    border:2px solid ${bookedCount >= 12 ? '#fc8181' : bookedCount > 0 ? '#ecc94b' : '#68d391'};font-family:'Segoe UI',sans-serif;text-align:center">
                     <div style="font-size:14px">${desk.id === 'SR' ? '🤝' : '🪑'}</div>
-                    <div style="font-size:5px;font-weight:700;color:${bookedCount > 0 ? '#9b2c2c' : '#276749'};line-height:1.1">${bookedCount > 0 ? bookedCount + 'h réservée' + (bookedCount > 1 ? 's' : '') : 'Libre'}</div>
+                    <div style="font-size:5px;font-weight:700;color:${bookedCount >= 12 ? '#9b2c2c' : bookedCount > 0 ? '#975a16' : '#276749'};line-height:1.1">${bookedCount >= 12 ? 'Complet' : bookedCount > 0 ? (12 - bookedCount) + 'h libres' : 'Libre'}</div>
                 </div>
                 <div class="desk-label" style="text-align:center">
                     <span class="desk-number">${roomLabel}</span>
@@ -4265,7 +4265,7 @@ function resolveRoomDuration() {
     return { startH, duration, label };
 }
 
-function reserveRoom() {
+async function reserveRoom() {
     if (!currentUser) return;
     if (isDayInPast(currentDayIndex)) { showToast('Impossible de réserver dans le passé'); closeModal(); return; }
     const roomId = selectedDeskId;
@@ -4301,16 +4301,22 @@ function reserveRoom() {
     }
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
-    if (APPS_SCRIPT_URL) {
-        bookedKeys.forEach(k => saveToSheets(k, reservations[k]));
-    }
     closeModal();
     renderAll();
     const collabName = getCollabById(person)?.name || person;
     showToast(collabName + ' — ' + roomId + ' réservé ' + label);
+    // Sauvegarder séquentiellement pour éviter les pertes partielles
+    if (APPS_SCRIPT_URL) {
+        let failures = 0;
+        for (const k of bookedKeys) {
+            const ok = await saveToSheets(k, reservations[k]);
+            if (!ok) failures++;
+        }
+        if (failures > 0) showToast('⚠️ ' + failures + ' créneau(x) non synchronisé(s) — réessayez');
+    }
 }
 
-function freeRoomSlots() {
+async function freeRoomSlots() {
     if (!selectedDeskId || !currentUser) return;
     if (isDayInPast(currentDayIndex)) { showToast('Impossible de modifier le passé'); closeModal(); return; }
     const roomId = selectedDeskId;
@@ -4336,7 +4342,7 @@ function freeRoomSlots() {
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
     if (APPS_SCRIPT_URL) {
-        freedKeys.forEach(k => saveToSheets(k, null));
+        for (const k of freedKeys) { await saveToSheets(k, null); }
     }
     closeModal();
     renderAll();
