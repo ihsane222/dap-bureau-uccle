@@ -3742,7 +3742,7 @@ function renderDesks() {
             </div>
             ${isLibre ? `<div class="libre-badge">Réserver</div>` : `
             <div class="desk-label">
-                ${escapeHtml(collab.name)}
+                ${escapeHtml(collab.name.split(' ')[0])}
                 <span class="desk-number">${desk.id}${reservation && reservation.detail ? ' · ' + reservation.detail : ''}</span>
             </div>`}
         `;
