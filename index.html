@@ -3304,16 +3304,15 @@ function getEasterDate(year) {
 
 function getBelgianHolidays(year) {
     const easter = getEasterDate(year);
-    const easterMs = easter.getTime();
-    const day = 86400000;
     const holidays = {};
-    const add = (d, label) => { const key = d.toLocalISODate ? d.toLocalISODate() : new Date(d).toLocalISODate(); holidays[key] = label; };
+    const add = (d, label) => { holidays[d.toLocalISODate()] = label; };
+    const easterPlus = (days) => { const d = new Date(easter); d.setDate(d.getDate() + days); return d; };
 
     add(new Date(year, 0, 1),  'Nouvel An');
-    add(new Date(easterMs + 1 * day), 'Lundi de Pâques');
+    add(easterPlus(1),  'Lundi de Pâques');
     add(new Date(year, 4, 1),  'Fête du Travail');
-    add(new Date(easterMs + 39 * day), 'Ascension');
-    add(new Date(easterMs + 50 * day), 'Lundi de Pentecôte');
+    add(easterPlus(39), 'Ascension');
+    add(easterPlus(50), 'Lundi de Pentecôte');
     add(new Date(year, 6, 21), 'Fête nationale');
     add(new Date(year, 7, 15), 'Assomption');
     add(new Date(year, 10, 1), 'Toussaint');
