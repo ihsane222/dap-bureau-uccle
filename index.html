@@ -2825,13 +2825,13 @@ function canModifyDesk(deskId) {
         if (!collab) return false;
         if (collab.accessAll) return true;
         if (deskId === 'SR' || deskId === 'SC') return true;
-        if (collab.fixedDesk && collab.fixedDesk !== deskId) return false;
-        if (collab.fixedDesk === deskId) return true;
+        if (isFixedOnDay(collab, currentDayIndex) && collab.fixedDesk !== deskId) return false;
+        if (collab.fixedDesk === deskId && isFixedOnDay(collab, currentDayIndex)) return true;
         const deskInfo = DESKS.find(d => d.id === deskId);
         if (!deskInfo) return false;
-        // Check if desk is a fixed desk for someone else
-        const isOtherFixed = COLLABORATEURS.some(c => c.fixedDesk === deskId && c.id !== currentUser.id);
-        if (isOtherFixed) return false;
+        // Check if desk is a fixed desk for someone else TODAY
+        const fixedOwner = getDeskFixedOwnerOnDay(deskId, currentDayIndex);
+        if (fixedOwner && fixedOwner.id !== currentUser.id) return false;
         return collab.floors && collab.floors.includes(deskInfo.floor);
     }
 
@@ -2988,11 +2988,11 @@ const COLLABORATEURS = [
     { id: 'annemarie', name: 'Anne-Marie Mincke', color: '#e056a0', hair: '#8B4513', email: '', floors: [1] },
     { id: 'alba', name: 'Alba Bernardinello', color: '#e84393', hair: '#1a1a1a', email: '', floors: [1] },
     // === 2ÈME ÉTAGE MOBILES ===
-    { id: 'anne', name: 'Anne Leroy', color: '#c44569', hair: '#8B4513', email: '', floors: [2] },
+    { id: 'anne', name: 'Anne Leroy', color: '#c44569', hair: '#8B4513', email: '', floors: [2], fixedDesk: 'X28', fixedDays: [1] },
     { id: 'sufyan', name: 'Sufyan Narinx', color: '#3dc1d3', hair: '#1a1a1a', email: '', floors: [2] },
-    { id: 'laurence', name: 'Laurence Vanham', color: '#e77f67', hair: '#a0522d', email: '', floors: [2] },
-    { id: 'murielle', name: 'Murielle Jongen', color: '#778beb', hair: '#c0392b', email: '', floors: [2] },
-    { id: 'diane', name: 'Diane de Krijger', color: '#f8a5c2', hair: '#d4a017', email: '', floors: [2] },
+    { id: 'laurence', name: 'Laurence Vanham', color: '#e77f67', hair: '#a0522d', email: '', floors: [2], fixedDesk: 'X27', fixedDays: [2,3,4] },
+    { id: 'murielle', name: 'Murielle Jongen', color: '#778beb', hair: '#c0392b', email: '', floors: [2], fixedDesk: 'X30', fixedDays: [0,1,2] },
+    { id: 'diane', name: 'Diane de Krijger', color: '#f8a5c2', hair: '#d4a017', email: '', floors: [2], fixedDesk: 'X29', fixedDays: [0,1,2,3] },
     { id: 'chris', name: 'Chris Marcus', color: '#5f27cd', hair: '#1a1a1a', email: '', floors: [2] },
     // === ÉLECTRONS LIBRES (3 étages) ===
     { id: 'olivier', name: 'Olivier Van Innis', color: '#2c3e50', hair: '#333', email: '', floors: [0,1,2] },
@@ -3253,6 +3253,12 @@ function getDefaultSlot(dayIndex, period) {
             result[deskId] = { person: collabId, status, detail };
         }
     });
+    // Ajouter les bureaux fixes partiels (fixedDays)
+    COLLABORATEURS.forEach(c => {
+        if (c.fixedDesk && c.fixedDays && c.fixedDays.includes(dayIndex)) {
+            result[c.fixedDesk] = { person: c.id, status: 'bureau', detail: null };
+        }
+    });
     return result;
 }
 
@@ -3276,6 +3282,22 @@ function isDayBeforeOpening(dayIndex) {
     d.setDate(d.getDate() + dayIndex);
     d.setHours(0, 0, 0, 0);
     return d < OPENING_DATE;
+}
+
+// Bureau fixe conditionnel par jour — fixedDays: [0=lun..4=ven]
+// Si fixedDays est absent, le bureau est fixe tous les jours (comportement classique)
+function isFixedOnDay(collab, dayIndex) {
+    if (!collab.fixedDesk) return false;
+    if (!collab.fixedDays) return true; // fixe permanent (Caroline, Beatriz, etc.)
+    return collab.fixedDays.includes(dayIndex);
+}
+
+function isDeskFixedOnDay(deskId, dayIndex) {
+    return COLLABORATEURS.some(c => c.fixedDesk === deskId && isFixedOnDay(c, dayIndex));
+}
+
+function getDeskFixedOwnerOnDay(deskId, dayIndex) {
+    return COLLABORATEURS.find(c => c.fixedDesk === deskId && isFixedOnDay(c, dayIndex));
 }
 
 function getMonday(d) {
@@ -3660,6 +3682,13 @@ function renderDesks() {
             }
         } else {
             reservation = slot[desk.id];
+            // Si pas de réservation mais bureau fixe aujourd'hui → afficher le propriétaire
+            if (!reservation) {
+                const fixedOwner = getDeskFixedOwnerOnDay(desk.id, currentDayIndex);
+                if (fixedOwner) {
+                    reservation = { person: fixedOwner.id, status: 'bureau', detail: null };
+                }
+            }
             collab = reservation ? getCollabById(reservation.person) : null;
             status = reservation ? reservation.status : 'libre';
         }
@@ -3775,8 +3804,9 @@ function renderRappelSection(collabStatuses) {
     // Rappels visibles uniquement pour les admins
     if (!currentUser || !currentUser.isAdmin) return '';
 
-    // Les collaborateurs avec bureau fixe n'ont pas besoin de confirmer
+    // Les collaborateurs avec bureau fixe aujourd'hui n'ont pas besoin de confirmer
     const fixedDeskIds = new Set(DEFAULT_ASSIGNMENTS.map(([id]) => id));
+    COLLABORATEURS.forEach(c => { if (c.fixedDesk && c.fixedDays && c.fixedDays.includes(currentDayIndex)) fixedDeskIds.add(c.id); });
 
     // Parmi les non-fixes, qui n'a pas de réservation explicite ?
     const key = getDateKey(currentDayIndex, currentPeriod);
@@ -3879,8 +3909,9 @@ function renderSidebar() {
         return a.name.localeCompare(b.name);
     });
 
-    // Bureaux fixes = pas besoin de confirmer
+    // Bureaux fixes aujourd'hui = pas besoin de confirmer
     const fixedDeskIds = new Set(DEFAULT_ASSIGNMENTS.map(([id]) => id));
+    COLLABORATEURS.forEach(c => { if (c.fixedDesk && c.fixedDays && c.fixedDays.includes(currentDayIndex)) fixedDeskIds.add(c.id); });
     // Qui a confirmé (réservation explicite) ?
     const key = getDateKey(currentDayIndex, currentPeriod);
     const confirmedIds = new Set();
@@ -4026,11 +4057,12 @@ function openModal(deskId) {
     const personSelect = document.getElementById('modalPerson');
     const deskInfo = DESKS.find(d => d.id === deskId);
     const deskFloor = deskInfo ? deskInfo.floor : -1;
-    const isFixedDesk = COLLABORATEURS.some(c => c.fixedDesk === deskId);
+    const fixedOwnerToday = getDeskFixedOwnerOnDay(deskId, currentDayIndex);
     const eligibleCollabs = COLLABORATEURS.filter(c => {
-        if (isFixedDesk) return c.fixedDesk === deskId;
+        if (fixedOwnerToday) return c.id === fixedOwnerToday.id;
         if (isRoom) return true;
-        return !c.fixedDesk && c.floors && c.floors.includes(deskFloor);
+        if (isFixedOnDay(c, currentDayIndex) && c.fixedDesk !== deskId) return false;
+        return c.floors && c.floors.includes(deskFloor);
     });
     personSelect.innerHTML = '<option value="">— Choisir —</option>' +
         eligibleCollabs.map(c => `<option value="${c.id}" ${reservation && reservation.person === c.id ? 'selected' : ''}>${escapeHtml(c.name)}</option>`).join('');
@@ -4681,9 +4713,12 @@ function getAccessibleDesks() {
     const collab = COLLABORATEURS.find(c => c.id === currentUser.id);
     if (!collab) return [];
     if (collab.accessAll) return DESKS.map(d => d.id);
-    if (collab.fixedDesk) return [collab.fixedDesk];
+    // Bureau fixe partiel : le collab peut réserver son fixe + les bureaux libres de son étage
+    if (collab.fixedDesk && !collab.fixedDays) return [collab.fixedDesk];
     return DESKS.filter(d => {
-        if (COLLABORATEURS.some(c => c.fixedDesk === d.id)) return false;
+        // Bureau fixe occupé aujourd'hui par quelqu'un d'autre → pas accessible
+        const fixedOwner = getDeskFixedOwnerOnDay(d.id, currentDayIndex);
+        if (fixedOwner && fixedOwner.id !== currentUser.id) return false;
         return collab.floors && collab.floors.includes(d.floor);
     }).map(d => d.id).concat(['SR', 'SC']);
 }
@@ -4716,7 +4751,7 @@ function renderSemaineType() {
             </select>
             <select class="st-desk-select ${showDesk ? 'show' : ''}" onchange="onSTDeskChange(${i}, this.value)">
                 <option value="">Bureau auto</option>
-                ${collab && collab.fixedDesk
+                ${collab && collab.fixedDesk && isFixedOnDay(collab, i)
                     ? `<option value="${collab.fixedDesk}" selected>${collab.fixedDesk} (fixe)</option>`
                     : desks.map(dk => `<option value="${dk}" ${desk === dk ? 'selected' : ''}>${dk}</option>`).join('')
                 }
@@ -4971,7 +5006,7 @@ function openCalEdit(year, month, day, cellEl) {
         </select>
         <select id="calEditDesk" style="${curStatus === 'bureau' ? '' : 'display:none'}">
             <option value="">Bureau auto</option>
-            ${collab && collab.fixedDesk
+            ${collab && collab.fixedDesk && isFixedOnDay(collab, date.getDay() - 1)
                 ? `<option value="${collab.fixedDesk}" selected>${collab.fixedDesk} (fixe)</option>`
                 : desks.map(dk => `<option value="${dk}" ${curDesk === dk ? 'selected' : ''}>${dk}</option>`).join('')}
         </select>
