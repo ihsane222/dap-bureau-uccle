@@ -3227,7 +3227,7 @@ let reservations = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
 // [collabId, status_am, detail_am, status_pm, detail_pm]
 // Jean-Baptiste, Raphaël, Elodie, Maxime, Christophe: never filled in the sheet
 const DEFAULT_ASSIGNMENTS = [
-    ['caroline',    'X1'],
+    // caroline retirée : déplacée en bureau fixe X10 (mar/mer/jeu) via COLLABORATEURS.fixedDesk
     ['beatriz',     'X2'],
     ['natalia',     'X3'],
     ['christophe',  'X4'],
@@ -3237,35 +3237,30 @@ const DEFAULT_ASSIGNMENTS = [
 // Patterns: day → collabId → { am: [status, detail], pm: [status, detail] }
 const DEFAULT_PATTERNS = {
     0: { // LUNDI
-        caroline:   { am: ['bureau',null], pm: ['bureau',null] },
         beatriz:    { am: ['bureau',null], pm: ['bureau',null] },
         natalia:    { am: ['bureau',null], pm: ['bureau',null] },
         christophe: { am: ['bureau',null], pm: ['bureau',null] },
         jerome:     { am: ['bureau',null], pm: ['bureau',null] },
     },
     1: { // MARDI
-        caroline:   { am: ['bureau',null], pm: ['bureau',null] },
         beatriz:    { am: ['bureau',null], pm: ['bureau',null] },
         natalia:    { am: ['bureau',null], pm: ['bureau',null] },
         christophe: { am: ['bureau',null], pm: ['bureau',null] },
         jerome:     { am: ['bureau',null], pm: ['bureau',null] },
     },
     2: { // MERCREDI
-        caroline:   { am: ['bureau',null], pm: ['bureau',null] },
         beatriz:    { am: ['bureau',null], pm: ['bureau',null] },
         natalia:    { am: ['bureau',null], pm: ['bureau',null] },
         christophe: { am: ['bureau',null], pm: ['bureau',null] },
         jerome:     { am: ['bureau',null], pm: ['bureau',null] },
     },
     3: { // JEUDI
-        caroline:   { am: ['bureau',null], pm: ['bureau',null] },
         beatriz:    { am: ['bureau',null], pm: ['bureau',null] },
         natalia:    { am: ['bureau',null], pm: ['bureau',null] },
         christophe: { am: ['bureau',null], pm: ['bureau',null] },
         jerome:     { am: ['bureau',null], pm: ['bureau',null] },
     },
     4: { // VENDREDI
-        caroline:   { am: ['bureau',null], pm: ['bureau',null] },
         beatriz:    { am: ['bureau',null], pm: ['bureau',null] },
         natalia:    { am: ['bureau',null], pm: ['bureau',null] },
         christophe: { am: ['bureau',null], pm: ['bureau',null] },
