@@ -1560,7 +1560,9 @@
         .admin-mini-btn.danger { color: var(--red); border-color: var(--red); }
         .admin-form { border: 1.5px solid var(--primary-light); border-radius: 8px; padding: 12px; margin-top: 10px; background: #f8fafc; }
         .admin-checks { display: flex; gap: 14px; flex-wrap: wrap; }
-        .admin-checks label { font-size: 0.8rem; font-weight: 500; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+        .admin-checks label { font-size: 0.8rem; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; white-space: nowrap; }
+        /* neutralise la règle globale .modal-field input{width:100%} pour les cases/radios */
+        .admin-checks input[type="checkbox"], .admin-checks input[type="radio"] { width: auto; padding: 0; margin: 0; flex: 0 0 auto; }
 
         /* Autre bureau detail */
         .autre-detail {
