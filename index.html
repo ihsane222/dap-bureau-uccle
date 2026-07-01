@@ -1544,6 +1544,24 @@
 
         .btn-cancel:hover { background: #f0f4f8; }
 
+        /* ===== Admin panel ===== */
+        .modal.modal-admin { width: 580px; }
+        .modal-admin .modal-body { max-height: 72vh; overflow-y: auto; }
+        .admin-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+        .admin-tab { flex: 1; padding: 8px; border: 1.5px solid var(--border); border-radius: 6px; background: white; cursor: pointer; font-size: 0.8rem; font-family: inherit; font-weight: 600; }
+        .admin-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .admin-section-title { font-weight: 700; font-size: 0.85rem; margin: 2px 0 10px; color: var(--primary); }
+        .admin-collab-row { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; }
+        .admin-collab-row .cdot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+        .admin-collab-row .cname { flex: 1; font-size: 0.85rem; font-weight: 600; line-height: 1.3; }
+        .admin-badge { font-size: 0.65rem; background: #edf2f7; color: #4a5568; border-radius: 4px; padding: 1px 5px; margin-left: 3px; font-weight: 600; }
+        .admin-mini-btn { border: 1.5px solid var(--border); background: white; border-radius: 6px; padding: 5px 9px; font-size: 0.72rem; cursor: pointer; font-family: inherit; flex-shrink: 0; }
+        .admin-mini-btn:hover { background: #f0f4f8; }
+        .admin-mini-btn.danger { color: var(--red); border-color: var(--red); }
+        .admin-form { border: 1.5px solid var(--primary-light); border-radius: 8px; padding: 12px; margin-top: 10px; background: #f8fafc; }
+        .admin-checks { display: flex; gap: 14px; flex-wrap: wrap; }
+        .admin-checks label { font-size: 0.8rem; font-weight: 500; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+
         /* Autre bureau detail */
         .autre-detail {
             display: none;
@@ -2688,17 +2706,29 @@
     </div>
 </div>
 
+<!-- ===== ADMIN PANEL ===== -->
+<div class="modal-overlay" id="adminOverlay" onclick="if(event.target===this)closeAdminPanel()" role="dialog" aria-modal="true">
+    <div class="modal modal-admin">
+        <div class="modal-header">
+            <span>&#9881;&#65039; Administration</span>
+            <button class="modal-close" onclick="closeAdminPanel()">&times;</button>
+        </div>
+        <div class="modal-body" id="adminBody"></div>
+    </div>
+</div>
+
 <script>
 // ============================
 // DATA
 // ============================
 const STORAGE_KEY = 'dap_bureau_uccle_v6';
+const CONFIG_KEY = '__config_collaborateurs__';    // clé réservée : config gestionnaires persistée via saveSlot
+const CONFIG_LS_KEY = 'dap_config_collaborateurs'; // miroir localStorage de la config
 
 // ============================
 // AUTHENTICATION
 // ============================
 const AUTH_KEY = 'dap_bureau_auth';
-const ADMIN_PIN = '2929'; // PIN admin = n° de la rue
 
 let currentUser = null; // { id, name, isAdmin }
 
@@ -2712,7 +2742,7 @@ function initAuth() {
             const parsed = JSON.parse(saved);
             const collab = COLLABORATEURS.find(c => c.id === parsed.id);
             if (collab) {
-                currentUser = { id: collab.id, name: collab.name, isAdmin: !!parsed.isAdmin };
+                currentUser = { id: collab.id, name: collab.name, isAdmin: !!collab.admin };
                 hideLoginScreen();
                 updateUserBadge();
                 if (!isTutorialDone()) setTimeout(startTutorial, 600);
@@ -2745,7 +2775,7 @@ function doLogin() {
     if (!sel.value) return;
     const collab = COLLABORATEURS.find(c => c.id === sel.value);
     if (!collab) return;
-    currentUser = { id: collab.id, name: collab.name, isAdmin: false };
+    currentUser = { id: collab.id, name: collab.name, isAdmin: !!collab.admin };
     localStorage.setItem(AUTH_KEY, JSON.stringify(currentUser));
     hideLoginScreen();
     updateUserBadge();
@@ -2772,18 +2802,17 @@ function updateUserBadge() {
 }
 
 function showUserMenu() {
-    const choices = ['Changer d\'utilisateur', 'Mode admin'];
-    if (currentUser && currentUser.isAdmin) choices[1] = 'Quitter mode admin';
+    const isAdmin = !!(currentUser && currentUser.isAdmin);
     const choice = prompt(
         `Connecté(e) : ${currentUser ? currentUser.name : '—'}\n` +
         `1. Changer d'utilisateur\n` +
-        `2. ${choices[1]}\n\n` +
-        `Entrez 1 ou 2 :`
+        (isAdmin ? `2. Panneau d'administration ⚙️\n` : '') +
+        `\nEntrez ${isAdmin ? '1 ou 2' : '1'} :`
     );
     if (choice === '1') {
         logout();
-    } else if (choice === '2') {
-        toggleAdmin();
+    } else if (choice === '2' && isAdmin) {
+        openAdminPanel();
     }
 }
 
@@ -2791,28 +2820,6 @@ function logout() {
     currentUser = null;
     localStorage.removeItem(AUTH_KEY);
     showLoginScreen();
-}
-
-function toggleAdmin() {
-    if (!currentUser) return;
-    if (currentUser.isAdmin) {
-        currentUser.isAdmin = false;
-        localStorage.setItem(AUTH_KEY, JSON.stringify(currentUser));
-        updateUserBadge();
-        renderAll();
-        showToast('Mode admin désactivé');
-    } else {
-        const pin = prompt('Entrez le code admin :');
-        if (pin === ADMIN_PIN) {
-            currentUser.isAdmin = true;
-            localStorage.setItem(AUTH_KEY, JSON.stringify(currentUser));
-            updateUserBadge();
-            renderAll();
-            showToast('Mode admin activé ★');
-        } else if (pin !== null) {
-            alert('Code incorrect.');
-        }
-    }
 }
 
 // Check if current user can modify a reservation on this desk
@@ -2872,6 +2879,11 @@ async function loadFromSheets() {
         clearTimeout(timeout);
         const raw = await resp.json();
         const json = Array.isArray(raw) ? raw[0] : raw;
+        // Extraire la config gestionnaires AVANT le diff (sinon elle pollue les réservations / le rendu des bureaux)
+        if (json && json.reservations && json.reservations[CONFIG_KEY]) {
+            applyConfig(json.reservations[CONFIG_KEY]);
+            delete json.reservations[CONFIG_KEY];
+        }
         if (json.success && json.reservations) {
             // Ne re-render que si les données ont changé
             const newData = JSON.stringify(json.reservations);
@@ -2958,7 +2970,9 @@ function updateSyncStatus() {
     }
 }
 
-const COLLABORATEURS = [
+// Liste "seed" : sert uniquement au 1er démarrage tant qu'aucune config n'existe côté backend.
+// Ensuite, la source de vérité est le blob CONFIG_KEY (éditable via le panneau admin).
+const SEED_COLLABORATEURS = [
     // === RDC FIXES ===
     { id: 'caroline', name: 'Caroline Meynaert', color: '#e74c3c', hair: '#8B4513', email: '', floors: [0], fixedDesk: 'X10', fixedDays: [1,2,3] },
     { id: 'beatriz', name: 'Beatriz Barros Madeiros', color: '#e91e63', hair: '#1a1a1a', email: '', floors: [0], fixedDesk: 'X2' },
@@ -2981,7 +2995,7 @@ const COLLABORATEURS = [
     { id: 'marc_d', name: 'Marc Daubresse', color: '#d63031', hair: '#666', email: '', floors: [0] },
     { id: 'dimitri', name: 'Dimitri Mahy', color: '#0984e3', hair: '#1a1a1a', email: '', floors: [0] },
     { id: 'philippe_l', name: 'Philippe Lefebvre', color: '#6c5ce7', hair: '#555', email: '', floors: [0] },
-    { id: 'etienne', name: 'Etienne Devolder', color: '#00cec9', hair: '#2c3e50', email: '', floors: [0,1,2], accessAll: true },
+    { id: 'etienne', name: 'Etienne Devolder', color: '#00cec9', hair: '#2c3e50', email: '', floors: [0,1,2], accessAll: true, admin: true },
     // === 1ER ÉTAGE MOBILES ===
     { id: 'antoine', name: 'Antoine Cardinael', color: '#27ae60', hair: '#333', email: '', floors: [1] },
     { id: 'fatou', name: 'Fatou Oularé', color: '#e67e22', hair: '#1a1a1a', email: '', floors: [1] },
@@ -3018,17 +3032,20 @@ const COLLABORATEURS = [
     { id: 'patrick', name: 'Patrick Kodjane', color: '#2d98da', hair: '#1a1a1a', email: '', floors: [0,1,2] },
     { id: 'jfghiot', name: 'Jean-François Ghiot', color: '#3498db', hair: '#555', email: '', floors: [0,1,2] },
     { id: 'melanie', name: 'Mélanie Verheyden', color: '#e84393', hair: '#d4a017', email: '', floors: [0,1,2] },
-    { id: 'ihsane', name: 'Ihsane Fettache', color: '#1abc9c', hair: '#1a1a1a', email: '', floors: [0,1,2], accessAll: true },
+    { id: 'ihsane', name: 'Ihsane Fettache', color: '#1abc9c', hair: '#1a1a1a', email: '', floors: [0,1,2], accessAll: true, admin: true },
     { id: 'sylvie_a', name: 'Sylvie Alvarez', color: '#f39c12', hair: '#8B4513', email: '', floors: [0,1,2] },
     { id: 'soumaya', name: 'Soumaya Mounib', color: '#9b59b6', hair: '#1a1a1a', email: '', floors: [0,1,2] },
     { id: 'emmanuel_h', name: 'Emmanuel Haag', color: '#16a085', hair: '#2c3e50', email: 'eh@emhc.be', floors: [2] },
     { id: 'virgile', name: 'Virgile Jacobs', color: '#3498db', hair: '#8B4513', email: '', floors: [0,1,2] },
-    { id: 'annette', name: 'Annette Senn', color: '#e17055', hair: '#d4a017', email: '', floors: [0,1,2], accessAll: true },
-    { id: 'severine', name: 'Séverine Delehouze', color: '#6c5ce7', hair: '#8B4513', email: '', floors: [0,1,2], accessAll: true },
-    { id: 'christophe_m', name: 'Christophe Meulemans', color: '#00b894', hair: '#333', email: '', floors: [0,1,2], accessAll: true },
+    { id: 'annette', name: 'Annette Senn', color: '#e17055', hair: '#d4a017', email: '', floors: [0,1,2], accessAll: true, admin: true },
+    { id: 'severine', name: 'Séverine Delehouze', color: '#6c5ce7', hair: '#8B4513', email: '', floors: [0,1,2], accessAll: true, admin: true },
+    { id: 'christophe_m', name: 'Christophe Meulemans', color: '#00b894', hair: '#333', email: '', floors: [0,1,2], accessAll: true, admin: true },
     { id: 'bilan', name: 'Bilan Mohamud Roble', color: '#ff7675', hair: '#1a1a1a', email: '', floors: [0,1,2] },
     { id: 'sandra_ds', name: 'Sandra de Sousa', color: '#55efc4', hair: '#a0522d', email: '', floors: [0,1,2] },
 ];
+
+// Copie mutable — repeuplée par applyConfig() dès qu'une config backend/localStorage existe.
+let COLLABORATEURS = SEED_COLLABORATEURS.map(c => ({ ...c }));
 
 // Desk positions — Plan 29 Place de Saint-Job (3 étages, pièces 170px haut)
 // REZ rooms top:34 h:170 | 1ER top:240 h:170 | 2ÈME top:446 h:170
@@ -5811,9 +5828,296 @@ function renderAll() {
 }
 
 // ============================
+// CONFIG GESTIONNAIRES (persistée côté backend via CONFIG_KEY)
+// ============================
+function attrEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+
+// Applique une config chargée (backend ou localStorage) : repeuple COLLABORATEURS + resync état.
+function applyConfig(cfg, fromLocal) {
+    if (!cfg || !Array.isArray(cfg.collaborateurs) || cfg.collaborateurs.length === 0) return;
+    COLLABORATEURS = cfg.collaborateurs;
+    if (!fromLocal) {
+        try { localStorage.setItem(CONFIG_LS_KEY, JSON.stringify(cfg)); } catch (e) {}
+    }
+    // Resync du flag admin de l'utilisateur courant depuis la config (source de vérité)
+    if (currentUser) {
+        const me = COLLABORATEURS.find(c => c.id === currentUser.id);
+        if (me) {
+            currentUser.isAdmin = !!me.admin;
+            try { localStorage.setItem(AUTH_KEY, JSON.stringify(currentUser)); } catch (e) {}
+            if (typeof updateUserBadge === 'function') updateUserBadge();
+        }
+    }
+    // Rafraîchit la liste de login si l'écran est présent
+    if (document.getElementById('loginSelect')) {
+        const s = document.getElementById('loginSearch');
+        populateLoginSelect(s ? s.value : '');
+    }
+}
+
+function loadConfigFromLocal() {
+    try {
+        const raw = localStorage.getItem(CONFIG_LS_KEY);
+        if (raw) applyConfig(JSON.parse(raw), true);
+    } catch (e) {}
+}
+
+function buildConfigBlob() {
+    return {
+        v: 1,
+        updatedAt: new Date().toISOString(),
+        updatedBy: currentUser ? currentUser.id : null,
+        collaborateurs: COLLABORATEURS,
+    };
+}
+
+// Enregistre la config. NB : blob unique => last-write-wins assumé (voir plan). Pas de reload-before-save
+// ici car il écraserait l'édition en mémoire que l'admin vient de faire ; collisions rares (poignée d'admins).
+async function saveConfig() {
+    if (!COLLABORATEURS.some(c => c.admin)) {
+        showToast('Impossible : au moins un administrateur est requis.');
+        return false;
+    }
+    const blob = buildConfigBlob();
+    const ok = await saveToSheets(CONFIG_KEY, blob);
+    try { localStorage.setItem(CONFIG_LS_KEY, JSON.stringify(blob)); } catch (e) {}
+    renderAll();
+    showToast(ok ? 'Configuration enregistrée ✓' : 'Enregistré localement (hors-ligne)');
+    return ok;
+}
+
+// --- Helpers création ---
+const COLLAB_COLORS = ['#e74c3c','#3498db','#2ecc71','#9b59b6','#e67e22','#1abc9c','#e84393','#f39c12','#16a085','#6c5ce7','#00b894','#d63031','#0984e3','#fd79a8','#a29bfe','#e17055','#00cec9','#636e72','#ff7675','#55efc4'];
+const HAIR_COLORS = ['#1a1a1a','#333','#555','#8B4513','#c0392b','#a0522d','#d4a017','#666','#2c3e50'];
+function pickColor() { return COLLAB_COLORS[COLLABORATEURS.length % COLLAB_COLORS.length]; }
+function pickHair() { return HAIR_COLORS[COLLABORATEURS.length % HAIR_COLORS.length]; }
+function generateCollabId(name) {
+    let base = String(name || '').toLowerCase().trim()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    if (!base) base = 'user';
+    let id = base, n = 2;
+    while (COLLABORATEURS.some(c => c.id === id)) { id = base + '_' + n; n++; }
+    return id;
+}
+
+// --- CRUD ---
+async function adminCreateCollab(data) {
+    const name = (data.name || '').trim();
+    if (!name) { showToast('Nom requis.'); return; }
+    const collab = {
+        id: generateCollabId(name),
+        name,
+        color: pickColor(),
+        hair: pickHair(),
+        email: '',
+        floors: (data.floors && data.floors.length) ? data.floors : [0,1,2],
+    };
+    if (data.admin) collab.admin = true;
+    if (data.accessAll) collab.accessAll = true;
+    COLLABORATEURS.push(collab);
+    await saveConfig();
+    renderAdminPanel();
+}
+
+async function adminEditCollab(id, patch) {
+    const c = COLLABORATEURS.find(x => x.id === id);
+    if (!c) return;
+    if ('name' in patch) { const nm = (patch.name || '').trim(); if (nm) c.name = nm; }
+    if ('floors' in patch) {
+        const floors = patch.floors;
+        if (c.fixedDesk) {
+            const d = DESKS.find(dd => dd.id === c.fixedDesk);
+            if (d && !floors.includes(d.floor)) {
+                showToast('Bureau fixe à l\'étage ' + d.floor + ' : ajustez le bureau fixe d\'abord.');
+                return;
+            }
+        }
+        c.floors = floors.length ? floors : [0];
+    }
+    if ('admin' in patch) {
+        if (!patch.admin && c.admin && COLLABORATEURS.filter(x => x.id !== id && x.admin).length === 0) {
+            showToast('Impossible : au moins un administrateur est requis.');
+            return;
+        }
+        if (patch.admin) c.admin = true; else delete c.admin;
+    }
+    if ('accessAll' in patch) { if (patch.accessAll) c.accessAll = true; else delete c.accessAll; }
+    await saveConfig();
+    renderAdminPanel();
+}
+
+async function adminDeleteCollab(id) {
+    const c = COLLABORATEURS.find(x => x.id === id);
+    if (!c) return;
+    if (c.admin && COLLABORATEURS.filter(x => x.id !== id && x.admin).length === 0) {
+        showToast('Impossible : au moins un administrateur est requis.');
+        return;
+    }
+    if (!confirm('Supprimer ' + c.name + ' ?\nSes réservations existantes resteront affichées jusqu\'à expiration.')) return;
+    COLLABORATEURS = COLLABORATEURS.filter(x => x.id !== id);
+    await saveConfig();
+    renderAdminPanel();
+}
+
+async function adminSetFixedDesk(id, deskId, days) {
+    const c = COLLABORATEURS.find(x => x.id === id);
+    if (!c) return;
+    if (!deskId) { // mobile
+        delete c.fixedDesk; delete c.fixedDays;
+        await saveConfig(); renderAdminPanel(); return;
+    }
+    const desk = DESKS.find(d => d.id === deskId);
+    if (!desk) { showToast('Bureau introuvable.'); return; }
+    if (!(c.floors || []).includes(desk.floor)) { showToast('Ce bureau est à un étage non accessible pour cette personne.'); return; }
+    const daysToCheck = (days && days.length) ? days : [0,1,2,3,4];
+    const conflict = COLLABORATEURS.find(o => o.id !== id && o.fixedDesk === deskId && daysToCheck.some(di => isFixedOnDay(o, di)));
+    if (conflict) { showToast('Bureau déjà fixe pour ' + conflict.name + ' ces jours-là.'); return; }
+    c.fixedDesk = deskId;
+    if (days && days.length && days.length < 5) c.fixedDays = days.slice().sort((a, b) => a - b);
+    else delete c.fixedDays; // aucun jour ou 5/5 = permanent
+    await saveConfig(); renderAdminPanel();
+}
+
+// --- UI panneau admin ---
+let adminTab = 'collabs';       // 'collabs' | 'desk'
+let adminFormMode = null;        // null | 'create' | '<id>'
+let adminDeskPerson = null;
+
+function openAdminPanel() {
+    if (!currentUser || !currentUser.isAdmin) { showToast('Réservé aux administrateurs.'); return; }
+    adminTab = 'collabs'; adminFormMode = null;
+    const ov = document.getElementById('adminOverlay');
+    if (ov) ov.classList.add('show');
+    renderAdminPanel();
+}
+function closeAdminPanel() {
+    const ov = document.getElementById('adminOverlay');
+    if (ov) ov.classList.remove('show');
+}
+
+function adminCollabForm(collab) {
+    const isEdit = !!collab;
+    const c = collab || { name: '', floors: [0,1,2], admin: false, accessAll: false };
+    const f = n => (c.floors && c.floors.includes(n)) ? 'checked' : '';
+    return `<div class="admin-form">
+      <div class="modal-field"><label>Nom</label><input id="afName" value="${attrEsc(c.name)}" placeholder="Prénom Nom"></div>
+      <div class="modal-field"><label>Étages accessibles</label>
+        <div class="admin-checks">
+          <label><input type="checkbox" id="afFloor0" ${f(0)}> RDC</label>
+          <label><input type="checkbox" id="afFloor1" ${f(1)}> 1er</label>
+          <label><input type="checkbox" id="afFloor2" ${f(2)}> 2ème</label>
+        </div>
+      </div>
+      <div class="modal-field"><div class="admin-checks">
+        <label><input type="checkbox" id="afAdmin" ${c.admin ? 'checked' : ''}> Droits admin ★</label>
+        <label><input type="checkbox" id="afAccessAll" ${c.accessAll ? 'checked' : ''}> Accès total (réserver pour tous)</label>
+      </div></div>
+      <div class="modal-actions" style="padding:0;background:none;border:none;margin-top:6px">
+        <button class="btn-modal btn-cancel" onclick="adminFormMode=null;renderAdminPanel()">Annuler</button>
+        <button class="btn-modal btn-reserve" onclick="adminSubmitCollab(${isEdit ? `'${c.id}'` : 'null'})">${isEdit ? 'Enregistrer' : 'Créer'}</button>
+      </div>
+    </div>`;
+}
+
+async function adminSubmitCollab(id) {
+    const floors = [];
+    if (document.getElementById('afFloor0').checked) floors.push(0);
+    if (document.getElementById('afFloor1').checked) floors.push(1);
+    if (document.getElementById('afFloor2').checked) floors.push(2);
+    const data = {
+        name: document.getElementById('afName').value,
+        floors,
+        admin: document.getElementById('afAdmin').checked,
+        accessAll: document.getElementById('afAccessAll').checked,
+    };
+    adminFormMode = null;
+    if (id) await adminEditCollab(id, data); else await adminCreateCollab(data);
+}
+
+function adminToggleDeskMode(fixed) {
+    const w = document.getElementById('adFixedWrap');
+    if (w) w.style.display = fixed ? '' : 'none';
+}
+
+function adminDeskSection() {
+    const sorted = COLLABORATEURS.slice().sort((a, b) => a.name.localeCompare(b.name));
+    if (!adminDeskPerson && sorted[0]) adminDeskPerson = sorted[0].id;
+    const opts = sorted.map(c => `<option value="${c.id}" ${c.id === adminDeskPerson ? 'selected' : ''}>${escapeHtml(c.name)}</option>`).join('');
+    let body = `<div class="modal-field"><label>Gestionnaire</label>
+      <select id="adPerson" onchange="adminDeskPerson=this.value;renderAdminPanel()">${opts}</select></div>`;
+    const person = COLLABORATEURS.find(c => c.id === adminDeskPerson);
+    if (person) {
+        const deskOpts = DESKS.filter(d => (person.floors || []).includes(d.floor) && d.id !== 'SR' && d.id !== 'SC')
+            .map(d => `<option value="${d.id}" ${person.fixedDesk === d.id ? 'selected' : ''}>${d.id} — étage ${d.floor}</option>`).join('');
+        const isFixed = !!person.fixedDesk;
+        const dayChk = i => (person.fixedDays ? person.fixedDays.includes(i) : isFixed) ? 'checked' : '';
+        body += `<div class="modal-field"><label>Mode</label>
+          <div class="admin-checks">
+            <label><input type="radio" name="adMode" value="mobile" ${!isFixed ? 'checked' : ''} onchange="adminToggleDeskMode(false)"> Mobile</label>
+            <label><input type="radio" name="adMode" value="fixed" ${isFixed ? 'checked' : ''} onchange="adminToggleDeskMode(true)"> Bureau fixe</label>
+          </div></div>
+          <div id="adFixedWrap" style="${isFixed ? '' : 'display:none'}">
+            <div class="modal-field"><label>Bureau</label><select id="adDesk">${deskOpts || '<option value="" disabled>Aucun bureau à ses étages</option>'}</select></div>
+            <div class="modal-field"><label>Jours (vide = tous les jours)</label>
+              <div class="admin-checks">
+                ${DAYS.map((d, i) => `<label><input type="checkbox" class="adDay" value="${i}" ${dayChk(i)}> ${d.slice(0, 3)}</label>`).join('')}
+              </div>
+            </div>
+          </div>
+          <div class="modal-actions" style="padding:0;background:none;border:none;margin-top:6px">
+            <button class="btn-modal btn-reserve" onclick="adminSubmitDesk()">Enregistrer</button>
+          </div>`;
+    }
+    return body;
+}
+
+function adminSubmitDesk() {
+    const person = COLLABORATEURS.find(c => c.id === adminDeskPerson);
+    if (!person) return;
+    const mode = document.querySelector('input[name="adMode"]:checked');
+    if (mode && mode.value === 'mobile') { adminSetFixedDesk(person.id, null, []); return; }
+    const deskEl = document.getElementById('adDesk');
+    const desk = deskEl ? deskEl.value : null;
+    if (!desk) { showToast('Choisissez un bureau.'); return; }
+    const days = Array.from(document.querySelectorAll('.adDay:checked')).map(x => parseInt(x.value, 10));
+    adminSetFixedDesk(person.id, desk, days);
+}
+
+function renderAdminPanel() {
+    const body = document.getElementById('adminBody');
+    if (!body) return;
+    let html = `<div class="admin-tabs">
+      <button class="admin-tab ${adminTab === 'collabs' ? 'active' : ''}" onclick="adminTab='collabs';adminFormMode=null;renderAdminPanel()">Gestionnaires</button>
+      <button class="admin-tab ${adminTab === 'desk' ? 'active' : ''}" onclick="adminTab='desk';renderAdminPanel()">Bureau fixe</button>
+    </div>`;
+    if (adminTab === 'collabs') {
+        html += `<div class="admin-section-title">${COLLABORATEURS.length} gestionnaire(s)</div>`;
+        html += COLLABORATEURS.slice().sort((a, b) => a.name.localeCompare(b.name)).map(c => {
+            const floors = (c.floors || []).map(fl => ['RDC', '1er', '2ème'][fl]).join(' · ');
+            const fixed = c.fixedDesk ? ' · 🪑' + c.fixedDesk + (c.fixedDays ? ' (' + c.fixedDays.map(d => DAYS[d].slice(0, 2)).join(',') + ')' : '') : '';
+            return `<div class="admin-collab-row">
+              <div class="cdot" style="background:${c.color}"></div>
+              <div class="cname">${escapeHtml(c.name)} ${c.admin ? '<span class="admin-badge">★admin</span>' : ''}${c.accessAll ? '<span class="admin-badge">accès total</span>' : ''}
+                <div style="font-size:0.7rem;color:#718096;font-weight:400">${floors}${fixed}</div></div>
+              <button class="admin-mini-btn" onclick="adminFormMode='${c.id}';renderAdminPanel()">Éditer</button>
+              <button class="admin-mini-btn danger" onclick="adminDeleteCollab('${c.id}')">✕</button>
+            </div>`;
+        }).join('');
+        if (adminFormMode === 'create') html += adminCollabForm(null);
+        else if (adminFormMode) html += adminCollabForm(COLLABORATEURS.find(c => c.id === adminFormMode));
+        else html += `<button class="btn-modal btn-reserve" style="margin-top:10px" onclick="adminFormMode='create';renderAdminPanel()">＋ Ajouter un gestionnaire</button>`;
+    } else {
+        html += `<div class="admin-section-title">Bureau fixe / mobile</div>` + adminDeskSection();
+    }
+    body.innerHTML = html;
+}
+
+// ============================
 // INIT
 // ============================
 (async function init() {
+    loadConfigFromLocal(); // config gestionnaires : priorité seed < localStorage < backend
     initAuth();
     initMiniMode();
     updateSyncStatus();
